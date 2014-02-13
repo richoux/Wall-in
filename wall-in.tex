@@ -169,9 +169,18 @@ grid. A building position is characterized by its upper-left tile.
 \begin{displaymath}
   \begin{array}{ccc}
     V & = & \{A, B, E, T, F, U_1, U_2, S_1, S_2\}\\
-    D & = & Positions\\
+    D & = & Positions \cup \{0\}\\
   \end{array}
 \end{displaymath}
+
+In addition of a (changing)  value, variables have also constant data,
+like $length$ and $height$ for the number of tiles needed to construct
+the corresponding building.
+
+Position $0$  means the building is  not used in  the wall. Otherwise,
+positions  are tuples of  the form  $(x, y)$  representing coordinates
+(i.e.,  $x$ for  the  vertical  position and  $y$  for the  horizontal
+position). 
 
 Let $c_{ij}$ be the cell at row $i$ column $j$ in the grid.
 
@@ -230,6 +239,68 @@ Knowing there  is no path between  the source and the  target cell, we
 could make  successive runs of  an A*-like algorithm allowing  to mark
 one cell, the two  cells if we still have no path  by adding one cell,
 then three cells and so on.
+
+\subsubsection{An alternative to {\em path}}
+
+Because running multiple times an A*-like algorithm is quite unsexy.
+
+We  can  rewrite  the  {\em  No  tile-sized  gaps  between  buildings}
+constraint as  follow: a wall is  sound if there  exists two buildings
+having a  building just  on their side,  and all other  used buildings
+have two buildings on their side.
+
+Thus, it means the two buildings  having a building just on their side
+may not have  this building both on their top,  right, bottom or left,
+and all  other used  buildings have two  buildings on their  side must
+respect         one          configuration         depicted         in
+Fig.~\ref{figs:buildings_middle}. 
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=.6\linewidth]{figs/buildings_middle}
+  \caption{Possible configurations for buildings in the middle of a wall.}
+  \label{figs:buildings_middle}
+\end{figure}
+
+\noindent
+{\em  No tile-sized gaps  between buildings:}
+\begin{displaymath}
+  \begin{array}{l}
+    \exists b_s, b_e \in V,\ b_s \neq b_e,\\
+    \Big( \exists b_s', b_e' \in V,\ b_s \neq b_s',\ b_e \neq b_e',\ s.t.\\
+    \lnot \left( b_s.x + b_s.height + 1 = b_s'.x \land b_e.x + b_e.height + 1
+      = b_e'.x \right)\\
+    \land\\
+    \lnot \left( b_s.x = b_s'.x +  b_s'.height + 1 \land b_e.x = b_e'.x
+      + b_e'.height + 1 \right)\\
+    \land\\
+    \lnot \left( b_s.y + b_s.length + 1 = b_s'.y \land b_e.y + b_e.length + 1
+      = b_e'.y \right)\\
+    \land\\
+    \lnot \left( b_s.y = b_s'.y +  b_s'.length + 1 \land b_e.y = b_e'.y
+      + b_e'.length + 1 \right) \Big)\\
+    \land\\
+    \Big( \forall b \in V,\ b_s \neq b \neq b_e,\\
+    \exists b_a, b_b \in V, b_a \neq b \neq b_b,\ s.t.\\
+    \left( b.y = b_a.y + b_a.length + 1 \land b.x = b_b.x +
+      b_b.height + 1 \right)\\
+    \lor\\
+    \left( b.x  = b_a.x + b_a.height  + 1 \land  b.x + b.height +  1 =
+      b_b.x \right)\\ 
+    \lor\\
+    \left( b.x  = b_a.x + b_a.height  + 1 \land  b.y + b.length +  1 =
+      b_b.y \right)\\ 
+    \lor\\
+    \left( b.y  = b_a.y + b_a.length  + 1 \land  b.x + b.height +  1 =
+      b_b.x \right)\\ 
+    \lor\\
+    \left( b.y  = b_a.y + b_a.length  + 1 \land  b.y + b.length +  1 =
+      b_b.y \right)\\ 
+    \lor\\
+    \left( b.x + b.height + 1 = b_a.x \land b.y + b.length + 1 = b_b.y
+    \right) \Big) 
+  \end{array}
+\end{displaymath}
 
 \end{document}
 
