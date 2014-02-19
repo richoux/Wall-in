@@ -3,7 +3,7 @@
 class Building
 {
 public:
-  Building(int, int, int, int, int, int);
+  Building(int, int, int, int, int, int) noexcept;
   virtual ~Building();
 
   // no need of copy ctor and assignment operator
