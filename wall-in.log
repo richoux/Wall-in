@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.7.30)  19 FEB 2014 14:19
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.7.30)  19 FEB 2014 15:52
 entering extended mode
  %&-line parsing enabled.
 **wall-in.tex
@@ -277,37 +277,45 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2 <./figs/chokes_circled.
 png> <./figs/choke_alone.png>] [3 <./figs/choke_grid.png> <./figs/choke_grid_ma
-rked.png> <./figs/grid.png>] [4 <./figs/grid_simplified.png>]
-<figs/buildings_middle.png, id=39, 514.92375pt x 314.17375pt>
+rked.png> <./figs/grid.png>]
+<figs/positions.png, id=32, 183.68625pt x 183.68625pt>
+File: figs/positions.png Graphic file (type png)
+
+<use figs/positions.png> [4 <./figs/grid_simplified.png> <./figs/positions.png>
+] <figs/buildings_middle.png, id=39, 514.92375pt x 314.17375pt>
 File: figs/buildings_middle.png Graphic file (type png)
 
-<use figs/buildings_middle.png> [5 <./figs/buildings_middle.png>] [6]
-(./wall-in.aux) ) 
+<use figs/buildings_middle.png>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[5] [6 <./figs/buildings_middle.png>] (./wall-in.aux) ) 
 Here is how much of TeX's memory you used:
- 3440 strings out of 495061
- 46483 string characters out of 1182621
- 115104 words of memory out of 3000000
- 6569 multiletter control sequences out of 15000+50000
+ 3446 strings out of 495061
+ 46603 string characters out of 1182621
+ 117104 words of memory out of 3000000
+ 6574 multiletter control sequences out of 15000+50000
  17050 words of font info for 51 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  36i,10n,38p,224b,276s stack positions out of 5000i,500n,10000p,200000b,50000s
- </home/flo/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbi1095.60
-0pk> </home/flo/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1095.600pk> </home/f
-lo/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1200.600pk> </home/flo/.texmf-var
-/fonts/pk/ljfour/jknappen/ec/ecti1095.600pk> </home/flo/.texmf-var/fonts/pk/ljf
-our/jknappen/ec/ecrm1095.600pk> </home/flo/.texmf-var/fonts/pk/ljfour/jknappen/
-ec/ecbx1440.600pk> </home/flo/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.6
-00pk> </home/flo/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1728.600pk></usr/sh
-are/texmf-texlive/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-t
-exlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/font
-s/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-texlive/fonts/type1/publ
-ic/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/
-cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb
-></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share
-/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
-Output written on wall-in.pdf (6 pages, 414174 bytes).
+ </home/flo/.texmf-var/f
+onts/pk/ljfour/jknappen/ec/ecbi1095.600pk> </home/flo/.texmf-var/fonts/pk/ljfou
+r/jknappen/ec/ecbx1095.600pk> </home/flo/.texmf-var/fonts/pk/ljfour/jknappen/ec
+/ecbx1200.600pk> </home/flo/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecti1095.600
+pk> </home/flo/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1095.600pk> </home/fl
+o/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1440.600pk> </home/flo/.texmf-var/
+fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/flo/.texmf-var/fonts/pk/ljfo
+ur/jknappen/ec/ecrm1728.600pk></usr/share/texmf-texlive/fonts/type1/public/amsf
+onts/cm/cmex10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmm
+i10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi8.pfb></us
+r/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texm
+f-texlive/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-texlive/fon
+ts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/pu
+blic/amsfonts/cm/cmsy6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfont
+s/cm/cmsy8.pfb>
+Output written on wall-in.pdf (6 pages, 420017 bytes).
 PDF statistics:
- 297 PDF objects out of 1000 (max. 8388607)
+ 304 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 36 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
 

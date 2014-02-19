@@ -166,6 +166,24 @@ grid. A building position is characterized by its upper-left tile.
 
 \subsection{More formal}
 
+\subsubsection{Positions}
+
+Given a grid $n  \times m$, let a position to be  an integer from 1 to
+n*m, placed as shown by Fig.~\ref{figs:positions}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=.3\linewidth]{figs/positions}
+  \caption{Positions on the grid.}
+  \label{figs:positions}
+\end{figure}
+
+Knowing the grid  size, it is trivial to convert  such a position into
+(x,y) coordinates.  Thus in the following,  I may use  positions as an
+integer or as a tuple (x,y).
+
+\subsubsection{Variables and Domain}
+
 \begin{displaymath}
   \begin{array}{ccc}
     V & = & \{A, B, E, T, F, U_1, U_2, S_1, S_2\}\\
@@ -177,10 +195,7 @@ In addition of a (changing)  value, variables have also constant data,
 like $length$ and $height$ for the number of tiles needed to construct
 the corresponding building.
 
-Position $0$  means the building is  not used in  the wall. Otherwise,
-positions  are tuples of  the form  $(x, y)$  representing coordinates
-(i.e.,  $x$ for  the  vertical  position and  $y$  for the  horizontal
-position). 
+Position $0$  means the building is  not used in  the wall.
 
 Let $c_{ij}$ be the cell at row $i$ column $j$ in the grid.
 
