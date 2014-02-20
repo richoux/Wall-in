@@ -11,6 +11,15 @@
 \usepackage{caption}
 \usepackage{color}
 \usepackage{fullpage}
+\usepackage{fixme}
+\fxsetup{
+    status=draft, % draft or final
+    layout=inline, % options are: inline, margin, footnote, pdfnote, pdfmargin
+    theme=colorsig % plain, signature, color or colorsig
+}
+\FXRegisterAuthor{f}{fs}{Florian}
+\FXRegisterAuthor{s}{as}{Santi}
+\FXRegisterAuthor{a}{aa}{Alberto}
 
 \begin{document}
   
@@ -35,7 +44,9 @@ fast to build, no or few gaps for small units, ...).
   more likely  to correspond to the  building with the  less HP rather
   than the sum of buildings' HP}
 
-\subsection{Library functionnality}
+\anote{I don't think it is interesting. Since the most important thing is building a wall as soon as possible, moreover SCVs can repair buildings....}
+
+\subsection{Library functionality}
 
 One easy and  straight forward way to proceed is  to propose a library
 with one function only:
@@ -46,12 +57,12 @@ Function {\bf makeWall}\\
 \begin{itemize}
 \item a chokepoint (from BWTA::Chokepoint), 
 \item a  boolean telling  if one  wants a wall  inside or  outside the
-  user's region,
+  user's region, \afatal{this is a little tricky... how you define inside/outside?? Maybe the best option is to give the BWTA::Region where you want to build the wall (remember that BWTA::Chokepoint has the info of what regions it connects)}
 \item what to  optimize (cost, time, gaps).  Start  with one objective
   at the  same time.  Multi-objective optimization problems  are quite
-  tricky,
+  tricky, \awarning{time is relative, you need to send a SCV there and you can be interrupted by unpredicted events... on top of that you need to wait for resources or for building requirements constrains. In other words, some times you can build the wall in parallel other times in sequence...}
 \item an  option for  getting outputs as  a list of  tuples (building,
-  position, timing) or as a list of BWAPI::UnitCommand.
+  position, timing) or as a list of BWAPI::UnitCommand. \anote{Mmmm I didn't know that we can create BWAPI::UnitCommand ... interesting ...}
 \end{itemize}
 {\bf Output}: Depending of input options, a list of tuples (building,
 position, timing) or as a list of BWAPI::UnitCommand.
@@ -63,7 +74,7 @@ For BWTA, a  chokepoint can have different aspects, and  I think it is
 good to  not limit ourselves  to chokes linking low-  and high-grounds
 only. See Fig.~\ref{figs:chokes}.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=.6\linewidth]{figs/chokes_circled}
   \caption{Two different kind of chokes, circled in red.}
@@ -73,7 +84,7 @@ only. See Fig.~\ref{figs:chokes}.
 Let  consider  one  wants  to   make  an  inside-wall  from  choke  in
 Fig.~\ref{figs:choke_alone}.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=.4\linewidth]{figs/choke_alone}
   \caption{Yeah, this one.}
@@ -82,9 +93,9 @@ Fig.~\ref{figs:choke_alone}.
 
 In order to  make easier the optimization process,  we could model the
 space around  a choke  through a  $16 \times 16$  grid of  tiles, like
-Michal proposed in his paper. See Fig.~\ref{figs:choke_grid}.
+Michal proposed in his paper \afatal{we can optimize this number using the width of the chokepoint}. See Fig.~\ref{figs:choke_grid}.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=.4\linewidth]{figs/choke_grid}
   \caption{Choke abstracted via a grid.}
@@ -92,11 +103,11 @@ Michal proposed in his paper. See Fig.~\ref{figs:choke_grid}.
 \end{figure}
 
 Then, we mark  which cells correspond to unbuildable  tiles, and marks
-also      a      source       and      target      cell/tile.      See
+also      a      source       and      target      cell/tile. \afatal{How we are going to ``automatically'' mark a source/target cell?}     See
 Fig.~\ref{figs:choke_grid_marked}.  Remark  that  target  cell  let  a
 ``door'' for an entrance/exit.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=.4\linewidth]{figs/choke_grid_marked}
   \caption{Remove unbuildable tiles and fix a starting and aimed tile.}
@@ -105,7 +116,7 @@ Fig.~\ref{figs:choke_grid_marked}.  Remark  that  target  cell  let  a
 
 May be clearer if I remove the background. See Fig.~\ref{figs:grid}.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=.4\linewidth]{figs/grid}
   \caption{Better indeed.}
@@ -117,9 +128,9 @@ Finally, knowing if  the user wants to build a  wall inside or outside
 his  region, we can  simplify the  grid. Even  if it  is not  shown in
 Fig.~\ref{figs:grid_simplified}, we could just keep 4 tiles to the
 left/right  of the  starting tile  and 3  tiles above/below  the goal,
-since hugest buildings are $4 \times 3$ tiles big.
+since hugest buildings are $4 \times 3$ tiles big. \awarning{I love this idea of simplify the grid, but we need to be careful to not simplify to much, sometimes we need to move far away from source/target cells to build the wall}
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=.4\linewidth]{figs/grid_simplified}
   \caption{Simplify the grid.}
@@ -148,7 +159,7 @@ Our {\bf variables} are buildings. Thus, V could be composed of:
 I think  allowing two  bunkers and supply  depots extends  greatly our
 possibilities (especially for having few  gaps in the wall). Why twice
 these buildings  and not  the others? Good  question; we  could indeed
-double each buildings.
+double each buildings. \anote{we can start with this and experiment with adding more buildings (specially when we will test ``long'' chokepoints)}
 
 The  {\bf  domain}  is the  set  of  positions  (i.e., cells)  in  the
 grid. A building position is characterized by its upper-left tile.
@@ -162,6 +173,8 @@ grid. A building position is characterized by its upper-left tile.
   buildings?
 \item {\em  No tile-sized gaps  between buildings}, that is,  our wall
   must by composed of side-by-side placed buildings.
+  \item \anote{If we want a ``door'' is it a constraint?}
+  \item \anote{And if we want the spawn point of the Barracks?}
 \end{itemize}
 
 \subsection{More formal}
@@ -171,7 +184,7 @@ grid. A building position is characterized by its upper-left tile.
 Given a grid $n  \times m$, let a position to be  an integer from 1 to
 n*m, placed as shown by Fig.~\ref{figs:positions}
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=.3\linewidth]{figs/positions}
   \caption{Positions on the grid.}
@@ -268,9 +281,9 @@ Thus, it means the two buildings  having a building just on their side
 may not have  this building both on their top,  right, bottom or left,
 and all  other used  buildings have two  buildings on their  side must
 respect         one          configuration         depicted         in
-Fig.~\ref{figs:buildings_middle}. 
+Fig.~\ref{figs:buildings_middle}. \anote{Idea: can we incorporate non-walkable tiles in this formula? I'm thinking to check if the wall is ``attached'' to the \emph{natural wall} :P}
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=.6\linewidth]{figs/buildings_middle}
   \caption{Possible configurations for buildings in the middle of a wall.}

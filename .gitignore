@@ -1,0 +1,19 @@
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# ================ #
+# LaTex temp files #
+# ================ #
+wall-in.aux
+wall-in.log
+wall-in.fdb_latexmk
+wall-in.synctex.gz
