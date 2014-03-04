@@ -4,31 +4,28 @@
 #include <memory>
 
 #include "building.hpp"
+#include "grid.hpp"
 
 namespace wallin
 {
-
-  using matrix = std::vector< std::vector< std::string > >;
-
   class Constraint
   {
   public:
-    Constraint(std::vector< std::shared_ptr<Building> >, int, int);
+    Constraint(std::vector< std::shared_ptr<Building> >, std::shared_ptr<Grid>);
     virtual ~Constraint();
 
     virtual double cost() const = 0;
     
   protected:
     std::vector< std::shared_ptr<Building> > variables;
-    matrix grid;
+    std::shared_ptr<Grid> grid;
   };  
 
   //IsBuildable
   class IsBuildable : public Constraint
   {
   public:
-    IsBuildable(std::vector< std::shared_ptr<Building> >, int, int);
+    IsBuildable(std::vector< std::shared_ptr<Building> >, std::shared_ptr<Grid>);
     double cost() const;
   };
-
 }
