@@ -11,7 +11,7 @@ namespace wallin
   class Constraint
   {
   public:
-    Constraint(std::vector< std::shared_ptr<Building> >, std::shared_ptr<Grid>);
+    Constraint(std::vector< std::shared_ptr<Building> >, std::shared_ptr<Grid>) noexcept;
     virtual ~Constraint();
 
     virtual double cost() const = 0;
@@ -25,7 +25,7 @@ namespace wallin
   class IsBuildable : public Constraint
   {
   public:
-    IsBuildable(std::vector< std::shared_ptr<Building> >, std::shared_ptr<Grid>);
+    IsBuildable(std::vector< std::shared_ptr<Building> >, std::shared_ptr<Grid>) noexcept;
     double cost() const;
   };
 }
