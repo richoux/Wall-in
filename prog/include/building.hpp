@@ -1,5 +1,10 @@
 #pragma once
 
+#include <iostream>
+#include <typeinfo>
+
+using namespace std;
+
 namespace wallin
 {
 
@@ -7,7 +12,7 @@ namespace wallin
   {
   public:
     // ctor with linear position 
-    Building(int, int, int, int, int, int, int = 0) noexcept;
+    Building(int, int, int, int, int, int, string = "", int = 0) noexcept;
 
     virtual ~Building() = 0;
 
@@ -17,6 +22,8 @@ namespace wallin
     inline void setPos(int pos)		{ position = pos; }
     inline int getPosition()	const	{ return position; }
 
+    inline string getShort()	const	{ return shortname; }
+
     inline int getLength()	const	{ return length; }
     inline int getHeight()	const	{ return height; }
 
@@ -25,9 +32,9 @@ namespace wallin
     inline int getGapBottom()	const	{ return gapBottom; }
     inline int getGapLeft()	const	{ return gapLeft; }
 
-  protected:
-    int position;
+    friend ostream& operator<<( ostream&, const Building& );
 
+  protected:
     int length;
     int height;
 
@@ -35,55 +42,59 @@ namespace wallin
     int gapRight;
     int gapBottom;
     int gapLeft;
+
+    string shortname;
+
+    int position;
   };
 
   class Academy : public Building
   {
   public:
-    Academy() : Building(3, 2, 0, 3, 7, 8) { }
-    Academy(int pos) : Building(3, 2, 0, 3, 7, 8, pos) { }
+    Academy() : Building(3, 2, 0, 3, 7, 8, "A") { }
+    Academy(int pos) : Building(3, 2, 0, 3, 7, 8, "A", pos) { }
   };
 
   class Barracks : public Building
   {
   public:
-    Barracks() : Building(4, 3, 8, 7, 15, 16) { }
-    Barracks(int pos) : Building(4, 3, 8, 7, 15, 16, pos) { }
+    Barracks() : Building(4, 3, 8, 7, 15, 16, "B") { }
+    Barracks(int pos) : Building(4, 3, 8, 7, 15, 16, "B", pos) { }
   };
 
   class Bunker : public Building
   {
   public:
-    Bunker() : Building(3, 2, 8, 15, 15, 16) { }
-    Bunker(int pos) : Building(3, 2, 8, 15, 15, 16, pos) { }
+    Bunker() : Building(3, 2, 8, 15, 15, 16, "U") { }
+    Bunker(int pos) : Building(3, 2, 8, 15, 15, 16, "U", pos) { }
   };
 
   class EngineeringBay : public Building
   {
   public:
-    EngineeringBay() : Building(4, 3, 16, 15, 19, 16) { }
-    EngineeringBay(int pos) : Building(4, 3, 16, 15, 19, 16, pos) { }
+    EngineeringBay() : Building(4, 3, 16, 15, 19, 16, "E") { }
+    EngineeringBay(int pos) : Building(4, 3, 16, 15, 19, 16, "E", pos) { }
   };
 
   class MissileTurret : public Building
   {
   public:
-    MissileTurret() : Building(2, 2, 0, 15, 15, 16) { }
-    MissileTurret(int pos) : Building(2, 2, 0, 15, 15, 16, pos) { }
+    MissileTurret() : Building(2, 2, 0, 15, 15, 16, "T") { }
+    MissileTurret(int pos) : Building(2, 2, 0, 15, 15, 16, "T", pos) { }
   };
 
   class Factory : public Building
   {
   public:
-    Factory() : Building(4, 3, 8, 7, 7, 8) { }
-    Factory(int pos) : Building(4, 3, 8, 7, 7, 8, pos) { }
+    Factory() : Building(4, 3, 8, 7, 7, 8, "F") { }
+    Factory(int pos) : Building(4, 3, 8, 7, 7, 8, "F", pos) { }
   };
 
   class SupplyDepot : public Building
   {
   public:
-    SupplyDepot() : Building(3, 2, 10, 9, 5, 10) { }
-    SupplyDepot(int pos) : Building(3, 2, 10, 9, 5, 10, pos) { }
+    SupplyDepot() : Building(3, 2, 10, 9, 5, 10, "S") { }
+    SupplyDepot(int pos) : Building(3, 2, 10, 9, 5, 10, "S", pos) { }
   };
 
 } // namespace wallin
