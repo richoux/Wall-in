@@ -56,8 +56,8 @@ namespace wallin
 
   std::ostream& operator<<( std::ostream& os, const Grid& g )
   {
-    os << "#row: " <<  g.nRow_ << std::endl
-       << "#column: " <<  g.mCol_ << std::endl
+    os << "#rows: " <<  g.nRow_ << std::endl
+       << "#columns: " <<  g.mCol_ << std::endl
        << "Matrix:" << std::endl;
 
     std::string bar = "";
