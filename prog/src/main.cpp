@@ -14,12 +14,15 @@ int main(int argc, char **argv)
   std::shared_ptr<Building> f = std::make_shared<Factory>( );
   std::shared_ptr<Building> s = std::make_shared<SupplyDepot>( );
 
-  b->setPos(9);
+  Grid grid(6,8);
 
-  Grid grid(5,8);
-  grid.add(0, 0, (*b) );
-  grid.add(1, 3, (*f) );
-  grid.add(2, 1, (*s) );
+  b->setPos( grid.mat2lin(0, 0) );
+  f->setPos( grid.mat2lin(1, 3) );
+  s->setPos( grid.mat2lin(2, 1) );
+
+  grid.add( *b );
+  grid.add( *f );
+  grid.add( *s );
 
   std::vector<std::shared_ptr<Building> > vec;
   vec.push_back( b );
@@ -29,11 +32,12 @@ int main(int argc, char **argv)
   IsBuildable isbuildable( vec, grid );
   std::cout << isbuildable << std::endl;
     
-  grid.clear(2, 1, (*s) );
+  grid.clear( *s );
   isbuildable.update( grid );
   std::cout << isbuildable << std::endl;
 
-  grid.add(3, 0, (*s) );
+  s->setPos( grid.mat2lin(3, 0) );
+  grid.add( *s );
   isbuildable.update( grid );
   std::cout << isbuildable << std::endl;
 }

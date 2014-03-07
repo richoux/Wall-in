@@ -3,25 +3,29 @@
 namespace wallin
 {
   Grid::Grid(int row, int col)
-    : nRow_(row),
-      mCol_(col),
-      matrix_(std::vector< std::vector<std::string> >(row, std::vector<std::string>(col, "") ) )
+    : nRow_(row-1),
+      mCol_(col-1),
+      matrix_(vector< vector<string> >(nRow_, vector<string>(mCol_, "") ) )
   { }
 
-  void Grid::add(int row, int col, Building& building)
+  void Grid::add( Building& building )
   {
+    pair<int, int> pos = lin2mat( building.getPosition() );
+    int row = pos.first;
+    int col = pos.second;
+
     for( int x = row; x < row + building.getHeight(); ++x )
       for( int y = col; y < col + building.getLength(); ++y )
 	add(x, y, building.getShort() );
   }
 
-  void Grid::add(int row, int col, std::string building)
+  void Grid::add( int row, int col, string building )
   {
     bool fail = !matrix_[row][col].empty();
     matrix_[row][col] += building;
     if( fail )
     {
-      std::pair<int, int> key(row, col);
+      pair<int, int> key(row, col);
       if( failures_.find( key ) == failures_.end() )
 	failures_.emplace( key, matrix_[row][col] );
       else
@@ -29,20 +33,24 @@ namespace wallin
     }
   }
   
-  void Grid::clear(int row, int col, Building& building)
+  void Grid::clear( Building& building )
   {
+    pair<int, int> pos = lin2mat( building.getPosition() );
+    int row = pos.first;
+    int col = pos.second;
+
     for( int x = row; x < row + building.getHeight(); ++x )
       for( int y = col; y < col + building.getLength(); ++y )
 	clear(x, y, building.getShort() );
   }
 
-  void Grid::clear(int row, int col, std::string building)
+  void Grid::clear( int row, int col, string building )
   {
     matrix_[row][col].replace( matrix_[row][col].find( building ),
 			       building.length(),
 			       "" );
 
-    std::pair<int, int> key(row, col);
+    pair<int, int> key(row, col);
     mapFail::iterator it = failures_.find( key );
 
     if( it != failures_.end() )
@@ -54,31 +62,31 @@ namespace wallin
     }
   }
 
-  std::ostream& operator<<( std::ostream& os, const Grid& g )
+  ostream& operator<<( ostream& os, const Grid& g )
   {
-    os << "#rows: " <<  g.nRow_ << std::endl
-       << "#columns: " <<  g.mCol_ << std::endl
-       << "Matrix:" << std::endl;
+    os << "#rows: " <<  g.nRow_ << endl
+       << "#columns: " <<  g.mCol_ << endl
+       << "Matrix:" << endl;
 
-    std::string bar = "";
+    string bar = "";
     for( int i=0; i<g.matrix_[0].size(); ++i )
       bar += "------";
 
     for( auto vec : g.matrix_ )
     {
-      os << bar << std::endl << "| ";
+      os << bar << endl << "| ";
       for(auto str : vec )
-	os << std::setw(3) << (str.empty() ? " " : str) << " | ";
+	os << setw(3) << (str.empty() ? " " : str) << " | ";
 
-      os << std::endl;
+      os << endl;
     }
-    os << bar << std::endl;
+    os << bar << endl;
     
-    os << "Failures:" << std::endl;
+    os << "Failures:" << endl;
     for( auto m : g.failures_ )
-      os << "(" << m.first.first << "," << m.first.second << "):" << m.second << std::endl;
+      os << "(" << m.first.first << "," << m.first.second << "):" << m.second << endl;
 
-    return os  << std::endl;
+    return os;
   }
 
 }

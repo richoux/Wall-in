@@ -28,7 +28,7 @@ namespace wallin
     for(auto v : c.variables)
       os << (*v) << std::endl;
 
-    return os << c.grid << std::endl;
+    return os << c.grid;
   }
 
 }
