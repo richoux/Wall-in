@@ -20,6 +20,7 @@ namespace wallin
     // inline std::string operator[](int i, int j) const { return matrix_[i][j]; }
     
     void add(int, int, Building&);
+    void clear(int, int, Building&);
 
     inline bool		hasFailure()	const { return !failures_.empty(); }
     inline mapFail	failures()	const { return failures_; }

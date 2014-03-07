@@ -29,6 +29,13 @@ namespace wallin
     }
   }
   
+  void Grid::clear(int row, int col, Building& building)
+  {
+    for( int x = row; x < row + building.getHeight(); ++x )
+      for( int y = col; y < col + building.getLength(); ++y )
+	clear(x, y, building.getShort() );
+  }
+
   void Grid::clear(int row, int col, std::string building)
   {
     matrix_[row][col].replace( matrix_[row][col].find( building ),
@@ -40,7 +47,7 @@ namespace wallin
 
     if( it != failures_.end() )
     {
-      if( matrix_[row][col].empty() )
+      if( matrix_[row][col].size() < 2 )
 	failures_.erase( it );
       else
 	failures_.at( key ) = matrix_[row][col];

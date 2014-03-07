@@ -29,4 +29,11 @@ int main(int argc, char **argv)
   IsBuildable isbuildable( vec, grid );
   std::cout << isbuildable << std::endl;
     
+  grid.clear(2, 1, (*s) );
+  isbuildable.update( grid );
+  std::cout << isbuildable << std::endl;
+
+  grid.add(3, 0, (*s) );
+  isbuildable.update( grid );
+  std::cout << isbuildable << std::endl;
 }

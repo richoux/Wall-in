@@ -18,6 +18,8 @@ namespace wallin
 
     virtual double cost() const = 0;
 
+    inline void update(Grid& g) { grid = g; }
+
     friend std::ostream& operator<<( std::ostream&, const Constraint& );
     
   protected:
