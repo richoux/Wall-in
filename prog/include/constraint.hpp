@@ -27,11 +27,11 @@ namespace wallin
     Grid grid;
   };  
 
-  //IsBuildable
-  class IsBuildable : public Constraint
+  //Overlap
+  class Overlap : public Constraint
   {
   public:
-    IsBuildable( std::vector< std::shared_ptr<Building> >&, Grid& ) noexcept;
+    Overlap( std::vector< std::shared_ptr<Building> >&, Grid& ) noexcept;
     double cost() const;
   };
 }

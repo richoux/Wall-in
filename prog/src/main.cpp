@@ -29,15 +29,15 @@ int main(int argc, char **argv)
   vec.push_back( f );
   vec.push_back( s );
 
-  IsBuildable isbuildable( vec, grid );
-  std::cout << isbuildable << std::endl;
-    
+  Overlap overlap( vec, grid );
+  std::cout << overlap << std::endl;
+
   grid.clear( *s );
-  isbuildable.update( grid );
-  std::cout << isbuildable << std::endl;
+  overlap.update( grid );
+  std::cout << overlap << std::endl;
 
   s->setPos( grid.mat2lin(3, 0) );
   grid.add( *s );
-  isbuildable.update( grid );
-  std::cout << isbuildable << std::endl;
+  overlap.update( grid );
+  std::cout << overlap << std::endl;
 }
