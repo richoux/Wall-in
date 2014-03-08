@@ -13,7 +13,8 @@ before_install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8.1"; fi
 
 script: 
+  - rm -f bin/wallin
   - cd prog/src
-  - CXX -g -std=c++0x main.cpp building.cpp constraint.cpp grid.cpp -o ../bin/wallin
+  - $CXX -g -std=c++0x main.cpp building.cpp constraint.cpp grid.cpp -o ../bin/wallin
   - cd ../bin/wallin
   - valgrind --leak-check=full --show-reachable=yes ../bin/wallin
