@@ -20,17 +20,19 @@ install:
 
   # g++4.8.1
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+  - if [ "$CXX" = "g++" ]; then export CFLAG="c++0x"; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; fi
 
   # clang 3.4
   - if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq clang-3.4; fi
   - if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq libc++; fi  
+  - if [ "$CXX" == "clang++" ]; then export CFLAG="gnu++11"; fi
   - if [ "$CXX" == "clang++" ]; then export CXX="clang++-3.4"; fi
 
 script: 
   - $CXX --version
   - rm -f bin/wallin
   - cd prog/src
-  - $CXX -g -std=c++0x main.cpp building.cpp constraint.cpp grid.cpp -o ../bin/wallin
+  - $CXX -g -std=$CFLAG main.cpp building.cpp constraint.cpp grid.cpp -o ../bin/wallin
   - cd ../bin ; ./wallin
   - valgrind --leak-check=full --show-reachable=yes ../bin/wallin
