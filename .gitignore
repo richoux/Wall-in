@@ -17,3 +17,8 @@ wall-in.aux
 wall-in.log
 wall-in.fdb_latexmk
 wall-in.synctex.gz
+
+# ============#
+# Binary file #
+# ============#
+prog/bin/wallin
