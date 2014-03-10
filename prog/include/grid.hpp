@@ -17,12 +17,16 @@ namespace wallin
   class Grid
   {
   public:
-    Grid(int, int);
+    Grid( int, int );
+    Grid( int, int, vector< pair<int, int> > );
     
     // inline string operator[](int i, int j) const { return matrix_[i][j]; }
     
     void add( Building& );
     void clear( Building& );
+  
+    void unbuildable( vector< pair<int, int> > );
+    inline void unbuildable ( int row, int col ) { matrix_[row][col].assign(3, '#'); }
 
     inline bool		hasFailure()	const { return !failures_.empty(); }
     inline mapFail	failures()	const { return failures_; }

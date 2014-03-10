@@ -34,4 +34,20 @@ namespace wallin
     Overlap( std::vector< std::shared_ptr<Building> >&, Grid& ) noexcept;
     double cost() const;
   };
+
+  //Buildable
+  class Buildable : public Constraint
+  {
+  public:
+    Buildable( std::vector< std::shared_ptr<Building> >&, Grid& ) noexcept;
+    double cost() const;
+  };
+
+  //NoGaps
+  class NoGaps : public Constraint
+  {
+  public:
+    NoGaps( std::vector< std::shared_ptr<Building> >&, Grid& ) noexcept;
+    double cost() const;
+  };
 }

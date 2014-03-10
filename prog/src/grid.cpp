@@ -3,10 +3,17 @@
 namespace wallin
 {
   Grid::Grid(int row, int col)
-    : nRow_(row-1),
-      mCol_(col-1),
+    : nRow_(row),
+      mCol_(col),
       matrix_(vector< vector<string> >(nRow_, vector<string>(mCol_, "") ) )
   { }
+
+  Grid::Grid( int row, int col, vector< pair<int, int> > unbuildables )
+    : Grid(row, col)
+  {
+    for( auto u : unbuildables )
+      matrix_[u.first][u.second].assign(3, '#');
+  }
 
   void Grid::add( Building& building )
   {
@@ -60,6 +67,12 @@ namespace wallin
       else
 	failures_.at( key ) = matrix_[row][col];
     }
+  }
+
+  void Grid::unbuildable( vector< pair<int, int> > unbuildables )
+  {
+    for( auto u : unbuildables )
+      this->unbuildable( u.first, u.second );    
   }
 
   ostream& operator<<( ostream& os, const Grid& g )
