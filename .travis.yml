@@ -40,6 +40,7 @@ install:
 script: 
   - $CXX --version
   - echo $CXXFLAGS
+  - cd ; ls
   - cd ~/wall-in/prog/src
   - $CXX -g $CXXFLAGS main.cpp building.cpp constraint.cpp grid.cpp -o ../bin/wallin
   - cd ../bin ; ./wallin
