@@ -41,7 +41,7 @@ script:
   - $CXX --version
   - echo $CXXFLAGS
   - rm -f bin/wallin
-  - cd prog/src
+  - cd ~/prog/src
   - $CXX -g $CXXFLAGS main.cpp building.cpp constraint.cpp grid.cpp -o ../bin/wallin
   - cd ../bin ; ./wallin
   - valgrind --leak-check=full --show-reachable=yes ../bin/wallin
