@@ -10,7 +10,7 @@
 
 using namespace wallin;
 
-void updateConstraints( const std::set<Constraint*>& setConstraints, Grid& grid )
+void updateConstraints( const std::set<Constraint*>& setConstraints, const Grid& grid )
 {
   std::for_each( setConstraints.begin(), setConstraints.end(), [&](Constraint *c){ c->update( grid );});
 }
