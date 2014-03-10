@@ -2,6 +2,7 @@
 
 namespace wallin
 {
+  int Building::nberBuildings = 0;
 
   Building::Building(int x, 
 		     int y, 
@@ -18,8 +19,9 @@ namespace wallin
       gapBottom(bottom), 
       gapLeft(left),
       shortname(shortname),
-      position(position)
-  {}
+      position(position),
+      id(Building::nberBuildings++)
+  { }
 
   Building::~Building() {}
 
@@ -28,6 +30,7 @@ namespace wallin
     return os
       << "Type: " <<  typeid(b).name() << std::endl
       << "Short name: " << b.shortname << std::endl
+      << "Id num: " << b.id << std::endl
       << "Position: " <<  b.position << std::endl
       << "Length: " <<  b.length << std::endl
       << "Height: " <<  b.height << std::endl

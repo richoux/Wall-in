@@ -1,12 +1,24 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <algorithm>
+#include <set>
 
 #include "../include/building.hpp"
 #include "../include/constraint.hpp"
 #include "../include/grid.hpp"
 
 using namespace wallin;
+
+void updateConstraints( const std::set<Constraint*>& setConstraints, Grid& grid )
+{
+  std::for_each( setConstraints.begin(), setConstraints.end(), [&](Constraint *c){ c->update( grid );});
+}
+
+void printConstraints( const std::set<Constraint*>& setConstraints )
+{
+  std::for_each( setConstraints.begin(), setConstraints.end(), [&](Constraint *c){ std::cout << *c << std::endl;});
+}
 
 int main(int argc, char **argv)
 {
@@ -38,19 +50,31 @@ int main(int argc, char **argv)
 
   Overlap overlap( vec, grid );
   Buildable buildable( vec, grid );
-  std::cout << overlap << std::endl;
-  std::cout << buildable << std::endl;
+  NoGaps noGaps( vec, grid );
+  
+  std::set<Constraint*> setConstraints;
+  setConstraints.insert( &overlap );
+  setConstraints.insert( &buildable );
+  setConstraints.insert( &noGaps );  
+  
+  printConstraints( setConstraints );
 
   grid.clear( *s );
-  overlap.update( grid );
-  buildable.update( grid );
-  std::cout << overlap << std::endl;
-  std::cout << buildable << std::endl;
+  updateConstraints( setConstraints, grid );
+  printConstraints( setConstraints );
 
   s->setPos( grid.mat2lin(4, 5) );
   grid.add( *s );
-  overlap.update( grid );
-  buildable.update( grid );
-  std::cout << overlap << std::endl;
-  std::cout << buildable << std::endl;
+  updateConstraints( setConstraints, grid );
+  printConstraints( setConstraints );
+
+  grid.clear( *f );
+  grid.clear( *s );
+  f->setPos( grid.mat2lin(1, 4) );
+  s->setPos( grid.mat2lin(4, 0) );
+  grid.add( *f );
+  grid.add( *s );
+  updateConstraints( setConstraints, grid );
+  printConstraints( setConstraints );
+  
 }

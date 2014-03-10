@@ -13,12 +13,12 @@ namespace wallin
   class Constraint
   {
   public:
-    Constraint( std::vector< std::shared_ptr<Building> >&, Grid& ) noexcept;
+    Constraint( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
     virtual ~Constraint();
 
     virtual double cost() const = 0;
 
-    inline void update(Grid& g) { grid = g; }
+    inline void update( Grid& g ) { grid = g; }
 
     friend std::ostream& operator<<( std::ostream&, const Constraint& );
     
@@ -31,7 +31,7 @@ namespace wallin
   class Overlap : public Constraint
   {
   public:
-    Overlap( std::vector< std::shared_ptr<Building> >&, Grid& ) noexcept;
+    Overlap( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
     double cost() const;
   };
 
@@ -39,7 +39,7 @@ namespace wallin
   class Buildable : public Constraint
   {
   public:
-    Buildable( std::vector< std::shared_ptr<Building> >&, Grid& ) noexcept;
+    Buildable( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
     double cost() const;
   };
 
@@ -47,7 +47,9 @@ namespace wallin
   class NoGaps : public Constraint
   {
   public:
-    NoGaps( std::vector< std::shared_ptr<Building> >&, Grid& ) noexcept;
+    NoGaps( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
     double cost() const;
+  private:
+    int countAround(const Building &) const;
   };
 }

@@ -22,6 +22,7 @@ namespace wallin
     inline void setPos(int pos)		{ position = pos; }
     inline int getPosition()	const	{ return position; }
 
+    inline int    getId()	const	{ return id; }
     inline string getShort()	const	{ return shortname; }
 
     inline int getLength()	const	{ return length; }
@@ -46,6 +47,10 @@ namespace wallin
     string shortname;
 
     int position;
+    int id;
+
+  private:
+    static int nberBuildings;
   };
 
   class Academy : public Building

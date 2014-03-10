@@ -28,11 +28,14 @@ namespace wallin
     void unbuildable( vector< pair<int, int> > );
     inline void unbuildable ( int row, int col ) { matrix_[row][col].assign(3, '#'); }
 
+    inline int		getNberRows()	const { return nRow_; }
+    inline int		getNberCols()	const { return mCol_; }
     inline bool		hasFailure()	const { return !failures_.empty(); }
     inline mapFail	failures()	const { return failures_; }
 
-    inline int		mat2lin(int row, int col) const {return row * mCol_ + col;}
-    inline int		mat2lin(pair<int, int> p) const {return p.first * mCol_ + p.second;}
+    inline pair<int, int> lin2mat(int p)	    const {return make_pair<int, int>(p / mCol_, p % mCol_);}
+    inline int		  mat2lin(int row, int col) const {return row * mCol_ + col;}
+    inline int		  mat2lin(pair<int, int> p) const {return p.first * mCol_ + p.second;}
 
     friend ostream& operator<<( ostream&, const Grid& );
 
@@ -40,8 +43,6 @@ namespace wallin
     void add(int, int, string);
     void clear(int, int, string);
     
-    inline pair<int, int> lin2mat(int p) const {return make_pair<int, int>(p / mCol_, p % mCol_);}
-
     int nRow_;
     int mCol_;
     vector< vector<string> > matrix_;
