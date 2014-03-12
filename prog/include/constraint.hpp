@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <typeinfo>
+#include <map>
 
 #include "building.hpp"
 #include "grid.hpp"
@@ -25,6 +26,7 @@ namespace wallin
   protected:
     std::vector< std::shared_ptr<Building> > variables;
     Grid grid;
+    std::map<int, std::shared_ptr<Building> > mapBuildings;
   };  
 
   //Overlap
@@ -49,7 +51,13 @@ namespace wallin
   public:
     NoGaps( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
     double cost() const;
-  private:
-    int countAround(const Building &) const;
+  };
+
+  //StartingEndingCells
+  class StartingEndingCells : public Constraint
+  {
+  public:
+    StartingEndingCells( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
+    double cost() const;
   };
 }

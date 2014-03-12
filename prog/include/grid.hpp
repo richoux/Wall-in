@@ -2,9 +2,12 @@
 
 #include <vector>
 #include <map>
+#include <set>
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <iomanip>
+#include <memory>
 
 #include "building.hpp"
 
@@ -17,17 +20,23 @@ namespace wallin
   class Grid
   {
   public:
-    Grid( int, int );
-    Grid( int, int, vector< pair<int, int> > );
+    Grid( int, int, int, int, int, int );
+    Grid( int, int, vector< pair<int, int> >, int, int, int, int );
     
-    // inline string operator[](int i, int j) const { return matrix_[i][j]; }
-    
-    void add( Building& );
-    void clear( Building& );
+	   void add  ( Building& );
+	   void clear( Building& );
   
-    void unbuildable( vector< pair<int, int> > );
-    inline void unbuildable ( int row, int col ) { matrix_[row][col].assign(3, '#'); }
+	   int  countAround ( const Building &, const std::vector< std::shared_ptr<Building> >& ) const;
+	   void unbuildable ( vector< pair<int, int> > );
+    inline void unbuildable ( int row, int col ) { matrixType_[row][col].assign(3, '#'); }
 
+    inline set<int>	buildingsAt( int row, int col ) const { return matrixId_[row][col]; }
+    inline set<int>	buildingsAt( pair<int, int> p ) const { return buildingsAt(p.first, p.second); }
+
+
+    inline pair<int, int> getStartingTile()	const { return startingTile; }
+    inline pair<int, int> getTargetTile()	const { return targetTile; }
+    
     inline int		getNberRows()	const { return nRow_; }
     inline int		getNberCols()	const { return mCol_; }
     inline bool		hasFailure()	const { return !failures_.empty(); }
@@ -40,12 +49,15 @@ namespace wallin
     friend ostream& operator<<( ostream&, const Grid& );
 
   private:
-    void add(int, int, string);
-    void clear(int, int, string);
+    void add(int, int, string, int);
+    void clear(int, int, string, int);
     
     int nRow_;
     int mCol_;
-    vector< vector<string> > matrix_;
+    vector< vector<string> > matrixType_;
+    vector< vector< set<int> > > matrixId_;
+    pair<int, int> startingTile;
+    pair<int, int> targetTile;
     mapFail failures_;
   };
 }

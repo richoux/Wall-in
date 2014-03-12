@@ -6,7 +6,10 @@ namespace wallin
   Constraint::Constraint(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) noexcept
   : variables( variables ),
     grid( grid )
-  { }
+  { 
+    for( auto b : variables )
+      mapBuildings[b->getId()] = b;
+  }
   
   Constraint::~Constraint() { }
 
@@ -83,7 +86,7 @@ namespace wallin
 
     for( auto building : variables )
     {
-      nberNeighbors = countAround( *building );
+      nberNeighbors = grid.countAround( *building, variables );
       if( nberNeighbors == 0 )
 	conflicts++;
       else
@@ -96,36 +99,22 @@ namespace wallin
     return conflicts;    
   }
 
-  int NoGaps::countAround( const Building& b ) const
+  /***********************/
+  /* StartingEndingCells */
+  /***********************/
+  StartingEndingCells::StartingEndingCells(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) noexcept
+    : Constraint(variables, grid)
+  { }
+
+  double StartingEndingCells::cost() const
   {
-    std::pair<int, int> coordinates = grid.lin2mat( b.getPosition() );
+    // no building on one of these two cells: cost of the cell = 3
+    // a building with no or with 2 or more neighbors: cost of the cell = 1
+    double conflicts = 0.;
 
-    int top = coordinates.first;
-    int right = coordinates.second + b.getLength();
-    int bottom = coordinates.first + b.getHeight();
-    int left = coordinates.second;
-
-    int counter = 0;
-
-    for(auto other : variables )
-    {
-      if( other->getId() != b.getId() )
-      {
-	std::pair<int, int> xyOther = grid.lin2mat( other->getPosition() );
-	int otherTop = xyOther.first;
-	int otherRight = xyOther.second + other->getLength();
-	int otherBottom = xyOther.first + other->getHeight();
-	int otherLeft = xyOther.second;
-	
-	if(  ( top == otherBottom + 1 && ( otherRight >= left && otherRight <= right + other->getLength() ) )
-	  || ( right == otherLeft - 1 && ( otherBottom >= top - 1 && otherBottom <= bottom + 1 + other->getHeight() ) )
-	  || ( bottom == otherTop - 1 && ( otherRight >= left && otherRight <= right + other->getLength() ) )
-	  || ( left == otherRight + 1 && ( otherBottom >= top - 1 && otherBottom <= bottom + 1 + other->getHeight() ) ) )
-	{
-	  counter++;
-	}
-      }
-    }
+    
+    
+    return conflicts;    
   }
 
 }

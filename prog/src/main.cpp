@@ -12,12 +12,12 @@ using namespace wallin;
 
 void updateConstraints( const std::set<Constraint*>& setConstraints, const Grid& grid )
 {
-  std::for_each( setConstraints.begin(), setConstraints.end(), [&](Constraint *c){ c->update( grid );});
+  std::for_each( setConstraints.begin(), setConstraints.end(), [&](Constraint *c){ c->update( grid ); });
 }
 
 void printConstraints( const std::set<Constraint*>& setConstraints )
 {
-  std::for_each( setConstraints.begin(), setConstraints.end(), [&](Constraint *c){ std::cout << *c << std::endl;});
+  std::for_each( setConstraints.begin(), setConstraints.end(), [&](Constraint *c){ std::cout << *c << std::endl; });
 }
 
 int main(int argc, char **argv)
@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     std::make_pair<int, int>(5, 7) 
   };
 
-  Grid grid( 6, 8, unbuildables );
+  Grid grid( 6, 8, unbuildables, 5, 0, 0, 7 );
   
   b->setPos( grid.mat2lin(0, 0) );
   f->setPos( grid.mat2lin(1, 3) );
