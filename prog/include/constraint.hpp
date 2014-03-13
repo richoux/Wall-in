@@ -53,11 +53,11 @@ namespace wallin
     double cost() const;
   };
 
-  //StartingEndingCells
-  class StartingEndingCells : public Constraint
+  //StartingTargetTiles
+  class StartingTargetTiles : public Constraint
   {
   public:
-    StartingEndingCells( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
+    StartingTargetTiles( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
     double cost() const;
   };
 }

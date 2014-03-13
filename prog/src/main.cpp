@@ -7,24 +7,14 @@
 #include "../include/building.hpp"
 #include "../include/constraint.hpp"
 #include "../include/grid.hpp"
+#include "../include/tools.hpp"
+#include "../include/terran.hpp"
 
 using namespace wallin;
 
-void updateConstraints( const std::set<Constraint*>& setConstraints, const Grid& grid )
-{
-  std::for_each( setConstraints.begin(), setConstraints.end(), [&](Constraint *c){ c->update( grid ); });
-}
-
-void printConstraints( const std::set<Constraint*>& setConstraints )
-{
-  std::for_each( setConstraints.begin(), setConstraints.end(), [&](Constraint *c){ std::cout << *c << std::endl; });
-}
-
 int main(int argc, char **argv)
 {
-  std::shared_ptr<Building> b = std::make_shared<Barracks>( );
-  std::shared_ptr<Building> f = std::make_shared<Factory>( );
-  std::shared_ptr<Building> s = std::make_shared<SupplyDepot>( );
+  std::vector<std::shared_ptr<Building> > vec = makeTerranBuildings();
 
   std::vector< std::pair<int, int> > unbuildables 
   { 
@@ -37,44 +27,41 @@ int main(int argc, char **argv)
   
   b->setPos( grid.mat2lin(0, 0) );
   f->setPos( grid.mat2lin(1, 3) );
-  s->setPos( grid.mat2lin(2, 1) );
+  s1->setPos( grid.mat2lin(2, 1) );
 
   grid.add( *b );
   grid.add( *f );
-  grid.add( *s );
-
-  std::vector<std::shared_ptr<Building> > vec;
-  vec.push_back( b );
-  vec.push_back( f );
-  vec.push_back( s );
+  grid.add( *s1 );
 
   Overlap overlap( vec, grid );
   Buildable buildable( vec, grid );
   NoGaps noGaps( vec, grid );
+  StartingTargetTiles specialTiles( vec, grid );
   
   std::set<Constraint*> setConstraints;
   setConstraints.insert( &overlap );
   setConstraints.insert( &buildable );
   setConstraints.insert( &noGaps );  
+  setConstraints.insert( &specialTiles );  
   
   printConstraints( setConstraints );
 
-  grid.clear( *s );
+  grid.clear( *s1 );
   updateConstraints( setConstraints, grid );
   printConstraints( setConstraints );
-
-  s->setPos( grid.mat2lin(4, 5) );
-  grid.add( *s );
+  
+  s1->setPos( grid.mat2lin(4, 5) );
+  grid.add( *s1 );
   updateConstraints( setConstraints, grid );
   printConstraints( setConstraints );
-
+  
   grid.clear( *f );
-  grid.clear( *s );
+  grid.clear( *s1 );
   f->setPos( grid.mat2lin(1, 4) );
-  s->setPos( grid.mat2lin(4, 0) );
+  s1->setPos( grid.mat2lin(4, 0) );
   grid.add( *f );
-  grid.add( *s );
+  grid.add( *s1 );
   updateConstraints( setConstraints, grid );
   printConstraints( setConstraints );
-  
+    
 }

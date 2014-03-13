@@ -81,18 +81,18 @@ namespace wallin
     EngineeringBay(int pos) : Building(4, 3, 16, 15, 19, 16, "E", pos) { }
   };
 
-  class MissileTurret : public Building
-  {
-  public:
-    MissileTurret() : Building(2, 2, 0, 15, 15, 16, "T") { }
-    MissileTurret(int pos) : Building(2, 2, 0, 15, 15, 16, "T", pos) { }
-  };
-
   class Factory : public Building
   {
   public:
     Factory() : Building(4, 3, 8, 7, 7, 8, "F") { }
     Factory(int pos) : Building(4, 3, 8, 7, 7, 8, "F", pos) { }
+  };
+
+  class MissileTurret : public Building
+  {
+  public:
+    MissileTurret() : Building(2, 2, 0, 15, 15, 16, "T") { }
+    MissileTurret(int pos) : Building(2, 2, 0, 15, 15, 16, "T", pos) { }
   };
 
   class SupplyDepot : public Building

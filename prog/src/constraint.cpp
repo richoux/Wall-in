@@ -94,25 +94,67 @@ namespace wallin
 	if( nberNeighbors == 1 && oneNeighbor++ > 2 )
 	  conflicts++;
       }
+      
+      std::cout << building->getShort() << ": " << nberNeighbors << std::endl;
     }
 
     return conflicts;    
   }
 
   /***********************/
-  /* StartingEndingCells */
+  /* StartingTargetTiles */
   /***********************/
-  StartingEndingCells::StartingEndingCells(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) noexcept
+  StartingTargetTiles::StartingTargetTiles(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) noexcept
     : Constraint(variables, grid)
   { }
 
-  double StartingEndingCells::cost() const
+  double StartingTargetTiles::cost() const
   {
-    // no building on one of these two cells: cost of the cell = 3
-    // a building with no or with 2 or more neighbors: cost of the cell = 1
+    // no building on one of these two tiles: cost of the tile = 3
+    // a building with no or with 2 or more neighbors: cost of the tile = 1
+    // two or more buildings on one of these tile: increasing penalties.
     double conflicts = 0.;
 
-    
+    std::set<int> startingBuildings = grid.buildingsAt( grid.getStartingTile() );
+    std::set<int> targetBuildings = grid.buildingsAt( grid.getTargetTile() );
+
+    std::shared_ptr<Building> b;
+    int neighbors;
+
+    if( startingBuildings.empty() )
+      conflicts += 3;
+    else
+    {
+      int penalty = 0;
+      for( int bId : startingBuildings )
+      {
+	b = mapBuildings.at(bId);
+	neighbors = grid.countAround( *b, variables );
+	
+	if (neighbors != 1)
+	  conflicts += 1;
+
+	conflicts += penalty++;
+      }
+    }
+
+    if( targetBuildings.empty() )
+      conflicts += 3;
+    else
+    {
+      int penalty = 0;
+      for( int bId : targetBuildings )
+      {
+	b = mapBuildings.at(bId);
+	neighbors = grid.countAround( *b, variables );
+	
+	if (neighbors != 1)
+	  conflicts += 1;
+
+	conflicts += penalty++;	
+      }
+      
+    }
     
     return conflicts;    
   }

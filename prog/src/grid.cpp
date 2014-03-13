@@ -9,7 +9,10 @@ namespace wallin
       matrixId_(vector< vector< set<int> > >(nRow_, vector< set<int> >(mCol_, set<int>() ) ) ),
       startingTile( make_pair( sRow, sCol ) ),
       targetTile( make_pair( tRow, tCol ) )
-  { }
+  { 
+    matrixType_[sRow][sCol] += "@s";
+    matrixType_[tRow][tCol] += "@t";
+  }
 
   Grid::Grid( int row, int col, vector< pair<int, int> > unbuildables, int sRow, int sCol, int tRow, int tCol )
     : Grid( row, col, sRow, sCol, tRow, tCol )
@@ -31,7 +34,9 @@ namespace wallin
 
   void Grid::add( int row, int col, string b_short, int b_id )
   {
-    bool fail = !matrixType_[row][col].empty();
+    bool fail = ! ( matrixType_[row][col].empty() 
+		    || ( matrixType_[row][col].find("@") != string::npos && matrixType_[row][col].size() <= 3) );
+
     matrixType_[row][col] += b_short;
     matrixId_[row][col].insert( b_id );
     if( fail )
@@ -85,8 +90,8 @@ namespace wallin
     std::pair<int, int> coordinates = lin2mat( b.getPosition() );
 
     int top = coordinates.first;
-    int right = coordinates.second + b.getLength();
-    int bottom = coordinates.first + b.getHeight();
+    int right = coordinates.second + b.getLength() - 1;
+    int bottom = coordinates.first + b.getHeight() - 1;
     int left = coordinates.second;
 
     int counter = 0;
@@ -97,14 +102,14 @@ namespace wallin
       {
 	std::pair<int, int> xyOther = lin2mat( other->getPosition() );
 	int otherTop = xyOther.first;
-	int otherRight = xyOther.second + other->getLength();
-	int otherBottom = xyOther.first + other->getHeight();
+	int otherRight = xyOther.second + other->getLength() - 1;
+	int otherBottom = xyOther.first + other->getHeight() - 1;
 	int otherLeft = xyOther.second;
 	
-	if(  ( top == otherBottom + 1 && ( otherRight >= left && otherRight <= right + other->getLength() ) )
-	  || ( right == otherLeft - 1 && ( otherBottom >= top - 1 && otherBottom <= bottom + 1 + other->getHeight() ) )
-	  || ( bottom == otherTop - 1 && ( otherRight >= left && otherRight <= right + other->getLength() ) )
-	  || ( left == otherRight + 1 && ( otherBottom >= top - 1 && otherBottom <= bottom + 1 + other->getHeight() ) ) )
+	if(  ( top == otherBottom + 1 && ( otherRight >= left && otherLeft <= right ) )
+	  || ( right == otherLeft - 1 && ( otherBottom >= top - 1 && otherBottom <= bottom + 1 ) )
+	  || ( bottom == otherTop - 1 && ( otherRight >= left && otherLeft <= right ) )
+	  || ( left == otherRight + 1 && ( otherBottom >= top - 1 && otherBottom <= bottom + 1 ) ) )
 	{
 	  counter++;
 	}
