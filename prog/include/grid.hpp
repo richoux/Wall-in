@@ -20,8 +20,8 @@ namespace wallin
   class Grid
   {
   public:
-    Grid( int, int, int, int, int, int );
-    Grid( int, int, vector< pair<int, int> >, int, int, int, int );
+    Grid( int, int, int, int, int, int ) noexcept;
+    Grid( int, int, vector< pair<int, int> >, int, int, int, int ) noexcept;
     
 	   void add  ( Building& );
 	   void clear( Building& );

@@ -2,7 +2,7 @@
 
 namespace wallin
 {
-  Grid::Grid( int row, int col, int sRow, int sCol, int tRow, int tCol )
+  Grid::Grid( int row, int col, int sRow, int sCol, int tRow, int tCol ) noexcept
     : nRow_(row),
       mCol_(col),
       matrixType_(vector< vector<string> >(nRow_, vector<string>(mCol_, "") ) ),
@@ -14,7 +14,7 @@ namespace wallin
     matrixType_[tRow][tCol] += "@t";
   }
 
-  Grid::Grid( int row, int col, vector< pair<int, int> > unbuildables, int sRow, int sCol, int tRow, int tCol )
+  Grid::Grid( int row, int col, vector< pair<int, int> > unbuildables, int sRow, int sCol, int tRow, int tCol ) noexcept
     : Grid( row, col, sRow, sCol, tRow, tCol )
   {
     for( auto u : unbuildables )
@@ -23,13 +23,16 @@ namespace wallin
 
   void Grid::add( Building& building )
   {
-    pair<int, int> pos = lin2mat( building.getPosition() );
-    int row = pos.first;
-    int col = pos.second;
-
-    for( int x = row; x < row + building.getHeight(); ++x )
-      for( int y = col; y < col + building.getLength(); ++y )
-	add(x, y, building.getShort(), building.getId() );
+    if( building.getPosition() != -1 )
+    {
+      pair<int, int> pos = lin2mat( building.getPosition() );
+      int row = pos.first;
+      int col = pos.second;
+      
+      for( int x = row; x < row + building.getHeight(); ++x )
+	for( int y = col; y < col + building.getLength(); ++y )
+	  add(x, y, building.getShort(), building.getId() );
+    }
   }
 
   void Grid::add( int row, int col, string b_short, int b_id )
@@ -51,13 +54,16 @@ namespace wallin
   
   void Grid::clear( Building& building )
   {
-    pair<int, int> pos = lin2mat( building.getPosition() );
-    int row = pos.first;
-    int col = pos.second;
-
-    for( int x = row; x < row + building.getHeight(); ++x )
-      for( int y = col; y < col + building.getLength(); ++y )
-	clear(x, y, building.getShort(), building.getId() );
+    if( building.getPosition() != -1 )
+    {
+      pair<int, int> pos = lin2mat( building.getPosition() );
+      int row = pos.first;
+      int col = pos.second;
+      
+      for( int x = row; x < row + building.getHeight(); ++x )
+	for( int y = col; y < col + building.getLength(); ++y )
+	  clear(x, y, building.getShort(), building.getId() );
+    }
   }
 
   void Grid::clear( int row, int col, string b_short, int b_id )
@@ -87,36 +93,41 @@ namespace wallin
 
   int Grid::countAround( const Building& b, const std::vector< std::shared_ptr<Building> >& variables ) const
   {
-    std::pair<int, int> coordinates = lin2mat( b.getPosition() );
-
-    int top = coordinates.first;
-    int right = coordinates.second + b.getLength() - 1;
-    int bottom = coordinates.first + b.getHeight() - 1;
-    int left = coordinates.second;
-
-    int counter = 0;
-
-    for(auto other : variables )
+    if( b.getPosition() != -1 )
     {
-      if( other->getId() != b.getId() )
+      std::pair<int, int> coordinates = lin2mat( b.getPosition() );
+
+      int top = coordinates.first;
+      int right = coordinates.second + b.getLength() - 1;
+      int bottom = coordinates.first + b.getHeight() - 1;
+      int left = coordinates.second;
+
+      int counter = 0;
+
+      for(auto other : variables )
       {
-	std::pair<int, int> xyOther = lin2mat( other->getPosition() );
-	int otherTop = xyOther.first;
-	int otherRight = xyOther.second + other->getLength() - 1;
-	int otherBottom = xyOther.first + other->getHeight() - 1;
-	int otherLeft = xyOther.second;
-	
-	if(  ( top == otherBottom + 1 && ( otherRight >= left && otherLeft <= right ) )
-	  || ( right == otherLeft - 1 && ( otherBottom >= top - 1 && otherBottom <= bottom + 1 ) )
-	  || ( bottom == otherTop - 1 && ( otherRight >= left && otherLeft <= right ) )
-	  || ( left == otherRight + 1 && ( otherBottom >= top - 1 && otherBottom <= bottom + 1 ) ) )
+	if( other->getId() != b.getId() )
 	{
-	  counter++;
+	  std::pair<int, int> xyOther = lin2mat( other->getPosition() );
+	  int otherTop = xyOther.first;
+	  int otherRight = xyOther.second + other->getLength() - 1;
+	  int otherBottom = xyOther.first + other->getHeight() - 1;
+	  int otherLeft = xyOther.second;
+	
+	  if(  ( top == otherBottom + 1 && ( otherRight >= left && otherLeft <= right ) )
+	       || ( right == otherLeft - 1 && ( otherBottom >= top - 1 && otherBottom <= bottom + 1 ) )
+	       || ( bottom == otherTop - 1 && ( otherRight >= left && otherLeft <= right ) )
+	       || ( left == otherRight + 1 && ( otherBottom >= top - 1 && otherBottom <= bottom + 1 ) ) )
+	  {
+	    counter++;
+	  }
 	}
       }
-    }
 
-    return counter;
+      return counter;
+    }
+    else
+      return 0;
   }
 
   ostream& operator<<( ostream& os, const Grid& g )
