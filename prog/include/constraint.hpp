@@ -17,7 +17,8 @@ namespace wallin
     Constraint( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
     virtual ~Constraint();
 
-    virtual double cost() const = 0;
+    virtual double cost( std::vector<int>& ) const = 0;
+    virtual double simulateCost( const Building&, const Building& );
 
     inline void update( const Grid& g ) { grid = g; }
 
@@ -26,7 +27,6 @@ namespace wallin
   protected:
     std::vector< std::shared_ptr<Building> > variables;
     Grid grid;
-    std::map<int, std::shared_ptr<Building> > mapBuildings;
   };  
 
   //Overlap
@@ -59,5 +59,7 @@ namespace wallin
   public:
     StartingTargetTiles( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
     double cost() const;
+  private:
+    std::map<int, std::shared_ptr<Building> > mapBuildings;
   };
 }

@@ -85,12 +85,6 @@ namespace wallin
     }
   }
 
-  void Grid::unbuildable( vector< pair<int, int> > unbuildables )
-  {
-    for( auto u : unbuildables )
-      this->unbuildable( u.first, u.second );    
-  }
-
   int Grid::countAround( const Building& b, const std::vector< std::shared_ptr<Building> >& variables ) const
   {
     if( b.getPosition() != -1 )
@@ -128,6 +122,34 @@ namespace wallin
     }
     else
       return 0;
+  }
+
+  int Grid::randomPos( const Building& b ) const
+  {
+    int xPos = randomPos.getRandNum( mCol_ - b.getLength() );
+    int yPos = randomPos.getRandNum( nRow_ - b.getHeight() );
+    return mat2lin( xPos, yPos );
+  }
+
+  set<int> Grid::possiblePos( const Building& b ) const
+  {
+    set<int> possiblePositions;
+
+    possiblePositions.insert( -1 );
+
+    for( int row = 0; row < nRow_ - b.getHeight(); row++ )
+      for( int col = 0; col < mCol_ - b.getLength(); col++ )
+      {
+	possiblePositions.insert( mat2lin(row, col) );
+      }
+
+    return possiblePositions;
+  }
+
+  void Grid::unbuildable( vector< pair<int, int> > unbuildables )
+  {
+    for( auto u : unbuildables )
+      this->unbuildable( u.first, u.second );    
   }
 
   ostream& operator<<( ostream& os, const Grid& g )

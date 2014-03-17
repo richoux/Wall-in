@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "building.hpp"
+#include "tools.hpp"
 
 using namespace std;
 
@@ -26,13 +27,14 @@ namespace wallin
 	   void add  ( Building& );
 	   void clear( Building& );
   
-	   int  countAround ( const Building &, const std::vector< std::shared_ptr<Building> >& ) const;
-	   void unbuildable ( vector< pair<int, int> > );
-    inline void unbuildable ( int row, int col ) { matrixType_[row][col].assign(3, '#'); }
+	   int	    countAround ( const Building &, const std::vector< std::shared_ptr<Building> >& ) const;
+	   int	    randomPos   ( const Building& ) const ;
+           set<int> possiblePos ( const Building& ) const;
+	   void	    unbuildable ( vector< pair<int, int> > );
+    inline void	    unbuildable ( int row, int col ) { matrixType_[row][col].assign(3, '#'); }
 
     inline set<int>	buildingsAt( int row, int col ) const { return matrixId_[row][col]; }
     inline set<int>	buildingsAt( pair<int, int> p ) const { return buildingsAt(p.first, p.second); }
-
 
     inline pair<int, int> getStartingTile()	const { return startingTile; }
     inline pair<int, int> getTargetTile()	const { return targetTile; }
@@ -59,5 +61,7 @@ namespace wallin
     pair<int, int> startingTile;
     pair<int, int> targetTile;
     mapFail failures_;
+
+    Random randomValues;
   };
 }

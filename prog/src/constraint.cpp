@@ -6,12 +6,24 @@ namespace wallin
   Constraint::Constraint(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) noexcept
   : variables( variables ),
     grid( grid )
-  { 
-    for( auto b : variables )
-      mapBuildings[b->getId()] = b;
-  }
+  { }
   
   Constraint::~Constraint() { }
+
+  double Constraint::simulateCost( const Building& oldBuilding, const Building& newBuilding )
+  {
+    grid.clear( oldBuilding );
+    grid.add( newBuilding );
+
+    std::vector<int> fake;
+    double simCost = cost( fake );
+
+    grid.clear( newBuilding );
+    grid.add( oldBuilding );
+
+    return simCost;
+  }
+
 
   std::ostream& operator<<( std::ostream& os, const Constraint& c )
   {
@@ -31,7 +43,7 @@ namespace wallin
     : Constraint(variables, grid)
   { }
 
-  double Overlap::cost() const
+  double Overlap::cost( std::vector<int>& varCost ) const
   {
     // version 1: 1 failure = 1 cost
     // return double( grid.failures().size() );
@@ -43,7 +55,12 @@ namespace wallin
     {
       int nbConflict = failures.second.size() - 1;
       if( nbConflict > 0 && failures.second.find( "###" ) == std::string::npos )
+      {
 	conflicts += nbConflict;
+	std::set<int> setBuildings = grid.buildingsAt( failures.first );
+	for( auto id : setBuildings )
+	  varCost[ id ] += nbConflict;
+      }
     }
 
     return conflicts;    
@@ -56,15 +73,22 @@ namespace wallin
     : Constraint(variables, grid)
   { }
 
-  double Buildable::cost() const
+  double Buildable::cost( std::vector<int>& varCost ) const
   {
     // count number of buildings misplaced on unbuildable tiles (denoted by ###)
     double conflicts = 0.;
+    int nbConflict;
 
     for( auto failures : grid.failures() )
     {
       if( failures.second.find( "###" ) != std::string::npos )
-	conflicts += failures.second.size() - 3;
+      {
+	nbConflict = failures.second.size() - 3;
+	conflicts += nbConflict;
+	std::set<int> setBuildings = grid.buildingsAt( failures.first );
+	for( auto id : setBuildings )
+	  varCost[ id ] += nbConflict;
+      }
     }
 
     return conflicts;    
@@ -77,7 +101,7 @@ namespace wallin
     : Constraint(variables, grid)
   { }
 
-  double NoGaps::cost() const
+  double NoGaps::cost( std::vector<int>& varCost ) const
   {
     // cost = |buildings with one neighbor| - 1 + |buildings with no neighbors|
     double conflicts = 0.;
@@ -88,11 +112,17 @@ namespace wallin
     {
       nberNeighbors = grid.countAround( *building, variables );
       if( nberNeighbors == 0 )
+      {
 	conflicts++;
+	varCost[ building->getId() ]++;
+      }
       else
       {
 	if( nberNeighbors == 1 && oneNeighbor++ > 2 )
+	{
 	  conflicts++;
+	  varCost[ building->getId() ]++;
+	}
       }
       
       std::cout << building->getShort() << ": " << nberNeighbors << std::endl;
@@ -106,9 +136,12 @@ namespace wallin
   /***********************/
   StartingTargetTiles::StartingTargetTiles(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) noexcept
     : Constraint(variables, grid)
-  { }
+  {
+    for( auto b : variables )
+      mapBuildings[b->getId()] = b;
+  }
 
-  double StartingTargetTiles::cost() const
+  double StartingTargetTiles::cost( std::vector<int>& varCost ) const
   {
     // no building on one of these two tiles: cost of the tile = 3
     // a building with no or with 2 or more neighbors: cost of the tile = 1
@@ -132,7 +165,10 @@ namespace wallin
 	neighbors = grid.countAround( *b, variables );
 	
 	if (neighbors != 1)
-	  conflicts += 1;
+	{
+	  conflicts++;
+	  varCost[ b ]++;
+	}
 
 	conflicts += penalty++;
       }
@@ -149,7 +185,10 @@ namespace wallin
 	neighbors = grid.countAround( *b, variables );
 	
 	if (neighbors != 1)
-	  conflicts += 1;
+	{
+	  conflicts++;
+	  varCost[ b ]++;
+	}
 
 	conflicts += penalty++;	
       }
