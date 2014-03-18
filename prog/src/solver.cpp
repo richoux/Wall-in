@@ -6,7 +6,7 @@ namespace wallin
 {
   Solver::Solver( const std::set<Constraint*>& setConstraints, 
 		  const std::vector<std::shared_ptr<Building> >& vecBuildings, 
-		  const Grid& grid ) noexcept
+		  const Grid& grid )
     : setConstraints(setConstraints), 
       vecBuildings(vecBuildings), 
       variableCost( std::vector<double>( vecBuildings.size(), 0. ) ),
@@ -24,6 +24,7 @@ namespace wallin
   {
     int xPos;
     int yPos;
+    std::cout << "Zblah" << std::endl;
     for( auto b : vecBuildings )
     {
       xPos = randomVar.getRandNum( grid.getNberCols() - b->getLength() );

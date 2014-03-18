@@ -21,7 +21,7 @@ namespace wallin
   public:
     Solver( const std::set<Constraint*>&, 
 	    const std::vector<std::shared_ptr<Building> >&, 
-	    const Grid& ) noexcept;
+	    const Grid& );
 
     double solve( double );
     

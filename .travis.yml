@@ -20,6 +20,7 @@ install:
 
   # g++4.8.1
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
+  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq libstdc++6-4.7-dev; fi
   - if [ "$CXX" = "g++" ]; then export CXXFLAGS="-std=c++0x"; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; fi
 
@@ -41,6 +42,6 @@ script:
   - $CXX --version
   - echo $CXXFLAGS
   - cd ~/build/richoux/Wall-in/prog/src
-  - $CXX -g $CXXFLAGS main.cpp building.cpp constraint.cpp grid.cpp tools.cpp -o ../bin/wallin
+  - $CXX -g $CXXFLAGS main.cpp building.cpp constraint.cpp grid.cpp tools.cpp solver.cpp -o ../bin/wallin
   - cd ../bin ; ./wallin
   - valgrind --leak-check=full --show-reachable=yes ../bin/wallin
