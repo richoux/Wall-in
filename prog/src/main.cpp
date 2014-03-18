@@ -45,7 +45,7 @@ int main(int argc, char **argv)
   setConstraints.insert( &noGaps );  
   setConstraints.insert( &specialTiles );  
   
-  // printConstraints( setConstraints );
+  //printConstraints( setConstraints );
 
   // grid.clear( *s1 );
   // updateConstraints( setConstraints, grid );
@@ -65,7 +65,9 @@ int main(int argc, char **argv)
   // updateConstraints( setConstraints, grid );
   // printConstraints( setConstraints );
 
-  Solver solver( setConstraints, vec, grid );
-  solver.solve( 1000 );
+  std::cout << "Test" << std::endl;
+
+  std::unique_ptr<Solver> solver(new Solver( setConstraints, vec, grid ) );
+  solver->solve( 1000 );
     
 }

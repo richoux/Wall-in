@@ -8,9 +8,10 @@
 #include <sstream>
 #include <iomanip>
 #include <memory>
+#include <algorithm>
 
 #include "building.hpp"
-#include "tools.hpp"
+#include "random.hpp"
 
 using namespace std;
 
@@ -22,17 +23,18 @@ namespace wallin
   {
   public:
     Grid( int, int, int, int, int, int ) noexcept;
-    Grid( int, int, vector< pair<int, int> >, int, int, int, int ) noexcept;
+    Grid( int, int, const vector< pair<int, int> >&, int, int, int, int ) noexcept;
     Grid(const Grid&) = default;
     Grid(Grid&&) = default;
+    //Grid& operator=(Grid);
     Grid& operator=(const Grid&) = default;
     Grid& operator=(Grid&&) = default;
     
-	   void add  ( Building& );
-	   void clear( Building& );
+	   void add  ( const Building& );
+	   void clear( const Building& );
   
 	   int	    countAround ( const Building &, const std::vector< std::shared_ptr<Building> >& ) const;
-	   int	    randomPos   ( const Building& ) const ;
+	   int	    randomPos   ( const Building& );
            set<int> possiblePos ( const Building& ) const;
 	   void	    unbuildable ( vector< pair<int, int> > );
     inline void	    unbuildable ( int row, int col ) { matrixType_[row][col].assign(3, '#'); }
@@ -65,7 +67,5 @@ namespace wallin
     pair<int, int> startingTile;
     pair<int, int> targetTile;
     mapFail failures_;
-
-    Random randomValues;
   };
 }

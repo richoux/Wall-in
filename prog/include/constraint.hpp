@@ -38,7 +38,7 @@ namespace wallin
   {
   public:
     Overlap( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
-    double cost() const;
+    double cost( std::vector<double>& ) const;
   };
 
   //Buildable
@@ -46,7 +46,7 @@ namespace wallin
   {
   public:
     Buildable( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
-    double cost() const;
+    double cost( std::vector<double>& ) const;
   };
 
   //NoGaps
@@ -54,7 +54,7 @@ namespace wallin
   {
   public:
     NoGaps( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
-    double cost() const;
+    double cost( std::vector<double>& ) const;
   };
 
   //StartingTargetTiles
@@ -62,7 +62,7 @@ namespace wallin
   {
   public:
     StartingTargetTiles( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
-    double cost() const;
+    double cost( std::vector<double>& ) const;
   private:
     std::map<int, std::shared_ptr<Building> > mapBuildings;
   };

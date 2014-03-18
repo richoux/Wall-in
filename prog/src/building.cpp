@@ -2,7 +2,7 @@
 
 namespace wallin
 {
-  int Building::nberBuildings = 1;
+  int Building::nberBuildings = 0;
 
   Building::Building(int x, 
 		     int y, 

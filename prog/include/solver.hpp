@@ -12,6 +12,7 @@
 #include "constraint.hpp"
 #include "grid.hpp"
 #include "tools.hpp"
+#include "random.hpp"
 
 namespace wallin
 {

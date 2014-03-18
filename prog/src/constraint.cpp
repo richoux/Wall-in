@@ -15,7 +15,7 @@ namespace wallin
     grid.clear( oldBuilding );
     grid.add( newBuilding );
 
-    std::vector<double> fake;
+    std::vector<double> fake(variables.size(), 0.);
     double simCost = cost( fake );
 
     grid.clear( newBuilding );
@@ -27,13 +27,15 @@ namespace wallin
 
   std::ostream& operator<<( std::ostream& os, const Constraint& c )
   {
-    os << "Type: " <<  typeid(c).name() << std::endl;
+    os << "Constraint type: " <<  typeid(c).name() << std::endl;
 
     for(auto v : c.variables)
       os << (*v) << std::endl;
 
+    std::vector<double> fake(c.variables.size(), 0.);
+
     return os << c.grid << std::endl
-	      << "Cost: " << c.cost() << std::endl;
+	      << "Cost: " << c.cost( fake ) << std::endl;
   }
 
   /***********/
@@ -167,7 +169,7 @@ namespace wallin
 	if (neighbors != 1)
 	{
 	  conflicts++;
-	  varCost[ b ]++;
+	  varCost[ bId ]++;
 	}
 
 	conflicts += penalty++;
@@ -187,7 +189,7 @@ namespace wallin
 	if (neighbors != 1)
 	{
 	  conflicts++;
-	  varCost[ b ]++;
+	  varCost[ bId ]++;
 	}
 
 	conflicts += penalty++;	

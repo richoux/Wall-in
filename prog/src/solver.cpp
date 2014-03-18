@@ -1,16 +1,19 @@
 #include "../include/solver.hpp"
 
+#include <iostream>
+
 namespace wallin
 {
   Solver::Solver( const std::set<Constraint*>& setConstraints, 
 		  const std::vector<std::shared_ptr<Building> >& vecBuildings, 
-		  const Grid& grid )
+		  const Grid& grid ) noexcept
     : setConstraints(setConstraints), 
       vecBuildings(vecBuildings), 
-      variableCost( std::vector<double>( vecBuildings.size, 0. ) ),
-      tabooList( std::vector<int>( vecBuildings.size, 0 ) ),
-      grid(grid)
+      variableCost( std::vector<double>( vecBuildings.size(), 0. ) ),
+      grid(grid),
+      tabooList( std::vector<int>( vecBuildings.size(), 0 ) )
   { 
+    std::cout << "Hey" << std::endl;
     reset();
 
     // for( auto b : vecBuildings )
@@ -19,14 +22,20 @@ namespace wallin
 
   void Solver::reset()
   {
+    int xPos;
+    int yPos;
     for( auto b : vecBuildings )
-      b->setPos( grid.randomPos( *b ) );
+    {
+      xPos = randomVar.getRandNum( grid.getNberCols() - b->getLength() );
+      yPos = randomVar.getRandNum( grid.getNberRows() - b->getHeight() );
+      b->setPos( grid.mat2lin( xPos, yPos ) );
+    }
     updateConstraints( setConstraints, grid );
   }
 
   void Solver::move( std::shared_ptr<Building> building, int newPosition )
   {
-    grid.clean( *building );
+    grid.clear( *building );
     building->setPos( newPosition );
     grid.add( *building );
     updateConstraints( setConstraints, grid );
@@ -68,7 +77,7 @@ namespace wallin
       std::for_each( tabooList.begin(), tabooList.end(), [](int v){ if(v) --v; } );
 
       // Here, we look at neighbor configurations with the lowest cost.
-      std::set<double> worstBuildings;
+      std::vector<double> worstBuildings;
       double worstVariableCost = 0;
       for( int i = 0; i < variableCost.size(); i++ )
       {
@@ -78,11 +87,11 @@ namespace wallin
 	  {
 	    worstVariableCost = variableCost[i];
 	    worstBuildings.clear();
-	    worstBuildings.insert( i );
+	    worstBuildings.push_back( i );
 	  }
 	  else 
 	    if( worstVariableCost == variableCost[i] )
-	      worstBuildings.insert( i );	  
+	      worstBuildings.push_back( i );	  
 	}
       }
       
@@ -90,13 +99,14 @@ namespace wallin
       int worstBuildingId = worstBuildings[ randomVar.getRandNum( worstBuildings.size() ) ];
       // Building oldBuilding = *(mapBuildings[ worstBuildingId ]);
       std::shared_ptr<Building> oldBuilding = vecBuildings[ worstBuildingId ];
-      Building newBuilding;
+      Building *newBuilding;
+      *newBuilding = *oldBuilding;
       
       // get possible positions for oldBuilding.
       std::set<int> possiblePositions = grid.possiblePos( *oldBuilding );
       for(auto pos : possiblePositions )
       {
-	newBuilding.setPos( pos );      
+	newBuilding->setPos( pos );      
 	estimatedCost = 0.;
 
 	// std::for_each( setConstraints.begin(), 
@@ -104,7 +114,7 @@ namespace wallin
 	// 	       [&](Constraint *c){ estimatedCost += c->simulateCost( *oldBuilding, newBuilding ); });
 
 	for( auto c : setConstraints )
-	  estimatedCost += c->simulateCost( *oldBuilding, newBuilding );
+	  estimatedCost += c->simulateCost( *oldBuilding, *newBuilding );
 
 	if( estimatedCost < bestEstimatedCost )
 	{
