@@ -65,8 +65,6 @@ int main(int argc, char **argv)
   // updateConstraints( setConstraints, grid );
   // printConstraints( setConstraints );
 
-  std::cout << "Test" << std::endl;
-
   std::unique_ptr<Solver> solver(new Solver( setConstraints, vec, grid ) );
   solver->solve( 1000 );
     

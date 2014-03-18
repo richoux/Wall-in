@@ -1,7 +1,5 @@
 #include "../include/solver.hpp"
 
-#include <iostream>
-
 namespace wallin
 {
   Solver::Solver( const std::set<Constraint*>& setConstraints, 
@@ -13,7 +11,6 @@ namespace wallin
       grid(grid),
       tabooList( std::vector<int>( vecBuildings.size(), 0 ) )
   { 
-    std::cout << "Hey" << std::endl;
     reset();
 
     // for( auto b : vecBuildings )
@@ -24,7 +21,6 @@ namespace wallin
   {
     int xPos;
     int yPos;
-    std::cout << "Zblah" << std::endl;
     for( auto b : vecBuildings )
     {
       xPos = randomVar.getRandNum( grid.getNberCols() - b->getLength() );

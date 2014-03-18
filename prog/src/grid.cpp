@@ -89,22 +89,27 @@ namespace wallin
     }
   }
 
+  // Not sure; fix later
   void Grid::clear( int row, int col, string b_short, int b_id )
   {
-    matrixType_[row][col].replace( matrixType_[row][col].find( b_short ),
-			       b_short.length(),
-			       "" );
-    matrixId_[row][col].erase( b_id );
-
-    pair<int, int> key(row, col);
-    mapFail::iterator it = failures_.find( key );
-
-    if( it != failures_.end() )
+    auto it = matrixType_[row][col].find( b_short );
+    if( it != std::string::npos )
     {
-      if( matrixType_[row][col].size() < 2 )
-	failures_.erase( it );
-      else
-	failures_.at( key ) = matrixType_[row][col];
+      matrixType_[row][col].replace( it,
+				     b_short.length(),
+				     "" );
+      matrixId_[row][col].erase( b_id );
+      
+      pair<int, int> key(row, col);
+      mapFail::iterator it = failures_.find( key );
+      
+      if( it != failures_.end() )
+      {
+	if( matrixType_[row][col].size() < 2 )
+	  failures_.erase( it );
+	else
+	  failures_.at( key ) = matrixType_[row][col];
+      }
     }
   }
 
