@@ -141,7 +141,7 @@ namespace wallin
 	       || ( bottom == otherTop - 1 && ( otherRight >= left && otherLeft <= right ) )
 	       || ( left == otherRight + 1 && ( otherBottom >= top - 1 && otherBottom <= bottom + 1 ) ) )
 	  {
-	    counter++;
+	    ++counter;
 	  }
 	}
       }
@@ -158,8 +158,8 @@ namespace wallin
 
     possiblePositions.insert( -1 );
 
-    for( int row = 0; row < nRow_ - b.getHeight(); row++ )
-      for( int col = 0; col < mCol_ - b.getLength(); col++ )
+    for( int row = 0; row < nRow_ - b.getHeight(); ++row )
+      for( int col = 0; col < mCol_ - b.getLength(); ++col )
       {
 	possiblePositions.insert( mat2lin(row, col) );
       }

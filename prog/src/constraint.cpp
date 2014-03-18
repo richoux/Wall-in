@@ -115,19 +115,17 @@ namespace wallin
       nberNeighbors = grid.countAround( *building, variables );
       if( nberNeighbors == 0 )
       {
-	conflicts++;
-	varCost[ building->getId() ]++;
+	++conflicts;
+	++varCost[ building->getId() ];
       }
       else
       {
 	if( nberNeighbors == 1 && oneNeighbor++ > 2 )
 	{
-	  conflicts++;
-	  varCost[ building->getId() ]++;
+	  ++conflicts;
+	  ++varCost[ building->getId() ];
 	}
       }
-      
-      std::cout << building->getShort() << ": " << nberNeighbors << std::endl;
     }
 
     return conflicts;    
@@ -168,8 +166,8 @@ namespace wallin
 	
 	if (neighbors != 1)
 	{
-	  conflicts++;
-	  varCost[ bId ]++;
+	  ++conflicts;
+	  ++varCost[ bId ];
 	}
 
 	conflicts += penalty++;
@@ -188,8 +186,8 @@ namespace wallin
 	
 	if (neighbors != 1)
 	{
-	  conflicts++;
-	  varCost[ bId ]++;
+	  ++conflicts;
+	  ++varCost[ bId ];
 	}
 
 	conflicts += penalty++;	

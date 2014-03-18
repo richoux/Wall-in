@@ -11,4 +11,9 @@ namespace wallin
   {
     std::for_each( setConstraints.begin(), setConstraints.end(), [&](Constraint *c){ std::cout << *c << std::endl; });
   }
+
+  void addAllInGrid( const std::vector<std::shared_ptr<Building> >& vec, Grid& grid )
+  {
+    std::for_each( vec.begin(), vec.end(), [&](std::shared_ptr<Building> b){ grid.add(*b); });
+  }
 }

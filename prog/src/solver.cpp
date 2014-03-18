@@ -26,8 +26,10 @@ namespace wallin
       xPos = randomVar.getRandNum( grid.getNberCols() - b->getLength() );
       yPos = randomVar.getRandNum( grid.getNberRows() - b->getHeight() );
       b->setPos( grid.mat2lin( xPos, yPos ) );
+      //std::cout << (*b) << std::endl;
     }
     updateConstraints( setConstraints, grid );
+    std::cout << grid << std::endl;
   }
 
   void Solver::move( std::shared_ptr<Building> building, int newPosition )
@@ -40,7 +42,7 @@ namespace wallin
 
   double Solver::solve( double timeout )
   {
-    std::chrono::duration<double> elapsedTime;
+    std::chrono::duration<double,std::milli> elapsedTime;
     std::chrono::time_point<std::chrono::system_clock> start, now;
     start = std::chrono::system_clock::now();
 
@@ -50,11 +52,18 @@ namespace wallin
     double bestEstimatedCost = std::numeric_limits<double>::max();
     int    bestPosition;
 
+    int tour = 1;
+    int test = 1;
+
     do 
     {
       now = std::chrono::system_clock::now();
       elapsedTime = now - start;
       
+      std::cout << "Tour: " << tour++ << std::endl
+		<< "Elapsed time: " << elapsedTime.count() << std::endl
+		<< "Global cost: " << bestGlobalCost << std::endl;
+
       if( bestGlobalCost == std::numeric_limits<double>::max() )
       {
 	currentCost = 0.;
@@ -71,12 +80,14 @@ namespace wallin
       }
 
       // Update taboo list
-      std::for_each( tabooList.begin(), tabooList.end(), [](int v){ if(v) --v; } );
-
+      for( int i = 0; i < tabooList.size(); ++i )
+	if( tabooList[i] != 0 )
+	  --tabooList[i];
+      
       // Here, we look at neighbor configurations with the lowest cost.
       std::vector<double> worstBuildings;
       double worstVariableCost = 0;
-      for( int i = 0; i < variableCost.size(); i++ )
+      for( int i = 0; i < variableCost.size(); ++i )
       {
 	if( tabooList[i] == 0 )
 	{
@@ -94,16 +105,16 @@ namespace wallin
       
       // b is one of the most misplaced building.
       int worstBuildingId = worstBuildings[ randomVar.getRandNum( worstBuildings.size() ) ];
+
       // Building oldBuilding = *(mapBuildings[ worstBuildingId ]);
       std::shared_ptr<Building> oldBuilding = vecBuildings[ worstBuildingId ];
-      Building *newBuilding;
-      *newBuilding = *oldBuilding;
-      
+      decltype(*oldBuilding) newBuilding = *oldBuilding;
+
       // get possible positions for oldBuilding.
       std::set<int> possiblePositions = grid.possiblePos( *oldBuilding );
       for(auto pos : possiblePositions )
       {
-	newBuilding->setPos( pos );      
+	newBuilding.setPos( pos );      
 	estimatedCost = 0.;
 
 	// std::for_each( setConstraints.begin(), 
@@ -111,7 +122,7 @@ namespace wallin
 	// 	       [&](Constraint *c){ estimatedCost += c->simulateCost( *oldBuilding, newBuilding ); });
 
 	for( auto c : setConstraints )
-	  estimatedCost += c->simulateCost( *oldBuilding, *newBuilding );
+	  estimatedCost += c->simulateCost( *oldBuilding, newBuilding );
 
 	if( estimatedCost < bestEstimatedCost )
 	{
@@ -126,10 +137,15 @@ namespace wallin
       {
 	bestGlobalCost = bestEstimatedCost;
 	move( oldBuilding, bestPosition );
+
+	// std::cout << "Elapsed time: " << elapsedTime.count() << std::endl
+	// 	  << "Global cost: " << bestGlobalCost << std::endl
+	// 	  << "Grids:" << grid << std::endl;
       }
       else // local minima
       {
 	tabooList[ worstBuildingId ] = 5;
+	std::cout << worstBuildingId << " taboo" << std::endl;
       }
            
     } while( bestGlobalCost != 0. && elapsedTime.count() < timeout );
