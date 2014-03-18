@@ -22,16 +22,18 @@ namespace wallin
 	    const std::vector<std::shared_ptr<Building> >&, 
 	    const Grid& ) noexcept;
 
-    int solve( double );
+    double solve( double );
     
   private:
     void reset();
+    void move( std::shared_ptr<Building>, int );
 
     std::set<Constraint*> setConstraints;
     std::vector<std::shared_ptr<Building> > vecBuildings;
-    std::vector<int> variableCost;
+    std::vector<double> variableCost;
     Grid grid;
-    std::map<int, std::shared_ptr<Building> > mapBuildings;
+    // std::map<int, std::shared_ptr<Building> > mapBuildings;
+    std::vector<int> tabooList;
     Random randomVar;
   };
 }

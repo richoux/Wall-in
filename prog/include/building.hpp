@@ -13,11 +13,12 @@ namespace wallin
   public:
     // ctor with linear position 
     Building(int, int, int, int, int, int, string = "", int = 0) noexcept;
+    Building(const Building&) = default;
+    Building(Building&&) = default;
+    Building& operator=(const Building&) = default;
+    Building& operator=(Building&&) = default;
 
     virtual ~Building() = 0;
-
-    // no need of copy ctor and assignment operator
-    // get rid of the Rule of Three here!
 
     inline void setPos(int pos)		{ position = pos; }
     inline int getPosition()	const	{ return position; }

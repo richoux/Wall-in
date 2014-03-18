@@ -7,44 +7,56 @@ namespace wallin
 		  const Grid& grid )
     : setConstraints(setConstraints), 
       vecBuildings(vecBuildings), 
+      variableCost( std::vector<double>( vecBuildings.size, 0. ) ),
+      tabooList( std::vector<int>( vecBuildings.size, 0 ) ),
       grid(grid)
   { 
     reset();
 
-    for( auto b : vecBuildings )
-      mapBuildings[b->getId()] = b;
+    // for( auto b : vecBuildings )
+    //   mapBuildings[b->getId()] = b;
   }
 
-  void Random::reset()
+  void Solver::reset()
   {
     for( auto b : vecBuildings )
       b->setPos( grid.randomPos( *b ) );
     updateConstraints( setConstraints, grid );
   }
 
-  int Solver::solve( double timeout )
+  void Solver::move( std::shared_ptr<Building> building, int newPosition )
+  {
+    grid.clean( *building );
+    building->setPos( newPosition );
+    grid.add( *building );
+    updateConstraints( setConstraints, grid );
+  }
+
+  double Solver::solve( double timeout )
   {
     std::chrono::duration<double> elapsedTime;
     std::chrono::time_point<std::chrono::system_clock> start, now;
     start = std::chrono::system_clock::now();
 
-    double globalCost = std::numeric_limits<double>::max();
+    double bestGlobalCost = std::numeric_limits<double>::max();
     double currentCost;
     double estimatedCost;
-    double bestEstimatedCost;
+    double bestEstimatedCost = std::numeric_limits<double>::max();
+    int    bestPosition;
 
-    do {
+    do 
+    {
       now = std::chrono::system_clock::now();
       elapsedTime = now - start;
       
-      if( globalCost == std::numeric_limits<double>::max() )
+      if( bestGlobalCost == std::numeric_limits<double>::max() )
       {
 	currentCost = 0.;
 	for( auto c : setConstraints )
 	  currentCost += c->cost( variableCost );
 	
-	if( currentCost < globalCost )
-	  globalCost = currentCost;
+	if( currentCost < bestGlobalCost )
+	  bestGlobalCost = currentCost;
 	else
 	{
 	  reset();
@@ -52,36 +64,73 @@ namespace wallin
 	}
       }
 
+      // Update taboo list
+      std::for_each( tabooList.begin(), tabooList.end(), [](int v){ if(v) --v; } );
+
       // Here, we look at neighbor configurations with the lowest cost.
-      // var cost in double?
-      std::set<int> worstBuildings;
-      int worstVariableCost = 0;
+      std::set<double> worstBuildings;
+      double worstVariableCost = 0;
       for( int i = 0; i < variableCost.size(); i++ )
       {
-	if( worstVariableCost < variableCost[i] )
+	if( tabooList[i] == 0 )
 	{
-	  worstVariableCost = variableCost[i];
-	  worstBuildings.clear();
-	  worstBuildings.insert( i );
+	  if( worstVariableCost < variableCost[i] )
+	  {
+	    worstVariableCost = variableCost[i];
+	    worstBuildings.clear();
+	    worstBuildings.insert( i );
+	  }
+	  else 
+	    if( worstVariableCost == variableCost[i] )
+	      worstBuildings.insert( i );	  
 	}
-	else 
-	  if( worstVariableCost == variableCost[i] )
-	    worstBuildings.insert( i );	  
       }
       
       // b is one of the most misplaced building.
-      Building oldBuilding = mapBuildings[ worstBuildings[ randomVar.getRandNum( worstBuildings.size() ) ] ];
+      int worstBuildingId = worstBuildings[ randomVar.getRandNum( worstBuildings.size() ) ];
+      // Building oldBuilding = *(mapBuildings[ worstBuildingId ]);
+      std::shared_ptr<Building> oldBuilding = vecBuildings[ worstBuildingId ];
       Building newBuilding;
       
       // get possible positions for oldBuilding.
-      std::set<int> possiblePositions = grid.possiblePos( oldBuilding );
+      std::set<int> possiblePositions = grid.possiblePos( *oldBuilding );
       for(auto pos : possiblePositions )
       {
 	newBuilding.setPos( pos );      
-	
+	estimatedCost = 0.;
+
+	// std::for_each( setConstraints.begin(), 
+	// 	       setConstraints.end(), 
+	// 	       [&](Constraint *c){ estimatedCost += c->simulateCost( *oldBuilding, newBuilding ); });
+
+	for( auto c : setConstraints )
+	  estimatedCost += c->simulateCost( *oldBuilding, newBuilding );
+
+	if( estimatedCost < bestEstimatedCost )
+	{
+	  bestEstimatedCost = estimatedCost;
+	  bestPosition = pos;
+	}
       }
 
-      
-    } while( globalCost != 0. && elapsedTime.count() < timeout );
+      currentCost = bestEstimatedCost;
+
+      if( bestEstimatedCost < bestGlobalCost )
+      {
+	bestGlobalCost = bestEstimatedCost;
+	move( oldBuilding, bestPosition );
+      }
+      else // local minima
+      {
+	tabooList[ worstBuildingId ] = 5;
+      }
+           
+    } while( bestGlobalCost != 0. && elapsedTime.count() < timeout );
+
+    std::cout << "Elapsed time: " << elapsedTime.count() << std::endl
+	      << "Global cost: " << bestGlobalCost << std::endl
+	      << "Grids:" << grid << std::endl;
+
+    return bestGlobalCost;
   }
 }

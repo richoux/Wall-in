@@ -23,6 +23,10 @@ namespace wallin
   public:
     Grid( int, int, int, int, int, int ) noexcept;
     Grid( int, int, vector< pair<int, int> >, int, int, int, int ) noexcept;
+    Grid(const Grid&) = default;
+    Grid(Grid&&) = default;
+    Grid& operator=(const Grid&) = default;
+    Grid& operator=(Grid&&) = default;
     
 	   void add  ( Building& );
 	   void clear( Building& );

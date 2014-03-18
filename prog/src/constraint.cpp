@@ -15,7 +15,7 @@ namespace wallin
     grid.clear( oldBuilding );
     grid.add( newBuilding );
 
-    std::vector<int> fake;
+    std::vector<double> fake;
     double simCost = cost( fake );
 
     grid.clear( newBuilding );
@@ -43,7 +43,7 @@ namespace wallin
     : Constraint(variables, grid)
   { }
 
-  double Overlap::cost( std::vector<int>& varCost ) const
+  double Overlap::cost( std::vector<double>& varCost ) const
   {
     // version 1: 1 failure = 1 cost
     // return double( grid.failures().size() );
@@ -73,7 +73,7 @@ namespace wallin
     : Constraint(variables, grid)
   { }
 
-  double Buildable::cost( std::vector<int>& varCost ) const
+  double Buildable::cost( std::vector<double>& varCost ) const
   {
     // count number of buildings misplaced on unbuildable tiles (denoted by ###)
     double conflicts = 0.;
@@ -101,7 +101,7 @@ namespace wallin
     : Constraint(variables, grid)
   { }
 
-  double NoGaps::cost( std::vector<int>& varCost ) const
+  double NoGaps::cost( std::vector<double>& varCost ) const
   {
     // cost = |buildings with one neighbor| - 1 + |buildings with no neighbors|
     double conflicts = 0.;
@@ -141,7 +141,7 @@ namespace wallin
       mapBuildings[b->getId()] = b;
   }
 
-  double StartingTargetTiles::cost( std::vector<int>& varCost ) const
+  double StartingTargetTiles::cost( std::vector<double>& varCost ) const
   {
     // no building on one of these two tiles: cost of the tile = 3
     // a building with no or with 2 or more neighbors: cost of the tile = 1

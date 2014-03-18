@@ -20,6 +20,11 @@ namespace wallin
   {
   public:
     Random();
+    Random(const Random&) = default;
+    Random(Random&&) = default;
+    Random& operator=(const Random&) = default;
+    Random& operator=(Random&&) = default;
+
     inline int getRandNum( int limit ) const { return ( numbers(rng) % limit ); } 
   private:
     std::mt19937			rng;
