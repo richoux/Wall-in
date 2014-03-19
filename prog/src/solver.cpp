@@ -33,17 +33,17 @@ namespace wallin
 
 	grid.add( *b );
 
-	std::cout<< "r:" << r << std::endl;
-	std::cout << "Position for " 
-		  << b->getShort() 
-		  << "(" << b->getId() << "): " 
-		  << b->getPosition() 
-		  << " (" << xPos << "," << yPos << ")" << std::endl;      
+	// std::cout<< "r:" << r << std::endl;
+	// std::cout << "Position for " 
+	// 	  << b->getShort() 
+	// 	  << "(" << b->getId() << "): " 
+	// 	  << b->getPosition() 
+	// 	  << " (" << xPos << "," << yPos << ")" << std::endl;      
       }
       else
       {
 	b->setPos( -1 );
-	std::cout<< "r:" << r << std::endl;
+	// std::cout<< "r:" << r << std::endl;
       }
     }
     updateConstraints( setConstraints, grid );
@@ -170,7 +170,7 @@ namespace wallin
 	for( auto c : setConstraints )
 	  estimatedCost += c->simulateCost( *oldBuilding, pos, varSimCost );
 
-	std::cout << "Estimated cost on position " << pos << ": " << estimatedCost << std::endl;
+	// std::cout << "Estimated cost on position " << pos << ": " << estimatedCost << std::endl;
 
 	if( estimatedCost < bestEstimatedCost )
 	{
@@ -196,6 +196,10 @@ namespace wallin
 	tabooList[ worstBuildingId ] = 5;
            
     } while( bestGlobalCost != 0. && elapsedTime.count() < timeout );
+
+    std::cout << "Final costs:" << std::endl;
+    for( auto c : setConstraints )
+      c->cost( variableCost );
 
     std::cout << "Elapsed time: " << elapsedTime.count() << std::endl
 	      << "Global cost: " << bestGlobalCost << std::endl

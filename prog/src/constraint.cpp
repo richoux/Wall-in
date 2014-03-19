@@ -71,7 +71,7 @@ namespace wallin
       }
     }
 
-    //std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
+    std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
 
 
     return conflicts;    
@@ -102,7 +102,7 @@ namespace wallin
       }
     }
 
-    //std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
+    std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
 
     return conflicts;    
   }
@@ -142,7 +142,7 @@ namespace wallin
       }
     }
 
-    //std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
+    std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
 
     return conflicts;    
   }
@@ -172,7 +172,7 @@ namespace wallin
 
     if( startingBuildings.empty() )
     {
-      conflicts += 3;
+      conflicts += 6;
       
       // penalize buildings not placed on the grid
       for( auto v : variables )
@@ -186,8 +186,10 @@ namespace wallin
       {
 	b = mapBuildings.at(bId);
 	neighbors = grid.countAround( *b, variables );
-	
-	if (neighbors != 1)
+
+	std::cout << "Building " << bId << " has " << neighbors << " neighbors" << std::endl;
+
+	if( neighbors != 1 )
 	{
 	  ++conflicts;
 	  ++varCost[ bId ];
@@ -199,7 +201,7 @@ namespace wallin
 
     if( targetBuildings.empty() )
     {      
-      conflicts += 3;
+      conflicts += 6;
 
       // penalize buildings not placed on the grid
       for( auto v : variables )
@@ -213,8 +215,10 @@ namespace wallin
       {
 	b = mapBuildings.at(bId);
 	neighbors = grid.countAround( *b, variables );
+
+	std::cout << "Building " << bId << " has " << neighbors << " neighbors" << std::endl;
 	
-	if (neighbors != 1)
+	if( neighbors != 1 )
 	{
 	  ++conflicts;
 	  ++varCost[ bId ];
@@ -225,7 +229,7 @@ namespace wallin
       
     }
 
-    //std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
+    std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
     
     return conflicts;    
   }

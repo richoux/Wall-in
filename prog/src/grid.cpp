@@ -128,18 +128,18 @@ namespace wallin
 
       for(auto other : variables )
       {
-	if( other->getId() != b.getId() )
+	if( other->getId() != b.getId() && other->isOnGrid() )
 	{
 	  std::pair<int, int> xyOther = lin2mat( other->getPosition() );
 	  int otherTop = xyOther.first;
 	  int otherRight = xyOther.second + other->getLength() - 1;
 	  int otherBottom = xyOther.first + other->getHeight() - 1;
 	  int otherLeft = xyOther.second;
-	
+
 	  if(  ( top == otherBottom + 1 && ( otherRight >= left && otherLeft <= right ) )
-	       || ( right == otherLeft - 1 && ( otherBottom >= top - 1 && otherBottom <= bottom + 1 ) )
+	       || ( right == otherLeft - 1 && ( otherBottom >= top - 1 && otherTop <= bottom + 1 ) )
 	       || ( bottom == otherTop - 1 && ( otherRight >= left && otherLeft <= right ) )
-	       || ( left == otherRight + 1 && ( otherBottom >= top - 1 && otherBottom <= bottom + 1 ) ) )
+	       || ( left == otherRight + 1 && ( otherBottom >= top - 1 && otherTop <= bottom + 1 ) ) )
 	  {
 	    ++counter;
 	  }
