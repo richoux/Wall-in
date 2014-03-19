@@ -10,16 +10,22 @@ namespace wallin
   
   Constraint::~Constraint() { }
 
-  double Constraint::simulateCost( const Building& oldBuilding, const Building& newBuilding )
+  double Constraint::simulateCost( Building& oldBuilding, const int newPosition, std::vector<double>& varSimCost )
   {
+    int backup = oldBuilding.getPosition();
     grid.clear( oldBuilding );
-    grid.add( newBuilding );
 
-    std::vector<double> fake(variables.size(), 0.);
-    double simCost = cost( fake );
-
-    grid.clear( newBuilding );
+    oldBuilding.setPos( newPosition );
     grid.add( oldBuilding );
+
+    double simCost = cost( varSimCost );
+
+    grid.clear( oldBuilding );
+
+    oldBuilding.setPos( backup );
+    grid.add( oldBuilding );
+
+    //std::cout << "Constraint " << typeid(*this).name() << ", SIM = " << simCost << std::endl;
 
     return simCost;
   }
@@ -65,6 +71,9 @@ namespace wallin
       }
     }
 
+    //std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
+
+
     return conflicts;    
   }
 
@@ -93,6 +102,8 @@ namespace wallin
       }
     }
 
+    //std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
+
     return conflicts;    
   }
 
@@ -112,21 +123,26 @@ namespace wallin
 
     for( auto building : variables )
     {
-      nberNeighbors = grid.countAround( *building, variables );
-      if( nberNeighbors == 0 )
+      if( building->isOnGrid() )
       {
-	++conflicts;
-	++varCost[ building->getId() ];
-      }
-      else
-      {
-	if( nberNeighbors == 1 && oneNeighbor++ > 2 )
+	nberNeighbors = grid.countAround( *building, variables );
+	if( nberNeighbors == 0 )
 	{
 	  ++conflicts;
 	  ++varCost[ building->getId() ];
 	}
+	else
+	{
+	  if( nberNeighbors == 1 && oneNeighbor++ > 2 )
+	  {
+	    ++conflicts;
+	    ++varCost[ building->getId() ];
+	  }
+	}
       }
     }
+
+    //std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
 
     return conflicts;    
   }
@@ -155,7 +171,14 @@ namespace wallin
     int neighbors;
 
     if( startingBuildings.empty() )
+    {
       conflicts += 3;
+      
+      // penalize buildings not placed on the grid
+      for( auto v : variables )
+	if( !v->isOnGrid() )
+	  varCost[ v->getId() ] += 2;
+    }
     else
     {
       int penalty = 0;
@@ -175,7 +198,14 @@ namespace wallin
     }
 
     if( targetBuildings.empty() )
+    {      
       conflicts += 3;
+
+      // penalize buildings not placed on the grid
+      for( auto v : variables )
+	if( !v->isOnGrid() )
+	  varCost[ v->getId() ] += 2;
+    }
     else
     {
       int penalty = 0;
@@ -194,6 +224,8 @@ namespace wallin
       }
       
     }
+
+    //std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
     
     return conflicts;    
   }

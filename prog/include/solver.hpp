@@ -27,7 +27,7 @@ namespace wallin
     
   private:
     void reset();
-    void move( std::shared_ptr<Building>, int );
+    void move( std::shared_ptr<Building>&, int );
 
     std::set<Constraint*> setConstraints;
     std::vector<std::shared_ptr<Building> > vecBuildings;

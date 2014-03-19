@@ -21,7 +21,8 @@ namespace wallin
     virtual ~Building() = 0;
 
     inline void setPos(int pos)		{ position = pos; }
-    inline int getPosition()	const	{ return position; }
+    inline int  getPosition()	const	{ return position; }
+    inline bool isOnGrid()	const	{ return position != -1; }
 
     inline int    getId()	const	{ return id; }
     inline string getShort()	const	{ return shortname; }

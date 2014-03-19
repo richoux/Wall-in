@@ -25,7 +25,6 @@ int main(int argc, char **argv)
   };
 
   Grid grid( 6, 8, unbuildables, 5, 0, 0, 7 );
-  addAllInGrid( vec, grid );
 
   // b->setPos( grid.mat2lin(0, 0) );
   // f->setPos( grid.mat2lin(1, 3) );

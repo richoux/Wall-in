@@ -4,8 +4,6 @@ namespace wallin
 {
   Random::Random()
   {
-    std::ifstream f("/dev/urandom");
-    f.read(reinterpret_cast<char*>(&seed), sizeof(seed)); 
-    rng.seed(seed);
+    rng.seed( time(NULL) + getpid() + getppid() );
   }
 }

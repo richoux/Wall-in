@@ -1,7 +1,9 @@
 #pragma once
 
 #include <random>
-#include <fstream>
+#include <ctime>
+#include <sys/types.h>
+#include <unistd.h>
 
 namespace wallin
 {
@@ -17,8 +19,7 @@ namespace wallin
     inline int getRandNum( int limit ) { return ( numbers(rng) % limit ); } 
   private:
     std::mt19937			rng;
-    //std::random_device			rd;
-    unsigned int seed;
+    unsigned int			seed;
     std::uniform_int_distribution<int>  numbers;
   };
 }

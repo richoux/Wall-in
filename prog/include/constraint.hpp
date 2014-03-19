@@ -22,7 +22,7 @@ namespace wallin
     virtual ~Constraint();
 
     virtual double cost( std::vector<double>& ) const = 0;
-    virtual double simulateCost( const Building&, const Building& );
+    virtual double simulateCost( Building&, const int, std::vector<double>& );
 
     inline void update( const Grid& g ) { grid = g; }
 

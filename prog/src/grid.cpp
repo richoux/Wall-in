@@ -46,7 +46,7 @@ namespace wallin
 
   void Grid::add( const Building& building )
   {
-    if( building.getPosition() != -1 )
+    if( building.isOnGrid() )
     {
       pair<int, int> pos = lin2mat( building.getPosition() );
       int row = pos.first;
@@ -77,7 +77,7 @@ namespace wallin
   
   void Grid::clear( const Building& building )
   {
-    if( building.getPosition() != -1 )
+    if( building.isOnGrid() )
     {
       pair<int, int> pos = lin2mat( building.getPosition() );
       int row = pos.first;
@@ -105,7 +105,7 @@ namespace wallin
       
       if( it != failures_.end() )
       {
-	if( matrixType_[row][col].size() < 2 )
+	if( matrixType_[row][col].size() < 2 || matrixType_[row][col].compare("###") == 0 )
 	  failures_.erase( it );
 	else
 	  failures_.at( key ) = matrixType_[row][col];
@@ -115,7 +115,7 @@ namespace wallin
 
   int Grid::countAround( const Building& b, const std::vector< std::shared_ptr<Building> >& variables ) const
   {
-    if( b.getPosition() != -1 )
+    if( b.isOnGrid() )
     {
       std::pair<int, int> coordinates = lin2mat( b.getPosition() );
 
@@ -158,8 +158,8 @@ namespace wallin
 
     possiblePositions.insert( -1 );
 
-    for( int row = 0; row < nRow_ - b.getHeight(); ++row )
-      for( int col = 0; col < mCol_ - b.getLength(); ++col )
+    for( int row = 0; row <= nRow_ - b.getHeight(); ++row )
+      for( int col = 0; col <= mCol_ - b.getLength(); ++col )
       {
 	possiblePositions.insert( mat2lin(row, col) );
       }
