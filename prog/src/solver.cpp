@@ -27,8 +27,8 @@ namespace wallin
       int r = randomVar.getRandNum(3);
       if( r == 0)
       {
-	xPos = randomVar.getRandNum( grid.getNberCols() - b->getLength() );
-	yPos = randomVar.getRandNum( grid.getNberRows() - b->getHeight() );
+	xPos = randomVar.getRandNum( grid.getNberRows() - b->getLength() );
+	yPos = randomVar.getRandNum( grid.getNberCols() - b->getHeight() );
 	b->setPos( grid.mat2lin( xPos, yPos ) );
 
 	grid.add( *b );

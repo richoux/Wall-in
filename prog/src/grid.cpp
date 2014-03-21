@@ -51,7 +51,7 @@ namespace wallin
       pair<int, int> pos = lin2mat( building.getPosition() );
       int row = pos.first;
       int col = pos.second;
-      
+     
       for( int x = row; x < row + building.getHeight(); ++x )
 	for( int y = col; y < col + building.getLength(); ++y )
 	  add(x, y, building.getShort(), building.getId() );
