@@ -15,8 +15,6 @@ using namespace wallin;
 
 int main(int argc, char **argv)
 {
-  std::vector<std::shared_ptr<Building> > vec = makeTerranBuildings();
-
   std::vector< std::pair<int, int> > unbuildables 
   { 
     std::make_pair<int, int>(7, 12), 
@@ -55,16 +53,8 @@ int main(int argc, char **argv)
 
   Grid grid( 12, 16, unbuildables, 11, 7, 6, 15 );
 
-  Overlap overlap( vec, grid );
-  Buildable buildable( vec, grid );
-  NoGaps noGaps( vec, grid );
-  StartingTargetTiles specialTiles( vec, grid );
-  
-  std::set<Constraint*> setConstraints;
-  setConstraints.insert( &overlap );
-  setConstraints.insert( &buildable );
-  setConstraints.insert( &noGaps );  
-  setConstraints.insert( &specialTiles );  
+  std::vector<std::shared_ptr<Building> > vec	= makeTerranBuildings();
+  std::set< Constraint* > setConstraints	= makeTerranConstraints( vec, grid );
   
   Solver solver( setConstraints, vec, grid );
   solver.solve( 16 );    
