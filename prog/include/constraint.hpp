@@ -14,12 +14,12 @@ namespace wallin
   class Constraint
   {
   public:
-    Constraint( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
+    Constraint( const std::vector< std::shared_ptr<Building> >&, const Grid& );
     Constraint(const Constraint&) = default;
     Constraint(Constraint&&) = default;
     Constraint& operator=(const Constraint&) = default;
     Constraint& operator=(Constraint&&) = default;
-    virtual ~Constraint();
+    virtual ~Constraint() = default;
 
     virtual double cost( std::vector<double>& ) const = 0;
     virtual double simulateCost( Building&, const int, std::vector<double>& );
@@ -37,7 +37,7 @@ namespace wallin
   class Overlap : public Constraint
   {
   public:
-    Overlap( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
+    Overlap( const std::vector< std::shared_ptr<Building> >&, const Grid& );
     double cost( std::vector<double>& ) const;
   };
 
@@ -45,7 +45,7 @@ namespace wallin
   class Buildable : public Constraint
   {
   public:
-    Buildable( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
+    Buildable( const std::vector< std::shared_ptr<Building> >&, const Grid& );
     double cost( std::vector<double>& ) const;
   };
 
@@ -53,7 +53,7 @@ namespace wallin
   class NoGaps : public Constraint
   {
   public:
-    NoGaps( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
+    NoGaps( const std::vector< std::shared_ptr<Building> >&, const Grid& );
     double cost( std::vector<double>& ) const;
   };
 
@@ -61,7 +61,7 @@ namespace wallin
   class StartingTargetTiles : public Constraint
   {
   public:
-    StartingTargetTiles( const std::vector< std::shared_ptr<Building> >&, const Grid& ) noexcept;
+    StartingTargetTiles( const std::vector< std::shared_ptr<Building> >&, const Grid& );
     double cost( std::vector<double>& ) const;
   private:
     std::map<int, std::shared_ptr<Building> > mapBuildings;

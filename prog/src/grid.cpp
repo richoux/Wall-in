@@ -2,7 +2,7 @@
 
 namespace wallin
 {
-  Grid::Grid( int row, int col, int sRow, int sCol, int tRow, int tCol ) noexcept
+  Grid::Grid( int row, int col, int sRow, int sCol, int tRow, int tCol ) 
     : nRow_(row),
       mCol_(col),
       matrixType_(vector< vector<string> >(nRow_, vector<string>(mCol_, "") ) ),
@@ -14,35 +14,12 @@ namespace wallin
     matrixType_[tRow][tCol] += "@t";
   }
 
-  Grid::Grid( int row, int col, const vector< pair<int, int> >& unbuildables, int sRow, int sCol, int tRow, int tCol ) noexcept
+  Grid::Grid( int row, int col, const vector< pair<int, int> >& unbuildables, int sRow, int sCol, int tRow, int tCol ) 
     : Grid( row, col, sRow, sCol, tRow, tCol )
   {
     for( auto u : unbuildables )
       matrixType_[u.first][u.second].assign(3, '#');
   }
-
-  // Grid::Grid( const Grid& other )
-  //   : nRow_(other.nRow_),
-  //     mCol_(other.mCol_),
-  //     matrixType_(other.matrixType_),
-  //     matrixId_(other.matrixId_),
-  //     startingTile(other.startingTile),
-  //     targetTile(other.targetTile),
-  //     failures_(other.failures_)
-  // { }
-
-  // Grid& Grid::operator=(Grid other)
-  // {
-  //   std::swap(this->nRow_, other.nRow_);
-  //   std::swap(this->mCol_, other.mCol_);
-  //   std::swap(this->matrixType_, other.matrixType_);
-  //   std::swap(this->matrixId_, other.matrixId_);
-  //   std::swap(this->startingTile, other.startingTile);
-  //   std::swap(this->targetTile, other.targetTile);
-  //   std::swap(this->failures_, other.failures_);
-
-  //   return *this;
-  // }
 
   void Grid::add( const Building& building )
   {

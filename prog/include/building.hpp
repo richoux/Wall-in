@@ -11,13 +11,12 @@ namespace wallin
   class Building
   {
   public:
-    // ctor with linear position 
-    Building(int, int, int, int, int, int, string = "", int = 0) noexcept;
+    Building(int, int, int, int, int, int, string = "", int = 0);
     Building(const Building&) = default;
-    Building(Building&&) = default;
+    Building(Building&&) noexcept = default;
     Building& operator=(const Building&) = default;
     Building& operator=(Building&&) = default;
-
+    
     virtual ~Building() = 0;
 
     inline void setPos(int pos)		{ position = pos; }

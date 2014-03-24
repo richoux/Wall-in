@@ -19,20 +19,41 @@ int main(int argc, char **argv)
 
   std::vector< std::pair<int, int> > unbuildables 
   { 
-    std::make_pair<int, int>(5, 5), 
-    std::make_pair<int, int>(5, 6), 
-    std::make_pair<int, int>(5, 7) 
+    std::make_pair<int, int>(7, 12), 
+    std::make_pair<int, int>(7, 13), 
+    std::make_pair<int, int>(7, 14), 
+    std::make_pair<int, int>(7, 15), 
+    std::make_pair<int, int>(8, 10), 
+    std::make_pair<int, int>(8, 11), 
+    std::make_pair<int, int>(8, 12), 
+    std::make_pair<int, int>(8, 13), 
+    std::make_pair<int, int>(8, 14), 
+    std::make_pair<int, int>(8, 15), 
+    std::make_pair<int, int>(9, 10), 
+    std::make_pair<int, int>(9, 11), 
+    std::make_pair<int, int>(9, 12), 
+    std::make_pair<int, int>(9, 13), 
+    std::make_pair<int, int>(9, 14), 
+    std::make_pair<int, int>(9, 15), 
+    std::make_pair<int, int>(10, 8), 
+    std::make_pair<int, int>(10, 9), 
+    std::make_pair<int, int>(10, 10), 
+    std::make_pair<int, int>(10, 11), 
+    std::make_pair<int, int>(10, 12), 
+    std::make_pair<int, int>(10, 13), 
+    std::make_pair<int, int>(10, 14), 
+    std::make_pair<int, int>(10, 15), 
+    std::make_pair<int, int>(11, 8), 
+    std::make_pair<int, int>(11, 9), 
+    std::make_pair<int, int>(11, 10), 
+    std::make_pair<int, int>(11, 11), 
+    std::make_pair<int, int>(11, 12), 
+    std::make_pair<int, int>(11, 13), 
+    std::make_pair<int, int>(11, 14), 
+    std::make_pair<int, int>(11, 15) 
   };
 
-  Grid grid( 6, 8, unbuildables, 5, 0, 0, 7 );
-
-  // b->setPos( grid.mat2lin(0, 0) );
-  // f->setPos( grid.mat2lin(1, 3) );
-  // s1->setPos( grid.mat2lin(2, 1) );
-
-  // grid.add( *b );
-  // grid.add( *f );
-  // grid.add( *s1 );
+  Grid grid( 12, 16, unbuildables, 11, 7, 6, 15 );
 
   Overlap overlap( vec, grid );
   Buildable buildable( vec, grid );
@@ -45,27 +66,6 @@ int main(int argc, char **argv)
   setConstraints.insert( &noGaps );  
   setConstraints.insert( &specialTiles );  
   
-  //printConstraints( setConstraints );
-
-  // grid.clear( *s1 );
-  // updateConstraints( setConstraints, grid );
-  // printConstraints( setConstraints );
-  
-  // s1->setPos( grid.mat2lin(4, 5) );
-  // grid.add( *s1 );
-  // updateConstraints( setConstraints, grid );
-  // printConstraints( setConstraints );
-  
-  // grid.clear( *f );
-  // grid.clear( *s1 );
-  // f->setPos( grid.mat2lin(1, 4) );
-  // s1->setPos( grid.mat2lin(4, 0) );
-  // grid.add( *f );
-  // grid.add( *s1 );
-  // updateConstraints( setConstraints, grid );
-  // printConstraints( setConstraints );
-
-  std::unique_ptr<Solver> solver(new Solver( setConstraints, vec, grid ) );
-  solver->solve( 1000 );
-    
+  Solver solver( setConstraints, vec, grid );
+  solver.solve( 1000 );    
 }

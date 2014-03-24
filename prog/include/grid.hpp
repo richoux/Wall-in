@@ -22,14 +22,14 @@ namespace wallin
   class Grid
   {
   public:
-    Grid( int, int, int, int, int, int ) noexcept;
-    Grid( int, int, const vector< pair<int, int> >&, int, int, int, int ) noexcept;
+    Grid( int, int, int, int, int, int ) ;
+    Grid( int, int, const vector< pair<int, int> >&, int, int, int, int ) ;
     Grid(const Grid&) = default;
     Grid(Grid&&) = default;
-    //Grid& operator=(Grid);
     Grid& operator=(const Grid&) = default;
     Grid& operator=(Grid&&) = default;
-    
+    ~Grid() = default;
+
 	   void add  ( const Building& );
 	   void clear( const Building& );
   

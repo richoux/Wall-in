@@ -11,7 +11,7 @@ namespace wallin
 		     int bottom, 
 		     int left, 
 		     std::string shortname, 
-		     int position) noexcept
+		     int position)
     : length(x),
       height(y),
       gapTop(top), 

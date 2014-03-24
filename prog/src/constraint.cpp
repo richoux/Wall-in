@@ -3,13 +3,11 @@
 namespace wallin
 {
   
-  Constraint::Constraint(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) noexcept
+  Constraint::Constraint(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) 
   : variables( variables ),
     grid( grid )
   { }
   
-  Constraint::~Constraint() { }
-
   double Constraint::simulateCost( Building& oldBuilding, const int newPosition, std::vector<double>& varSimCost )
   {
     int backup = oldBuilding.getPosition();
@@ -24,8 +22,6 @@ namespace wallin
 
     oldBuilding.setPos( backup );
     grid.add( oldBuilding );
-
-    //std::cout << "Constraint " << typeid(*this).name() << ", SIM = " << simCost << std::endl;
 
     return simCost;
   }
@@ -47,7 +43,7 @@ namespace wallin
   /***********/
   /* Overlap */
   /***********/
-  Overlap::Overlap(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) noexcept
+  Overlap::Overlap(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) 
     : Constraint(variables, grid)
   { }
 
@@ -71,16 +67,13 @@ namespace wallin
       }
     }
 
-    std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
-
-
     return conflicts;    
   }
 
   /*************/
   /* Buildable */
   /*************/
-  Buildable::Buildable(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) noexcept
+  Buildable::Buildable(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) 
     : Constraint(variables, grid)
   { }
 
@@ -102,15 +95,13 @@ namespace wallin
       }
     }
 
-    std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
-
     return conflicts;    
   }
 
   /**********/
   /* NoGaps */
   /**********/
-  NoGaps::NoGaps(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) noexcept
+  NoGaps::NoGaps(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) 
     : Constraint(variables, grid)
   { }
 
@@ -126,6 +117,7 @@ namespace wallin
       if( building->isOnGrid() )
       {
 	nberNeighbors = grid.countAround( *building, variables );
+
 	if( nberNeighbors == 0 )
 	{
 	  ++conflicts;
@@ -133,7 +125,7 @@ namespace wallin
 	}
 	else
 	{
-	  if( nberNeighbors == 1 && oneNeighbor++ > 2 )
+	  if( nberNeighbors == 1 && ++oneNeighbor > 2 )
 	  {
 	    ++conflicts;
 	    ++varCost[ building->getId() ];
@@ -142,15 +134,13 @@ namespace wallin
       }
     }
 
-    std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
-
     return conflicts;    
   }
 
   /***********************/
   /* StartingTargetTiles */
   /***********************/
-  StartingTargetTiles::StartingTargetTiles(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) noexcept
+  StartingTargetTiles::StartingTargetTiles(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) 
     : Constraint(variables, grid)
   {
     for( auto b : variables )
@@ -187,8 +177,6 @@ namespace wallin
 	b = mapBuildings.at(bId);
 	neighbors = grid.countAround( *b, variables );
 
-	std::cout << "Building " << bId << " has " << neighbors << " neighbors" << std::endl;
-
 	if( neighbors != 1 )
 	{
 	  ++conflicts;
@@ -216,8 +204,6 @@ namespace wallin
 	b = mapBuildings.at(bId);
 	neighbors = grid.countAround( *b, variables );
 
-	std::cout << "Building " << bId << " has " << neighbors << " neighbors" << std::endl;
-	
 	if( neighbors != 1 )
 	{
 	  ++conflicts;
@@ -229,8 +215,6 @@ namespace wallin
       
     }
 
-    std::cout << "Constraint " << typeid(*this).name() << ", cost = " << conflicts << std::endl;
-    
     return conflicts;    
   }
 

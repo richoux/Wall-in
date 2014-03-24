@@ -22,6 +22,11 @@ namespace wallin
     Solver( const std::set<Constraint*>&, 
 	    const std::vector<std::shared_ptr<Building> >&, 
 	    const Grid& );
+    Solver(const Solver&) = default;
+    Solver(Solver&&) = default;
+    Solver& operator=(const Solver&) = default;
+    Solver& operator=(Solver&&) = default;
+    ~Solver() = default;
 
     double solve( double );
     
@@ -33,7 +38,6 @@ namespace wallin
     std::vector<std::shared_ptr<Building> > vecBuildings;
     std::vector<double> variableCost;
     Grid grid;
-    // std::map<int, std::shared_ptr<Building> > mapBuildings;
     std::vector<int> tabooList;
     Random randomVar;
   };
