@@ -2,7 +2,7 @@
 
 def usage
   puts "#{$0}"
-  puts  "Usage: " + $0 + " FILE"
+  puts  "Usage: " + $0 + " FILE [LIMIT]"
 end
 
 # We must have at least a file name
@@ -10,6 +10,12 @@ if ARGV.length == 0
   usage
   exit
 end
+
+limit = 100
+if ARGV.size == 2
+  limit = ARGV[1].to_i
+end
+
 
 # Open file
 file = File.open(ARGV[0])
@@ -20,7 +26,7 @@ count = 0
 # For each line in file
 file.each do |line|
   words = line.split(': ')
-  if words[1].to_f < 1000
+  if words[1].to_f < limit
     times.push( words[1].to_f )
   else
     count += 1

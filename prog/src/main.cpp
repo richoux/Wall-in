@@ -57,5 +57,5 @@ int main(int argc, char **argv)
   std::set< Constraint* > setConstraints	= makeTerranConstraints( vec, grid );
   
   Solver solver( setConstraints, vec, grid );
-  solver.solve( 16 );    
+  solver.solve( 20 );    
 }
