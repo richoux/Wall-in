@@ -149,8 +149,8 @@ namespace wallin
 
   double StartingTargetTiles::cost( std::vector<double>& varCost ) const
   {
-    // no building on one of these two tiles: cost of the tile = 3
-    // a building with no or with 2 or more neighbors: cost of the tile = 1
+    // no building on one of these two tiles: cost of the tile = 6
+    // a building with no or with 2 or more neighbors: cost of the tile = 3
     // two or more buildings on one of these tile: increasing penalties.
     double conflicts = 0.;
 
@@ -179,8 +179,8 @@ namespace wallin
 
 	if( neighbors != 1 )
 	{
-	  ++conflicts;
-	  ++varCost[ bId ];
+	  conflicts += 3;
+	  varCost[ bId ] += 2;
 	}
 
 	conflicts += penalty++;
@@ -206,8 +206,8 @@ namespace wallin
 
 	if( neighbors != 1 )
 	{
-	  ++conflicts;
-	  ++varCost[ bId ];
+	  conflicts += 3;
+	  varCost[ bId ] += 2;
 	}
 
 	conflicts += penalty++;	

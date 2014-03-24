@@ -144,6 +144,12 @@ namespace wallin
     return possiblePositions;
   }
 
+  int	Grid::distanceTo( int source, std::pair<int, int> target ) const
+  {
+    std::pair<int, int> sourcePair = lin2mat( source );
+    return abs( target.first - sourcePair.first ) + abs( target.second - sourcePair.second );
+  }
+
   void Grid::unbuildable( vector< pair<int, int> > unbuildables )
   {
     for( auto u : unbuildables )
@@ -154,23 +160,12 @@ namespace wallin
   {
     os << "#rows: " <<  g.nRow_ << endl
        << "#columns: " <<  g.mCol_ << endl
-       << "Matrix Type:" << endl;
+       << "Matrix Id:" << endl;
 
     string bar = "";
     for( int i=0; i<g.matrixType_[0].size(); ++i )
       bar += "------";
 
-    for( auto vec : g.matrixType_ )
-    {
-      os << bar << endl << "| ";
-      for(auto str : vec )
-	os << setw(3) << (str.empty() ? " " : str) << " | ";
-
-      os << endl;
-    }
-    os << bar << endl << endl;
-
-    os << "Matrix Id:" << endl;
     for( auto vec : g.matrixId_ )
     {
       os << bar << endl << "| ";
@@ -186,6 +181,17 @@ namespace wallin
 	  os << setw(3) << oss.str() << " | ";
 	}
       }
+      os << endl;
+    }
+    os << bar << endl << endl;
+
+    os << "Matrix Type:" << endl;
+    for( auto vec : g.matrixType_ )
+    {
+      os << bar << endl << "| ";
+      for(auto str : vec )
+	os << setw(3) << (str.empty() ? " " : str) << " | ";
+
       os << endl;
     }
     os << bar << endl;

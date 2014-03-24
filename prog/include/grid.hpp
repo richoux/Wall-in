@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <memory>
 #include <algorithm>
+#include <cstdlib>
 
 #include "building.hpp"
 #include "random.hpp"
@@ -36,6 +37,9 @@ namespace wallin
 	   int	    countAround ( const Building &, const std::vector< std::shared_ptr<Building> >& ) const;
 	   int	    randomPos   ( const Building& );
            set<int> possiblePos ( const Building& ) const;
+           int	    distanceTo  ( int, std::pair<int, int> ) const;
+    inline int	    distanceTo  ( int source, int target ) const { return distanceTo( source, lin2mat( target ) ); }
+    inline int	    distanceToTarget( int source ) const { return distanceTo( source, targetTile ); }
 	   void	    unbuildable ( vector< pair<int, int> > );
     inline void	    unbuildable ( int row, int col ) { matrixType_[row][col].assign(3, '#'); }
 
