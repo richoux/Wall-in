@@ -67,5 +67,5 @@ int main(int argc, char **argv)
   setConstraints.insert( &specialTiles );  
   
   Solver solver( setConstraints, vec, grid );
-  solver.solve( 1000 );    
+  solver.solve( 16 );    
 }
