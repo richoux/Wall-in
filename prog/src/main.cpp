@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <set>
 
+#include <type_traits>
+
 #include "../include/building.hpp"
 #include "../include/constraint.hpp"
 #include "../include/grid.hpp"
@@ -50,12 +52,21 @@ int main(int argc, char **argv)
     std::make_pair<int, int>(11, 14), 
     std::make_pair<int, int>(11, 15) 
   };
-
+  
   Grid grid( 12, 16, unbuildables, 11, 7, 6, 15 );
 
   std::vector<std::shared_ptr<Building> > vec	= makeTerranBuildings();
   std::set< Constraint* > setConstraints	= makeTerranConstraints( vec, grid );
-  
+
   Solver solver( setConstraints, vec, grid );
   solver.solve( 20 );    
+
+  // std::cout << std::boolalpha << "Building movable: " << std::is_nothrow_move_constructible<Building>::value << std::endl;
+  // std::cout << std::boolalpha << "Barracks movable: " << std::is_nothrow_move_constructible<Barracks>::value << std::endl;
+  // std::cout << std::boolalpha << "Grid movable: " << std::is_nothrow_move_constructible<Grid>::value << std::endl;
+  // std::cout << std::boolalpha << "Solver movable: " << std::is_nothrow_move_constructible<Solver>::value << std::endl;
+  // std::cout << std::boolalpha << "Random movable: " << std::is_nothrow_move_constructible<Random>::value << std::endl;
+  // std::cout << std::boolalpha << "Constraint movable: " << std::is_nothrow_move_constructible<Constraint>::value << std::endl;
+  // std::cout << std::boolalpha << "NoGaps movable: " << std::is_nothrow_move_constructible<NoGaps>::value << std::endl;
+  // std::cout << std::boolalpha << "StartingTargetTiles movable: " << std::is_nothrow_move_constructible<StartingTargetTiles>::value << std::endl;
 }

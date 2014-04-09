@@ -15,11 +15,11 @@ namespace wallin
   {
   public:
     Constraint( const std::vector< std::shared_ptr<Building> >&, const Grid& );
-    Constraint(const Constraint&) = default;
-    Constraint(Constraint&&) = default;
-    Constraint& operator=(const Constraint&) = default;
-    Constraint& operator=(Constraint&&) = default;
-    virtual ~Constraint() = default;
+    // Constraint(const Constraint&) = default;
+    // Constraint(Constraint&&) = default;
+    // Constraint& operator=(const Constraint&) = default;
+    // Constraint& operator=(Constraint&&) = default;
+    // virtual ~Constraint() = default;
 
     virtual double cost( std::vector<double>& ) const = 0;
     virtual double simulateCost( Building&, const int, std::vector<double>& );

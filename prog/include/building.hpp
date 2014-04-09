@@ -13,10 +13,10 @@ namespace wallin
   public:
     Building(int, int, int, int, int, int, string = "", int = 0);
     Building(const Building&) = default;
-    Building(Building&&) noexcept = default;
+    Building(Building&&) = default;
     Building& operator=(const Building&) = default;
     Building& operator=(Building&&) = default;
-    
+
     virtual ~Building() = 0;
 
     inline void setPos(int pos)		{ position = pos; }
