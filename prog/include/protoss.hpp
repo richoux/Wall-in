@@ -7,6 +7,8 @@
 #include "constraint.hpp"
 #include "grid.hpp"
 
+using namespace std;
+
 namespace wallin
 {
 
@@ -22,11 +24,11 @@ namespace wallin
   std::shared_ptr<Building> y4;
   std::shared_ptr<Building> s;
 
-  std::unique_ptr<Overlap> overlap;
-  std::unique_ptr<Buildable> buildable;
-  std::unique_ptr<NoGaps> noGaps;
-  std::unique_ptr<StartingTargetTiles> specialTiles;
-  std::unique_ptr<Pylons> pylons;
+  shared_ptr<Constraint> overlap;
+  shared_ptr<Constraint> buildable;
+  shared_ptr<Constraint> noGaps;
+  shared_ptr<Constraint> specialTiles;
+  shared_ptr<Constraint> pylons;
 
   std::vector<std::shared_ptr<Building> > makeProtossBuildings()
   {
@@ -48,19 +50,13 @@ namespace wallin
 
   std::set< Constraint* > makeProtossConstraints( const std::vector<std::shared_ptr<Building> >& vec, const Grid& grid )
   {
-    overlap.reset( new Overlap( vec, grid ) );
-    buildable.reset( new Buildable( vec, grid ) );
-    noGaps.reset( new NoGaps( vec, grid ) );
-    specialTiles.reset( new StartingTargetTiles( vec, grid ) );
-    pylons.reset( new Pylons( vec, grid ) );
+    overlap	 = make_shared<Overlap>( vec, grid );
+    buildable	 = make_shared<Buildable>( vec, grid );
+    noGaps	 = make_shared<NoGaps>( vec, grid );
+    specialTiles = make_shared<StartingTargetTiles>( vec, grid );
+    pylons	 = make_shared<Pylons>( vec, grid );
     
-    std::set< Constraint* > setConstraints;
-    setConstraints.insert( overlap.get() );
-    setConstraints.insert( buildable.get() );
-    setConstraints.insert( noGaps.get() );  
-    setConstraints.insert( specialTiles.get() );  
-    setConstraints.insert( pylons.get() );  
-
+    set< shared_ptr<Constraint> > setConstraints {overlap, buildable, noGaps, specialTiles, pylons};
     return setConstraints;
   }
 }
