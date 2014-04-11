@@ -11,7 +11,7 @@
 
 namespace wallin
 {
-  void updateConstraints( const std::set< Constraint* >&, const Grid& );
-  void printConstraints( const std::set< Constraint* >& );
+  void updateConstraints( const std::set< shared_ptr<Constraint> >&, const Grid& );
+  void printConstraints( const std::set< shared_ptr<Constraint> >& );
   void addAllInGrid( const std::vector<std::shared_ptr<Building> >&, Grid& );
 }

@@ -19,7 +19,7 @@ namespace wallin
   class Solver
   {
   public:
-    Solver( const std::set<Constraint*>&, 
+    Solver( const std::set< shared_ptr<Constraint> >&, 
 	    const std::vector<std::shared_ptr<Building> >&, 
 	    const Grid& );
     Solver(const Solver&) = default;
@@ -34,7 +34,7 @@ namespace wallin
     void reset();
     void move( std::shared_ptr<Building>&, int );
 
-    std::set<Constraint*> setConstraints;
+    std::set< shared_ptr<Constraint> > setConstraints;
     std::vector<std::shared_ptr<Building> > vecBuildings;
     std::vector<double> variableCost;
     Grid grid;

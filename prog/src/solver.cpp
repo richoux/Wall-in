@@ -2,7 +2,7 @@
 
 namespace wallin
 {
-  Solver::Solver( const std::set<Constraint*>& setConstraints, 
+  Solver::Solver( const std::set< shared_ptr<Constraint> >& setConstraints, 
 		  const std::vector<std::shared_ptr<Building> >& vecBuildings, 
 		  const Grid& grid )
     : setConstraints(setConstraints), 
