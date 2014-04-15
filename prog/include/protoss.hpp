@@ -48,7 +48,7 @@ namespace wallin
     return vec;
   }
 
-  std::set< Constraint* > makeProtossConstraints( const std::vector<std::shared_ptr<Building> >& vec, const Grid& grid )
+  vector::set< Constraint* > makeProtossConstraints( const std::vector<std::shared_ptr<Building> >& vec, const Grid& grid )
   {
     overlap	 = make_shared<Overlap>( vec, grid );
     buildable	 = make_shared<Buildable>( vec, grid );
@@ -56,7 +56,7 @@ namespace wallin
     specialTiles = make_shared<StartingTargetTiles>( vec, grid );
     pylons	 = make_shared<Pylons>( vec, grid );
     
-    set< shared_ptr<Constraint> > setConstraints {overlap, buildable, noGaps, specialTiles, pylons};
+    vector< shared_ptr<Constraint> > setConstraints {overlap, buildable, noGaps, specialTiles, pylons};
     return setConstraints;
   }
 }

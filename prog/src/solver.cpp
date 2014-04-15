@@ -2,7 +2,7 @@
 
 namespace wallin
 {
-  Solver::Solver( const std::set< shared_ptr<Constraint> >& setConstraints, 
+  Solver::Solver( const std::vector< shared_ptr<Constraint> >& setConstraints, 
 		  const std::vector<std::shared_ptr<Building> >& vecBuildings, 
 		  const Grid& grid )
     : setConstraints(setConstraints), 
@@ -50,6 +50,11 @@ namespace wallin
     std::chrono::time_point<std::chrono::system_clock> start, now;
     start = std::chrono::system_clock::now();
 
+    // to time simulateCost and cost functions
+    std::chrono::duration<double,std::milli> timeSimCost(0);
+    std::chrono::duration<double,std::milli> timeCost(0);
+    std::chrono::time_point<std::chrono::system_clock> startSimCost, startCost;
+ 
     double bestGlobalCost = std::numeric_limits<double>::max();
     double currentCost;
     double estimatedCost;
@@ -61,7 +66,7 @@ namespace wallin
     int worstBuildingId;
 
     std::shared_ptr<Building> oldBuilding;
-    std::set<int> possiblePositions;
+    std::vector<int> possiblePositions;
     std::vector<double> varSimCost( std::vector<double>( vecBuildings.size(), 0. ) );
     std::vector<double> bestSimCost( std::vector<double>( vecBuildings.size(), 0. ) );
 
@@ -75,8 +80,14 @@ namespace wallin
       if( bestGlobalCost == std::numeric_limits<double>::max() )
       {
 	currentCost = 0.;
+
+	// time costs
+	//startCost = std::chrono::system_clock::now();
+	
 	for( auto c : setConstraints )
 	  currentCost += c->cost( variableCost );
+
+	//timeCost = std::chrono::system_clock::now() - startCost;
 	
 	if( currentCost < bestGlobalCost )
 	  bestGlobalCost = currentCost;
@@ -127,8 +138,13 @@ namespace wallin
 	estimatedCost = 0.;
 	std::fill( varSimCost.begin(), varSimCost.end(), 0. );
       
+	// time simulateCost
+	//startSimCost = std::chrono::system_clock::now();
+
 	for( auto c : setConstraints )
 	  estimatedCost += c->simulateCost( *oldBuilding, pos, varSimCost );
+
+	//timeSimCost += std::chrono::system_clock::now() - startSimCost;
 
 	if( estimatedCost < bestEstimatedCost 
 	    || ( estimatedCost == bestEstimatedCost //heuristics: better to take pos=-1 or the nearest position from the target tile. 
@@ -183,6 +199,8 @@ namespace wallin
 
     std::cout << "Grids:" << grid << std::endl
 	      << "Elapsed time: " << elapsedTime.count() << std::endl
+      //<< "Elapsed time to simulate cost: " << timeSimCost.count() << std::endl
+      //<< "Elapsed time to cost: " << timeCost.count() << std::endl
 	      << "Global cost: " << bestGlobalCost << std::endl;
 
     return bestGlobalCost;

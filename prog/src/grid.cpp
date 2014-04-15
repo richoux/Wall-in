@@ -129,16 +129,16 @@ namespace wallin
       return 0;
   }
 
-  set<int> Grid::possiblePos( const Building& b ) const
+  vector<int> Grid::possiblePos( const Building& b ) const
   {
-    set<int> possiblePositions;
+    vector<int> possiblePositions;
 
-    possiblePositions.insert( -1 );
+    possiblePositions.push_back( -1 );
 
     for( int row = 0; row <= nRow_ - b.getHeight(); ++row )
       for( int col = 0; col <= mCol_ - b.getLength(); ++col )
       {
-	possiblePositions.insert( mat2lin(row, col) );
+	possiblePositions.push_back( mat2lin(row, col) );
       }
 
     return possiblePositions;

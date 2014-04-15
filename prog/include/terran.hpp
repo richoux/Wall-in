@@ -43,14 +43,14 @@ namespace wallin
     return vec;
   }
 
-  set< shared_ptr<Constraint> > makeTerranConstraints( const vector<shared_ptr<Building> >& vec, const Grid& grid )
+  vector< shared_ptr<Constraint> > makeTerranConstraints( const vector<shared_ptr<Building> >& vec, const Grid& grid )
   {
     overlap	 = make_shared<Overlap>( vec, grid );
     buildable	 = make_shared<Buildable>( vec, grid );
     noGaps	 = make_shared<NoGaps>( vec, grid );
     specialTiles = make_shared<StartingTargetTiles>( vec, grid );
     
-    set< shared_ptr<Constraint> > setConstraints {overlap, buildable, noGaps, specialTiles};
+    vector< shared_ptr<Constraint> > setConstraints {overlap, buildable, noGaps, specialTiles};
     return setConstraints;
   }
 }

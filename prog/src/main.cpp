@@ -2,7 +2,7 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
-#include <set>
+//#include <set>
 
 #include <type_traits>
 
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
   Grid grid( 12, 16, unbuildables, 11, 7, 6, 15 );
 
   std::vector<std::shared_ptr<Building> > vec			= makeTerranBuildings();
-  std::set< std::shared_ptr<Constraint> > setConstraints	= makeTerranConstraints( vec, grid );
+  std::vector< std::shared_ptr<Constraint> > setConstraints	= makeTerranConstraints( vec, grid );
 
   Solver solver( setConstraints, vec, grid );
   solver.solve( 20 );    
