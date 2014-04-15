@@ -56,7 +56,7 @@ namespace wallin
     specialTiles = make_shared<StartingTargetTiles>( vec, grid );
     pylons	 = make_shared<Pylons>( vec, grid );
     
-    vector< shared_ptr<Constraint> > setConstraints {overlap, buildable, noGaps, specialTiles, pylons};
-    return setConstraints;
+    vector< shared_ptr<Constraint> > vecConstraints {overlap, buildable, noGaps, specialTiles, pylons};
+    return vecConstraints;
   }
 }

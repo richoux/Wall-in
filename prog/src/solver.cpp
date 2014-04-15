@@ -2,10 +2,10 @@
 
 namespace wallin
 {
-  Solver::Solver( const std::vector< shared_ptr<Constraint> >& setConstraints, 
+  Solver::Solver( const std::vector< shared_ptr<Constraint> >& vecConstraints, 
 		  const std::vector<std::shared_ptr<Building> >& vecBuildings, 
 		  const Grid& grid )
-    : setConstraints(setConstraints), 
+    : vecConstraints(vecConstraints), 
       vecBuildings(vecBuildings), 
       variableCost( std::vector<double>( vecBuildings.size(), 0. ) ),
       grid(grid),
@@ -33,7 +33,7 @@ namespace wallin
       else
 	b->setPos( -1 );
     }
-    updateConstraints( setConstraints, grid );
+    updateConstraints( vecConstraints, grid );
   }
 
   void Solver::move( std::shared_ptr<Building>& building, int newPosition )
@@ -41,7 +41,7 @@ namespace wallin
     grid.clear( *building );
     building->setPos( newPosition );
     grid.add( *building );
-    updateConstraints( setConstraints, grid );
+    updateConstraints( vecConstraints, grid );
   }
 
   double Solver::solve( double timeout )
@@ -84,7 +84,7 @@ namespace wallin
 	// time costs
 	//startCost = std::chrono::system_clock::now();
 	
-	for( auto c : setConstraints )
+	for( auto c : vecConstraints )
 	  currentCost += c->cost( variableCost );
 
 	//timeCost = std::chrono::system_clock::now() - startCost;
@@ -141,7 +141,7 @@ namespace wallin
 	// time simulateCost
 	//startSimCost = std::chrono::system_clock::now();
 
-	for( auto c : setConstraints )
+	for( auto c : vecConstraints )
 	  estimatedCost += c->simulateCost( *oldBuilding, pos, varSimCost );
 
 	//timeSimCost += std::chrono::system_clock::now() - startSimCost;
@@ -184,7 +184,7 @@ namespace wallin
 	    estimatedCost = 0.;
 	    std::fill( varSimCost.begin(), varSimCost.end(), 0. );
 	    
-	    for( auto c : setConstraints )
+	    for( auto c : vecConstraints )
 	      estimatedCost += c->simulateCost( *b, -1, varSimCost );
 	    
 	    if( estimatedCost == 0. )

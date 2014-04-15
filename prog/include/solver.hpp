@@ -34,7 +34,7 @@ namespace wallin
     void reset();
     void move( std::shared_ptr<Building>&, int );
 
-    std::vector< shared_ptr<Constraint> > setConstraints;
+    std::vector< shared_ptr<Constraint> > vecConstraints;
     std::vector<std::shared_ptr<Building> > vecBuildings;
     std::vector<double> variableCost;
     Grid grid;

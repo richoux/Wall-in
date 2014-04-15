@@ -56,9 +56,9 @@ int main(int argc, char **argv)
   Grid grid( 12, 16, unbuildables, 11, 7, 6, 15 );
 
   std::vector<std::shared_ptr<Building> > vec			= makeTerranBuildings();
-  std::vector< std::shared_ptr<Constraint> > setConstraints	= makeTerranConstraints( vec, grid );
+  std::vector< std::shared_ptr<Constraint> > vecConstraints	= makeTerranConstraints( vec, grid );
 
-  Solver solver( setConstraints, vec, grid );
+  Solver solver( vecConstraints, vec, grid );
   solver.solve( 20 );    
 
   // std::cout << std::boolalpha << "Building movable: " << std::is_nothrow_move_constructible<Building>::value << std::endl;
