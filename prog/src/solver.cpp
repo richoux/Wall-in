@@ -55,6 +55,11 @@ namespace wallin
     std::chrono::duration<double,std::milli> timeCost(0);
     std::chrono::time_point<std::chrono::system_clock> startSimCost, startCost;
  
+    int sizeGrid = grid.getNberRows() * grid.getNberCols() + 1; // + 1 for the "position -1" outside the grid
+    std::vector< std::vector< double > > vecConstraintsCosts( vecConstraints.size(), std::vector<double>( vecBuildings.size(), 0. ) );
+    std::vector< double >		 vecGlobalCosts( std::vector<double>( sizeGrid, -1 ) );
+    std::vector< std::vector< double > > vecVarSimCosts( std::vector< std::vector<double> >( sizeGrid, std::vector<double>( vecBuildings.size(), 0. ) ) );
+
     double bestGlobalCost = std::numeric_limits<double>::max();
     double currentCost;
     double estimatedCost;
@@ -133,28 +138,59 @@ namespace wallin
 
       // variable simulated costs
       std::fill( bestSimCost.begin(), bestSimCost.end(), 0. );
-      for(auto pos : possiblePositions )
-      {
-	estimatedCost = 0.;
-	std::fill( varSimCost.begin(), varSimCost.end(), 0. );
+
+      for( int i = 0; i < vecConstraints.size(); ++i )
+	vecConstraintsCosts[i] = vecConstraints[i]->simulateCost( *oldBuilding, possiblePositions, vecVarSimCosts );
+
+      std::fill( vecGlobalCosts.begin(), vecGlobalCosts.end(), -1 );
       
-	// time simulateCost
-	//startSimCost = std::chrono::system_clock::now();
+      // sum all numbers in the vector vecConstraintsCosts[i] and put it into vecGlobalCosts[i] 
+      for( auto v : vecConstraintsCosts )
+	std::transform( vecGlobalCosts.begin(), 
+			vecGlobalCosts.end(), 
+			v.begin(), 
+			vecGlobalCosts.begin(), 
+			std::plus<double>() );
+      
+      // replace all negative numbers by the max value for double
+      std::replace_if( vecGlobalCosts.begin(), 
+		       vecGlobalCosts.end(), 
+		       std::bind( std::less<double>(), std::placeholders::_1, 0. ), 
+		       std::numeric_limits<double>::max() );
 
-	for( auto c : vecConstraints )
-	  estimatedCost += c->simulateCost( *oldBuilding, pos, varSimCost );
-
-	//timeSimCost += std::chrono::system_clock::now() - startSimCost;
-
-	if( estimatedCost < bestEstimatedCost 
-	    || ( estimatedCost == bestEstimatedCost //heuristics: better to take pos=-1 or the nearest position from the target tile. 
-		 && ( pos == -1 || grid.distanceToTarget( pos ) < grid.distanceToTarget( bestPosition ) ) ) )
+      // look for the first smallest cost
+      for( int i = 0; i < vecGlobalCosts.size(); ++i )
+	if( vecGlobalCosts[i] < bestEstimatedCost
+	    || ( vecGlobalCosts[i] == bestEstimatedCost //heuristics: better to take i=-1 or the nearest position from the target tile. 
+		 && ( i == 0 || grid.distanceToTarget( i - 1 ) < grid.distanceToTarget( bestPosition ) ) ) )
 	{
-	  bestEstimatedCost = estimatedCost;
-	  bestPosition = pos;
-	  bestSimCost = varSimCost;
+	  bestEstimatedCost = vecGlobalCosts[i];
+	  bestPosition = i - 1;
+	  bestSimCost = vecVarSimCosts[i];
 	}
-      }
+
+      // for(auto pos : possiblePositions )
+      // {
+      // 	estimatedCost = 0.;
+      // 	std::fill( varSimCost.begin(), varSimCost.end(), 0. );
+      
+      // 	// time simulateCost
+      // 	//startSimCost = std::chrono::system_clock::now();
+
+      // 	for( auto c : vecConstraints )
+      // 	  estimatedCost += c->simulateCost( *oldBuilding, pos, varSimCost );
+
+      // 	//timeSimCost += std::chrono::system_clock::now() - startSimCost;
+
+      // 	if( estimatedCost < bestEstimatedCost 
+      // 	    || ( estimatedCost == bestEstimatedCost //heuristics: better to take pos=-1 or the nearest position from the target tile. 
+      // 		 && ( pos == -1 || grid.distanceToTarget( pos ) < grid.distanceToTarget( bestPosition ) ) ) )
+      // 	{
+      // 	  bestEstimatedCost = estimatedCost;
+      // 	  bestPosition = pos;
+      // 	  bestSimCost = varSimCost;
+      // 	}
+      // }
 
       currentCost = bestEstimatedCost;
 
@@ -176,24 +212,24 @@ namespace wallin
       bool change;
       do
       {
-	for( auto b : vecBuildings )
-	{
-	  change = false;
-	  if( b->isOnGrid() )
-	  {
-	    estimatedCost = 0.;
-	    std::fill( varSimCost.begin(), varSimCost.end(), 0. );
+    	for( auto b : vecBuildings )
+    	{
+    	  change = false;
+    	  if( b->isOnGrid() )
+    	  {
+    	    estimatedCost = 0.;
+    	    std::fill( varSimCost.begin(), varSimCost.end(), 0. );
 	    
-	    for( auto c : vecConstraints )
-	      estimatedCost += c->simulateCost( *b, -1, varSimCost );
+    	    for( auto c : vecConstraints )
+    	      estimatedCost += c->simulateCost( *b, -1, varSimCost );
 	    
-	    if( estimatedCost == 0. )
-	    {
-	      move( b, -1 );
-	      change = true;
-	    }	  
-	  }
-	}
+    	    if( estimatedCost == 0. )
+    	    {
+    	      move( b, -1 );
+    	      change = true;
+    	    }	  
+    	  }
+    	}
       } while( change );
     }
 

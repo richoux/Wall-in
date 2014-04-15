@@ -7,6 +7,8 @@
 #include <chrono>
 #include <ctime>
 #include <limits>
+#include <algorithm>
+#include <functional>
 
 #include "building.hpp"
 #include "constraint.hpp"

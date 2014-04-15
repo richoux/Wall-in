@@ -8,6 +8,27 @@ namespace wallin
     grid( grid )
   { }
   
+  std::vector<double> Constraint::simulateCost( Building& oldBuilding, const std::vector<int>& newPosition, std::vector< std::vector<double> >& vecVarSimCosts )
+  {
+    std::vector<double> simCosts( vecVarSimCosts.size(), 0. );
+    int backup = oldBuilding.getPosition();
+    
+    for( auto pos : newPosition )
+    {
+      grid.clear( oldBuilding );
+      oldBuilding.setPos( pos );
+      grid.add( oldBuilding );
+      
+      simCosts[pos+1] = cost( vecVarSimCosts[pos+1] );
+    }
+
+    grid.clear( oldBuilding );
+    oldBuilding.setPos( backup );
+    grid.add( oldBuilding );
+    
+    return simCosts;
+  }
+
   double Constraint::simulateCost( Building& oldBuilding, const int newPosition, std::vector<double>& varSimCost )
   {
     int backup = oldBuilding.getPosition();
@@ -25,7 +46,6 @@ namespace wallin
 
     return simCost;
   }
-
 
   std::ostream& operator<<( std::ostream& os, const Constraint& c )
   {
@@ -117,6 +137,7 @@ namespace wallin
       if( building->isOnGrid() )
       {
 	nberNeighbors = grid.countAround( *building, variables );
+	//std::cout << "NoGaps building " << building->getId() << ": " << nberNeighbors << " neighbors."<< std::endl; 
 
 	if( nberNeighbors == 0 )
 	{
@@ -133,6 +154,8 @@ namespace wallin
 	}
       }
     }
+
+    //std::cout << "cost NoGaps: " << conflicts << std::endl; 
 
     return conflicts;    
   }
