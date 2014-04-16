@@ -1,0 +1,107 @@
+#include <iostream>
+#include <vector>
+#include <memory>
+#include <algorithm>
+#include <set>
+
+#include <type_traits>
+
+#include "../include/building.hpp"
+#include "../include/constraint.hpp"
+#include "../include/grid.hpp"
+#include "../include/tools.hpp"
+#include "../include/terran.hpp"
+#include "../include/solver.hpp"
+
+using namespace wallin;
+
+int main(int argc, char **argv)
+{
+  if (argc!=2) {
+    printf("Usage %s <datafile>\n", argv[0]);
+    printf("The datafile is the result of analyzing a .scx map using Alberto's offline BWTA\n");
+    return 1;
+  }
+
+  // yes, yes, I know this is old school C, but I code in "old fashioned" C++ ;)
+  FILE *fp = fopen(argv[1],"r+");
+  if (fp!=NULL) {
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    while((read = getline(&line, &len, fp)) != -1) {
+//      printf("line was '%s'\n", line);
+      // trim newline characters:
+      for(int i = 0;i<strlen(line);i++) 
+        if (line[i]=='\n' || line[i]=='\r') line[i] = 0;
+
+      if (strcmp(line,"Chokepoint:")==0) {
+        std::vector<std::pair<int,int>> wall_start;
+        std::vector<std::pair<int,int>> wall_end;
+        printf("Processing chokepoint data...\n");
+        // ignore the following two lines:
+        read = getline(&line, &len, fp);
+        read = getline(&line, &len, fp);
+
+        // now read the start and end of a wall:
+        do {
+          read = getline(&line, &len, fp);
+          if (line[0]=='w') {
+            // wall specification: wall from 6,12 to 9,6
+            int x1,y1,x2,y2;
+            sscanf(line,"wall from %i,%i to %i,%i",&x1,&y1,&x2,&y2);
+            printf("wall from %i,%i to %i,%i\n",x1,y1,x2,y2);
+            wall_start.push_back(std::pair<int,int>(y1,x1));
+            wall_end.push_back(std::pair<int,int>(y2,x2));
+          }
+        } while(line[0]=='w');
+
+        // now read the map:
+        std::vector< std::pair<int, int> > unbuildables;
+        char buffer[512];
+        sscanf(line,"%s",buffer);
+        int dx = strlen(buffer);
+        int dy = strlen(buffer);
+        printf("map size: %i,%i\n",dx,dy);
+        for(int i = 0;i<dy;i++) {
+          printf("%s\n",buffer);
+          for(int j = 0;j<dx;j++) {
+            if (buffer[j]!='2') unbuildables.push_back(std::pair<int,int>(i,j));
+          }
+          if (i!=dy-1) {
+            read = getline(&line, &len, fp);
+            sscanf(line,"%s",buffer);
+          }
+        }
+
+        for(int i = 0;i<wall_start.size();i++) {
+          std::pair<int,int> start = wall_start[i];
+          std::pair<int,int> end = wall_end[i];
+          Grid grid( dx, dy, unbuildables, start.first, start.second, end.first, end.second );
+
+          printf("calling solver...\n");
+          std::vector<std::shared_ptr<Building> > vec     = makeTerranBuildings();
+          std::set< std::shared_ptr<Constraint> > setConstraints  = makeTerranConstraints( vec, grid );
+
+          Solver solver( setConstraints, vec, grid );
+          solver.solve( 20 );    
+        }
+
+        printf("\n\n");        
+      }
+    }
+    if (line!=NULL) free(line);
+    fclose(fp);
+  }
+
+/*
+  // std::cout << std::boolalpha << "Building movable: " << std::is_nothrow_move_constructible<Building>::value << std::endl;
+  // std::cout << std::boolalpha << "Barracks movable: " << std::is_nothrow_move_constructible<Barracks>::value << std::endl;
+  // std::cout << std::boolalpha << "Grid movable: " << std::is_nothrow_move_constructible<Grid>::value << std::endl;
+  // std::cout << std::boolalpha << "Solver movable: " << std::is_nothrow_move_constructible<Solver>::value << std::endl;
+  // std::cout << std::boolalpha << "Random movable: " << std::is_nothrow_move_constructible<Random>::value << std::endl;
+  // std::cout << std::boolalpha << "Constraint movable: " << std::is_nothrow_move_constructible<Constraint>::value << std::endl;
+  // std::cout << std::boolalpha << "NoGaps movable: " << std::is_nothrow_move_constructible<NoGaps>::value << std::endl;
+  // std::cout << std::boolalpha << "StartingTargetTiles movable: " << std::is_nothrow_move_constructible<StartingTargetTiles>::value << std::endl;
+  */
+}
