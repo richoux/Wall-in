@@ -22,6 +22,7 @@ namespace wallin
     // virtual ~Constraint() = default;
 
     virtual double cost( std::vector<double>& ) const = 0;
+    virtual std::vector<double> simulateCost( Building&, const std::vector<int>&, int, std::vector< std::vector<double> >& );
     virtual double simulateCost( Building&, const int, std::vector<double>& );
 
     inline void update( const Grid& g ) { grid = g; }
@@ -54,6 +55,14 @@ namespace wallin
   {
   public:
     NoGaps( const std::vector< std::shared_ptr<Building> >&, const Grid& );
+    double cost( std::vector<double>& ) const;
+  };
+
+  //NoGapsFinalize
+  class NoGapsFinalize : public Constraint
+  {
+  public:
+    NoGapsFinalize( const std::vector< std::shared_ptr<Building> >&, const Grid& );
     double cost( std::vector<double>& ) const;
   };
 

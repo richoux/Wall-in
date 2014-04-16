@@ -129,22 +129,22 @@ namespace wallin
       return 0;
   }
 
-  set<int> Grid::possiblePos( const Building& b ) const
+  vector<int> Grid::possiblePos( const Building& b ) const
   {
-    set<int> possiblePositions;
+    vector<int> possiblePositions;
 
-    possiblePositions.insert( -1 );
+    possiblePositions.push_back( -1 );
 
     for( int row = 0; row <= nRow_ - b.getHeight(); ++row )
       for( int col = 0; col <= mCol_ - b.getLength(); ++col )
       {
-	possiblePositions.insert( mat2lin(row, col) );
+	possiblePositions.push_back( mat2lin(row, col) );
       }
 
     return possiblePositions;
   }
 
-  int	Grid::distanceTo( int source, std::pair<int, int> target ) const
+  int Grid::distanceTo( int source, std::pair<int, int> target ) const
   {
     std::pair<int, int> sourcePair = lin2mat( source );
     return abs( target.first - sourcePair.first ) + abs( target.second - sourcePair.second );
@@ -154,6 +154,15 @@ namespace wallin
   {
     for( auto u : unbuildables )
       this->unbuildable( u.first, u.second );    
+  }
+
+  bool Grid::isStartingOrTargetTile( int id ) const
+  {
+    auto startingBuildings = buildingsAt( getStartingTile() );
+    auto targetBuildings = buildingsAt( getTargetTile() );
+
+    return startingBuildings.find( id ) != startingBuildings.end()
+      || targetBuildings.find( id ) != targetBuildings.end();
   }
 
   ostream& operator<<( ostream& os, const Grid& g )
@@ -169,16 +178,14 @@ namespace wallin
     for( auto vec : g.matrixId_ )
     {
       os << bar << endl << "| ";
-      for(auto setId : vec )
+      for( auto setId : vec )
       {
 	if( setId.empty() )
 	  os << setw(3) << "    | ";
 	else
 	{
-	  ostringstream oss;
-	  for(auto id : setId)
-	    oss << id;
-	  os << setw(3) << oss.str() << " | ";
+	  for( auto id : setId )
+	    os << setw(3) << to_string( id ) << " | ";
 	}
       }
       os << endl;

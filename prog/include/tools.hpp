@@ -1,7 +1,7 @@
 #pragma once
 
 #include <algorithm>
-#include <set>
+// #include <set>
 #include <vector>
 #include <memory>
 
@@ -11,7 +11,7 @@
 
 namespace wallin
 {
-  void updateConstraints( const std::set< shared_ptr<Constraint> >&, const Grid& );
-  void printConstraints( const std::set< shared_ptr<Constraint> >& );
+  void updateConstraints( const std::vector< shared_ptr<Constraint> >&, const Grid& );
+  void printConstraints( const std::vector< shared_ptr<Constraint> >& );
   void addAllInGrid( const std::vector<std::shared_ptr<Building> >&, Grid& );
 }

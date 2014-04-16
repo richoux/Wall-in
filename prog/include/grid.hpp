@@ -36,7 +36,7 @@ namespace wallin
   
 	   int	    countAround ( const Building &, const std::vector< std::shared_ptr<Building> >& ) const;
 	   int	    randomPos   ( const Building& );
-           set<int> possiblePos ( const Building& ) const;
+           vector<int> possiblePos ( const Building& ) const;
            int	    distanceTo  ( int, std::pair<int, int> ) const;
     inline int	    distanceTo  ( int source, int target ) const { return distanceTo( source, lin2mat( target ) ); }
     inline int	    distanceToTarget( int source ) const { return distanceTo( source, targetTile ); }
@@ -48,6 +48,8 @@ namespace wallin
 
     inline pair<int, int> getStartingTile()	const { return startingTile; }
     inline pair<int, int> getTargetTile()	const { return targetTile; }
+           
+           bool		isStartingOrTargetTile( int ) const;
     
     inline int		getNberRows()	const { return nRow_; }
     inline int		getNberCols()	const { return mCol_; }
