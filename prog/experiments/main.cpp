@@ -81,9 +81,9 @@ int main(int argc, char **argv)
 
           printf("calling solver...\n");
           std::vector<std::shared_ptr<Building> > vec     = makeTerranBuildings();
-          std::set< std::shared_ptr<Constraint> > setConstraints  = makeTerranConstraints( vec, grid );
+          std::vector< std::shared_ptr<Constraint> > vecConstraints = makeTerranConstraints( vec, grid );
 
-          Solver solver( setConstraints, vec, grid );
+          Solver solver( vecConstraints, vec, grid );
           solver.solve( 20 );    
         }
 
