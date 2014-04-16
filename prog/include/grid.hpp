@@ -48,6 +48,8 @@ namespace wallin
 
     inline pair<int, int> getStartingTile()	const { return startingTile; }
     inline pair<int, int> getTargetTile()	const { return targetTile; }
+           
+           bool		isStartingOrTargetTile( int ) const;
     
     inline int		getNberRows()	const { return nRow_; }
     inline int		getNberCols()	const { return mCol_; }

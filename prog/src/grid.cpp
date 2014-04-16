@@ -144,7 +144,7 @@ namespace wallin
     return possiblePositions;
   }
 
-  int	Grid::distanceTo( int source, std::pair<int, int> target ) const
+  int Grid::distanceTo( int source, std::pair<int, int> target ) const
   {
     std::pair<int, int> sourcePair = lin2mat( source );
     return abs( target.first - sourcePair.first ) + abs( target.second - sourcePair.second );
@@ -154,6 +154,15 @@ namespace wallin
   {
     for( auto u : unbuildables )
       this->unbuildable( u.first, u.second );    
+  }
+
+  bool Grid::isStartingOrTargetTile( int id ) const
+  {
+    auto startingBuildings = buildingsAt( getStartingTile() );
+    auto targetBuildings = buildingsAt( getTargetTile() );
+
+    return startingBuildings.find( id ) != startingBuildings.end()
+      || targetBuildings.find( id ) != targetBuildings.end();
   }
 
   ostream& operator<<( ostream& os, const Grid& g )
@@ -169,16 +178,14 @@ namespace wallin
     for( auto vec : g.matrixId_ )
     {
       os << bar << endl << "| ";
-      for(auto setId : vec )
+      for( auto setId : vec )
       {
 	if( setId.empty() )
 	  os << setw(3) << "    | ";
 	else
 	{
-	  ostringstream oss;
-	  for(auto id : setId)
-	    oss << id;
-	  os << setw(3) << oss.str() << " | ";
+	  for( auto id : setId )
+	    os << setw(3) << to_string( id ) << " | ";
 	}
       }
       os << endl;

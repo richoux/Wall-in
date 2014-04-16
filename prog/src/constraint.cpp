@@ -8,9 +8,9 @@ namespace wallin
     grid( grid )
   { }
   
-  std::vector<double> Constraint::simulateCost( Building& oldBuilding, const std::vector<int>& newPosition, std::vector< std::vector<double> >& vecVarSimCosts )
+  std::vector<double> Constraint::simulateCost( Building& oldBuilding, const std::vector<int>& newPosition, int sizeGrid, std::vector< std::vector<double> >& vecVarSimCosts )
   {
-    std::vector<double> simCosts( vecVarSimCosts.size(), 0. );
+    std::vector<double> simCosts( sizeGrid, -1. );
     int backup = oldBuilding.getPosition();
     
     for( auto pos : newPosition )
@@ -129,8 +129,8 @@ namespace wallin
   {
     // cost = |buildings with one neighbor| - 1 + |buildings with no neighbors|
     double conflicts = 0.;
-    int oneNeighbor = 0;
     int nberNeighbors;
+    std::vector<int> oneNeighborBuildings;
 
     for( auto building : variables )
     {
@@ -146,16 +146,72 @@ namespace wallin
 	}
 	else
 	{
-	  if( nberNeighbors == 1 && ++oneNeighbor > 2 )
-	  {
-	    ++conflicts;
-	    ++varCost[ building->getId() ];
-	  }
+	  if( nberNeighbors == 1 )
+	    oneNeighborBuildings.push_back( building->getId() );
 	}
       }
     }
 
+    if( oneNeighborBuildings.size() > 2 )
+    {
+      for( auto b : oneNeighborBuildings )
+	if( ! grid.isStartingOrTargetTile( b ) )
+	{
+	  ++conflicts;
+	  ++varCost[ b ];
+	}
+    }
+    
     //std::cout << "cost NoGaps: " << conflicts << std::endl; 
+    //if( conflicts == 0)
+    //  std::cout << grid << std::endl;
+
+
+    return conflicts;    
+  }
+
+  /******************/
+  /* NoGapsFinalize */
+  /******************/
+  NoGapsFinalize::NoGapsFinalize(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) 
+    : Constraint(variables, grid)
+  { }
+
+  double NoGapsFinalize::cost( std::vector<double>& varCost ) const
+  {
+    double conflicts = 0.;
+    int nberNeighbors;
+    std::vector<int> oneNeighborBuildings;
+
+    for( auto building : variables )
+    {
+      if( building->isOnGrid() )
+      {
+	nberNeighbors = grid.countAround( *building, variables );
+	//std::cout << "NoGaps building " << building->getId() << ": " << nberNeighbors << " neighbors."<< std::endl; 
+
+	if( nberNeighbors == 0 )
+	{
+	  ++conflicts;
+	  ++varCost[ building->getId() ];
+	}
+	else
+	{
+	  if( nberNeighbors == 1 )
+	    oneNeighborBuildings.push_back( building->getId() );
+	}
+      }
+    }
+
+    if( oneNeighborBuildings.size() > 3 )
+    {
+      for( auto b : oneNeighborBuildings )
+	if( ! grid.isStartingOrTargetTile( b ) )
+	{
+	  ++conflicts;
+	  ++varCost[ b ];
+	}
+    }
 
     return conflicts;    
   }
