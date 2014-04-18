@@ -34,6 +34,8 @@ namespace wallin
     inline int getGapBottom()	const	{ return gapBottom; }
     inline int getGapLeft()	const	{ return gapLeft; }
 
+    inline bool operator<( const Building& other ) const { return id < other.id; }
+
     friend ostream& operator<<( ostream&, const Building& );
 
   protected:

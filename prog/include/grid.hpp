@@ -31,30 +31,32 @@ namespace wallin
     Grid& operator=(Grid&&) = default;
     ~Grid() = default;
 
-	   void add  ( const Building& );
-	   void clear( const Building& );
-  
-	   int	    countAround ( const Building &, const std::vector< std::shared_ptr<Building> >& ) const;
-	   int	    randomPos   ( const Building& );
-           vector<int> possiblePos ( const Building& ) const;
-           int	    distanceTo  ( int, std::pair<int, int> ) const;
-    inline int	    distanceTo  ( int source, int target ) const { return distanceTo( source, lin2mat( target ) ); }
-    inline int	    distanceToTarget( int source ) const { return distanceTo( source, targetTile ); }
-	   void	    unbuildable ( vector< pair<int, int> > );
-    inline void	    unbuildable ( int row, int col ) { matrixType_[row][col].assign(3, '#'); }
+	   void		 add  ( const Building& );
+	   void		 clear( const Building& );
 
-    inline set<int>	buildingsAt( int row, int col ) const { return matrixId_[row][col]; }
-    inline set<int>	buildingsAt( pair<int, int> p ) const { return buildingsAt(p.first, p.second); }
+    set< shared_ptr<Building> > getBuildingsAround ( const Building &, const vector< shared_ptr<Building> >& ) const;
+	   int	       	 countAround ( const Building &, const vector< shared_ptr<Building> >& ) const;  
+
+	   int		 randomPos   ( const Building& );
+           vector<int>	 possiblePos ( const Building& ) const;
+           int		 distanceTo  ( int, std::pair<int, int> ) const;
+    inline int		 distanceTo  ( int source, int target ) const { return distanceTo( source, lin2mat( target ) ); }
+    inline int		 distanceToTarget( int source ) const { return distanceTo( source, targetTile ); }
+	   void		 unbuildable ( vector< pair<int, int> > );
+    inline void		 unbuildable ( int row, int col ) { matrixType_[row][col].assign(3, '#'); }
+
+    inline set<int>	 buildingsAt( int row, int col ) const { return matrixId_[row][col]; }
+    inline set<int>	 buildingsAt( pair<int, int> p ) const { return buildingsAt(p.first, p.second); }
 
     inline pair<int, int> getStartingTile()	const { return startingTile; }
     inline pair<int, int> getTargetTile()	const { return targetTile; }
            
-           bool		isStartingOrTargetTile( int ) const;
+           bool		 isStartingOrTargetTile( int ) const;
     
-    inline int		getNberRows()	const { return nRow_; }
-    inline int		getNberCols()	const { return mCol_; }
-    inline bool		hasFailure()	const { return !failures_.empty(); }
-    inline mapFail	failures()	const { return failures_; }
+    inline int		 getNberRows()	const { return nRow_; }
+    inline int		 getNberCols()	const { return mCol_; }
+    inline bool		 hasFailure()	const { return !failures_.empty(); }
+    inline mapFail	 failures()	const { return failures_; }
 
     inline pair<int, int> lin2mat(int p)	    const {return make_pair<int, int>(p / mCol_, p % mCol_);}
     inline int		  mat2lin(int row, int col) const {return row * mCol_ + col;}

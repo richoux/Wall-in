@@ -2,14 +2,14 @@
 
 namespace wallin
 {
-  Solver::Solver( const std::vector< shared_ptr<Constraint> >& vecConstraints, 
-		  const std::vector<std::shared_ptr<Building> >& vecBuildings, 
+  Solver::Solver( const vector< shared_ptr<Constraint> >& vecConstraints, 
+		  const vector<shared_ptr<Building> >& vecBuildings, 
 		  const Grid& grid )
     : vecConstraints(vecConstraints), 
       vecBuildings(vecBuildings), 
-      variableCost( std::vector<double>( vecBuildings.size(), 0. ) ),
+      variableCost( vector<double>( vecBuildings.size(), 0. ) ),
       grid(grid),
-      tabooList( std::vector<int>( vecBuildings.size(), 0 ) )
+      tabooList( vector<int>( vecBuildings.size(), 0 ) )
   { 
     reset();
   }
@@ -36,7 +36,7 @@ namespace wallin
     updateConstraints( vecConstraints, grid );
   }
 
-  void Solver::move( std::shared_ptr<Building>& building, int newPosition )
+  void Solver::move( shared_ptr<Building>& building, int newPosition )
   {
     grid.clear( *building );
     building->setPos( newPosition );
@@ -46,53 +46,53 @@ namespace wallin
 
   double Solver::solve( double timeout )
   {
-    std::chrono::duration<double,std::milli> elapsedTime;
-    std::chrono::time_point<std::chrono::system_clock> start, now;
-    start = std::chrono::system_clock::now();
+    chrono::duration<double,milli> elapsedTime;
+    chrono::time_point<chrono::system_clock> start, now;
+    start = chrono::system_clock::now();
 
     // to time simulateCost and cost functions
-    std::chrono::duration<double,std::milli> timeSimCost(0);
-    std::chrono::duration<double,std::milli> timeCost(0);
-    std::chrono::time_point<std::chrono::system_clock> startSimCost, startCost;
+    chrono::duration<double,milli> timeSimCost(0);
+    chrono::duration<double,milli> timeCost(0);
+    chrono::time_point<chrono::system_clock> startSimCost, startCost;
  
     // int sizeGrid = grid.getNberRows() * grid.getNberCols() + 1; // + 1 for the "position -1" outside the grid
-    // std::vector< std::vector< double > > vecConstraintsCosts( vecConstraints.size(), std::vector<double>( vecBuildings.size(), 0. ) );
-    // std::vector< double >		 vecGlobalCosts( std::vector<double>( sizeGrid, -1 ) );
-    // std::vector< std::vector< double > > vecVarSimCosts( std::vector< std::vector<double> >( sizeGrid, std::vector<double>( vecBuildings.size(), 0. ) ) );
+    // vector< vector< double > > vecConstraintsCosts( vecConstraints.size(), vector<double>( vecBuildings.size(), 0. ) );
+    // vector< double >		 vecGlobalCosts( vector<double>( sizeGrid, -1 ) );
+    // vector< vector< double > > vecVarSimCosts( vector< vector<double> >( sizeGrid, vector<double>( vecBuildings.size(), 0. ) ) );
 
-    double bestGlobalCost = std::numeric_limits<double>::max();
+    double bestGlobalCost = numeric_limits<double>::max();
     double currentCost;
     double estimatedCost;
-    double bestEstimatedCost = std::numeric_limits<double>::max();
+    double bestEstimatedCost = numeric_limits<double>::max();
     int    bestPosition;
 
-    std::vector<double> worstBuildings;
+    vector<double> worstBuildings;
     double worstVariableCost;
     int worstBuildingId;
 
-    std::shared_ptr<Building> oldBuilding;
-    std::vector<int> possiblePositions;
-    std::vector<double> varSimCost( std::vector<double>( vecBuildings.size(), 0. ) );
-    std::vector<double> bestSimCost( std::vector<double>( vecBuildings.size(), 0. ) );
+    shared_ptr<Building> oldBuilding;
+    vector<int> possiblePositions;
+    vector<double> varSimCost( vector<double>( vecBuildings.size(), 0. ) );
+    vector<double> bestSimCost( vector<double>( vecBuildings.size(), 0. ) );
 
     int tour = 1;
     int test = 1;
 
     do 
     {
-      now = std::chrono::system_clock::now();
+      now = chrono::system_clock::now();
       
-      if( bestGlobalCost == std::numeric_limits<double>::max() )
+      if( bestGlobalCost == numeric_limits<double>::max() )
       {
 	currentCost = 0.;
 
 	// time costs
-	//startCost = std::chrono::system_clock::now();
+	//startCost = chrono::system_clock::now();
 	
 	for( auto c : vecConstraints )
 	  currentCost += c->cost( variableCost );
 
-	//timeCost = std::chrono::system_clock::now() - startCost;
+	//timeCost = chrono::system_clock::now() - startCost;
 	
 	if( currentCost < bestGlobalCost )
 	  bestGlobalCost = currentCost;
@@ -137,26 +137,26 @@ namespace wallin
       possiblePositions = grid.possiblePos( *oldBuilding );
 
       // variable simulated costs
-      // std::fill( bestSimCost.begin(), bestSimCost.end(), 0. );
+      // fill( bestSimCost.begin(), bestSimCost.end(), 0. );
 
       // for( int i = 0; i < vecConstraints.size(); ++i )
       // 	vecConstraintsCosts[i] = vecConstraints[i]->simulateCost( *oldBuilding, possiblePositions, vecVarSimCosts );
 
-      // std::fill( vecGlobalCosts.begin(), vecGlobalCosts.end(), -1 );
+      // fill( vecGlobalCosts.begin(), vecGlobalCosts.end(), -1 );
       
       // // sum all numbers in the vector vecConstraintsCosts[i] and put it into vecGlobalCosts[i] 
       // for( auto v : vecConstraintsCosts )
-      // 	std::transform( vecGlobalCosts.begin(), 
+      // 	transform( vecGlobalCosts.begin(), 
       // 			vecGlobalCosts.end(), 
       // 			v.begin(), 
       // 			vecGlobalCosts.begin(), 
-      // 			std::plus<double>() );
+      // 			plus<double>() );
       
       // // replace all negative numbers by the max value for double
-      // std::replace_if( vecGlobalCosts.begin(), 
+      // replace_if( vecGlobalCosts.begin(), 
       // 		       vecGlobalCosts.end(), 
-      // 		       std::bind( std::less<double>(), std::placeholders::_1, 0. ), 
-      // 		       std::numeric_limits<double>::max() );
+      // 		       bind( less<double>(), placeholders::_1, 0. ), 
+      // 		       numeric_limits<double>::max() );
 
       // // look for the first smallest cost
       // for( int i = 0; i < vecGlobalCosts.size(); ++i )
@@ -172,15 +172,15 @@ namespace wallin
       for(auto pos : possiblePositions )
       {
       	estimatedCost = 0.;
-      	std::fill( varSimCost.begin(), varSimCost.end(), 0. );
+      	fill( varSimCost.begin(), varSimCost.end(), 0. );
       
       	// time simulateCost
-      	//startSimCost = std::chrono::system_clock::now();
+      	//startSimCost = chrono::system_clock::now();
 
       	for( auto c : vecConstraints )
       	  estimatedCost += c->simulateCost( *oldBuilding, pos, varSimCost );
 
-      	//timeSimCost += std::chrono::system_clock::now() - startSimCost;
+      	//timeSimCost += chrono::system_clock::now() - startSimCost;
 
       	if( estimatedCost < bestEstimatedCost 
       	    || ( estimatedCost == bestEstimatedCost //heuristics: better to take pos=-1 or the nearest position from the target tile. 
@@ -214,11 +214,35 @@ namespace wallin
       NoGapsFinalize ngf( vecBuildings, grid );
 
       // find all buildings accessible from the starting building and remove all others
-      auto current = *( grid.buildingsAt( grid.getStartingTile() ).begin() );
-      std::set<Building> toVisit;
-      std::set<Building> visited;
-      
-      // TODO
+      int nberCurrent = *( grid.buildingsAt( grid.getStartingTile() ).begin() );
+      shared_ptr<Building> current = vecBuildings[ nberCurrent ];
+      set< shared_ptr<Building> > toVisit = grid.getBuildingsAround( *current, vecBuildings );
+      set< shared_ptr<Building> > visited;
+      set< shared_ptr<Building> > neighbors;
+
+      visited.insert( current );
+
+      while( !toVisit.empty() )
+      {
+	auto first = *( toVisit.begin() );
+	current = first;
+	toVisit.erase( first );
+	neighbors = grid.getBuildingsAround( *current, vecBuildings );
+
+	for( auto n : neighbors )
+	  if( visited.find( n ) == visited.end() )
+	    toVisit.insert( n );
+
+	visited.insert( current );
+      }
+
+      // remove all unreachable buildings from the starting building out of the grid
+      for( auto b : vecBuildings )
+	if( visited.find( b ) == visited.end() )
+	{
+	  grid.clear( *b );
+	  b->setPos( -1 );
+	}
 
       // clean wall from unnecessary buildings.
       do
@@ -230,7 +254,7 @@ namespace wallin
 	    if( b->isOnGrid() )
 	    {
 	      cost = 0.;
-	      std::fill( varSimCost.begin(), varSimCost.end(), 0. );
+	      fill( varSimCost.begin(), varSimCost.end(), 0. );
 	      
 	      cost = ngf.simulateCost( *b, -1, varSimCost );
 	      
@@ -238,7 +262,6 @@ namespace wallin
 	      {
 		grid.clear( *b );
 		b->setPos( -1 );
-		grid.add( *b );
 		ngf.update( grid );
 		change = true;
 	      }	  
@@ -247,25 +270,25 @@ namespace wallin
       } while( change );
     }
 
-    std::cout << "Grids:" << grid << std::endl
-	      << "Elapsed time: " << elapsedTime.count() << std::endl
-      //<< "Elapsed time to simulate cost: " << timeSimCost.count() << std::endl
-      //<< "Elapsed time to cost: " << timeCost.count() << std::endl
-	      << "Global cost: " << bestGlobalCost << std::endl;
+    cout << "Grids:" << grid << endl
+	      << "Elapsed time: " << elapsedTime.count() << endl
+      //<< "Elapsed time to simulate cost: " << timeSimCost.count() << endl
+      //<< "Elapsed time to cost: " << timeCost.count() << endl
+	      << "Global cost: " << bestGlobalCost << endl;
 
     // print cost for each constraint
     for( auto c : vecConstraints )
     {
-      std::fill( varSimCost.begin(), varSimCost.end(), 0. );
-      std::cout << "Cost of " << typeid(*c).name() << ": " << c->cost( varSimCost ) << " [";
+      fill( varSimCost.begin(), varSimCost.end(), 0. );
+      cout << "Cost of " << typeid(*c).name() << ": " << c->cost( varSimCost ) << " [";
 
       for( auto v : varSimCost )
-	std::cout << " " << v;
+	cout << " " << v;
 
-      std::cout << " ]" << std::endl;
+      cout << " ]" << endl;
     }      
     
-    std::cout << std::endl;
+    cout << endl;
     
     return bestGlobalCost;
   }

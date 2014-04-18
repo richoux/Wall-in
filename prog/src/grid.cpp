@@ -70,7 +70,7 @@ namespace wallin
   void Grid::clear( int row, int col, string b_short, int b_id )
   {
     auto it = matrixType_[row][col].find( b_short );
-    if( it != std::string::npos )
+    if( it != string::npos )
     {
       matrixType_[row][col].replace( it,
 				     b_short.length(),
@@ -90,24 +90,24 @@ namespace wallin
     }
   }
 
-  int Grid::countAround( const Building& b, const std::vector< std::shared_ptr<Building> >& variables ) const
+  set< shared_ptr<Building> > Grid::getBuildingsAround ( const Building& b, const vector< shared_ptr<Building> >& variables ) const
   {
+    set< shared_ptr<Building> > myNeighbors;
+
     if( b.isOnGrid() )
     {
-      std::pair<int, int> coordinates = lin2mat( b.getPosition() );
+      pair<int, int> coordinates = lin2mat( b.getPosition() );
 
       int top = coordinates.first;
       int right = coordinates.second + b.getLength() - 1;
       int bottom = coordinates.first + b.getHeight() - 1;
       int left = coordinates.second;
 
-      int counter = 0;
-
       for(auto other : variables )
       {
 	if( other->getId() != b.getId() && other->isOnGrid() )
 	{
-	  std::pair<int, int> xyOther = lin2mat( other->getPosition() );
+	  pair<int, int> xyOther = lin2mat( other->getPosition() );
 	  int otherTop = xyOther.first;
 	  int otherRight = xyOther.second + other->getLength() - 1;
 	  int otherBottom = xyOther.first + other->getHeight() - 1;
@@ -118,13 +118,19 @@ namespace wallin
 	       || ( bottom == otherTop - 1 && ( otherRight >= left && otherLeft <= right ) )
 	       || ( left == otherRight + 1 && ( otherBottom >= top - 1 && otherTop <= bottom + 1 ) ) )
 	  {
-	    ++counter;
+	    myNeighbors.insert( other );
 	  }
 	}
       }
-
-      return counter;
     }
+    
+    return myNeighbors;
+  }
+
+  int Grid::countAround( const Building& b, const vector< shared_ptr<Building> >& variables ) const
+  {
+    if( b.isOnGrid() )
+      return getBuildingsAround( b, variables ).size();
     else
       return 0;
   }
@@ -144,9 +150,9 @@ namespace wallin
     return possiblePositions;
   }
 
-  int Grid::distanceTo( int source, std::pair<int, int> target ) const
+  int Grid::distanceTo( int source, pair<int, int> target ) const
   {
-    std::pair<int, int> sourcePair = lin2mat( source );
+    pair<int, int> sourcePair = lin2mat( source );
     return abs( target.first - sourcePair.first ) + abs( target.second - sourcePair.second );
   }
 

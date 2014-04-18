@@ -3,12 +3,14 @@
 //#include <set>
 #include <vector>
 #include <map>
+#include <set>
 #include <memory>
 #include <chrono>
 #include <ctime>
 #include <limits>
 #include <algorithm>
 #include <functional>
+#include <set>
 
 #include "building.hpp"
 #include "constraint.hpp"
@@ -16,13 +18,15 @@
 #include "tools.hpp"
 #include "random.hpp"
 
+using namespace std;
+
 namespace wallin
 {
   class Solver
   {
   public:
-    Solver( const std::vector< shared_ptr<Constraint> >&, 
-	    const std::vector<std::shared_ptr<Building> >&, 
+    Solver( const vector< shared_ptr<Constraint> >&, 
+	    const vector<shared_ptr<Building> >&, 
 	    const Grid& );
     Solver(const Solver&) = default;
     Solver(Solver&&) = default;
@@ -34,13 +38,13 @@ namespace wallin
     
   private:
     void reset();
-    void move( std::shared_ptr<Building>&, int );
+    void move( shared_ptr<Building>&, int );
 
-    std::vector< shared_ptr<Constraint> > vecConstraints;
-    std::vector<std::shared_ptr<Building> > vecBuildings;
-    std::vector<double> variableCost;
+    vector< shared_ptr<Constraint> > vecConstraints;
+    vector<shared_ptr<Building> > vecBuildings;
+    vector<double> variableCost;
     Grid grid;
-    std::vector<int> tabooList;
+    vector<int> tabooList;
     Random randomVar;
   };
 }
