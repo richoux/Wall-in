@@ -3,8 +3,7 @@
 #include <memory>
 #include <algorithm>
 #include <set>
-
-#include <type_traits>
+#include <cstring>
 
 #include "../include/building.hpp"
 #include "../include/constraint.hpp"
@@ -93,15 +92,4 @@ int main(int argc, char **argv)
     if (line!=NULL) free(line);
     fclose(fp);
   }
-
-/*
-  // std::cout << std::boolalpha << "Building movable: " << std::is_nothrow_move_constructible<Building>::value << std::endl;
-  // std::cout << std::boolalpha << "Barracks movable: " << std::is_nothrow_move_constructible<Barracks>::value << std::endl;
-  // std::cout << std::boolalpha << "Grid movable: " << std::is_nothrow_move_constructible<Grid>::value << std::endl;
-  // std::cout << std::boolalpha << "Solver movable: " << std::is_nothrow_move_constructible<Solver>::value << std::endl;
-  // std::cout << std::boolalpha << "Random movable: " << std::is_nothrow_move_constructible<Random>::value << std::endl;
-  // std::cout << std::boolalpha << "Constraint movable: " << std::is_nothrow_move_constructible<Constraint>::value << std::endl;
-  // std::cout << std::boolalpha << "NoGaps movable: " << std::is_nothrow_move_constructible<NoGaps>::value << std::endl;
-  // std::cout << std::boolalpha << "StartingTargetTiles movable: " << std::is_nothrow_move_constructible<StartingTargetTiles>::value << std::endl;
-  */
 }
