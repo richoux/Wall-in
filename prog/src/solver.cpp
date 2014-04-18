@@ -47,13 +47,14 @@ namespace wallin
   double Solver::solve( double timeout )
   {
     chrono::duration<double,milli> elapsedTime;
-    chrono::time_point<chrono::system_clock> start, now;
+    chrono::time_point<chrono::system_clock> start;
     start = chrono::system_clock::now();
 
     // to time simulateCost and cost functions
     chrono::duration<double,milli> timeSimCost(0);
     chrono::duration<double,milli> timeCost(0);
-    chrono::time_point<chrono::system_clock> startSimCost, startCost;
+    chrono::duration<double,milli> timeCleaning(0);
+    chrono::time_point<chrono::system_clock> startSimCost, startCost, startCleaning;
  
     // int sizeGrid = grid.getNberRows() * grid.getNberCols() + 1; // + 1 for the "position -1" outside the grid
     // vector< vector< double > > vecConstraintsCosts( vecConstraints.size(), vector<double>( vecBuildings.size(), 0. ) );
@@ -80,8 +81,6 @@ namespace wallin
 
     do 
     {
-      now = chrono::system_clock::now();
-      
       if( bestGlobalCost == numeric_limits<double>::max() )
       {
 	currentCost = 0.;
@@ -175,12 +174,12 @@ namespace wallin
       	fill( varSimCost.begin(), varSimCost.end(), 0. );
       
       	// time simulateCost
-      	//startSimCost = chrono::system_clock::now();
+      	startSimCost = chrono::system_clock::now();
 
       	for( auto c : vecConstraints )
       	  estimatedCost += c->simulateCost( *oldBuilding, pos, varSimCost );
 
-      	//timeSimCost += chrono::system_clock::now() - startSimCost;
+      	timeSimCost += chrono::system_clock::now() - startSimCost;
 
       	if( estimatedCost < bestEstimatedCost 
       	    || ( estimatedCost == bestEstimatedCost //heuristics: better to take pos=-1 or the nearest position from the target tile. 
@@ -203,12 +202,14 @@ namespace wallin
       else // local minima
 	tabooList[ worstBuildingId ] = 5;
 
-      elapsedTime = now - start;
+      elapsedTime = chrono::system_clock::now() - start;
     } while( bestGlobalCost != 0. && elapsedTime.count() < timeout );
 
     // remove useless buildings
     if( bestGlobalCost == 0 )
     {
+      startCleaning = chrono::system_clock::now();
+
       bool change;
       double cost;
       NoGapsFinalize ngf( vecBuildings, grid );
@@ -268,13 +269,16 @@ namespace wallin
 	    }
 	  }
       } while( change );
+
+      timeCleaning = chrono::system_clock::now() - startCleaning;
     }
 
     cout << "Grids:" << grid << endl
-	      << "Elapsed time: " << elapsedTime.count() << endl
-      //<< "Elapsed time to simulate cost: " << timeSimCost.count() << endl
+	 << "Elapsed time: " << elapsedTime.count() << endl
+	 << "Elapsed time to simulate cost: " << timeSimCost.count() << endl
       //<< "Elapsed time to cost: " << timeCost.count() << endl
-	      << "Global cost: " << bestGlobalCost << endl;
+	 << "Elapsed time to clean: " << timeCleaning.count() << endl
+	 << "Global cost: " << bestGlobalCost << endl;
 
     // print cost for each constraint
     for( auto c : vecConstraints )
