@@ -8,6 +8,6 @@ done
 
 rm -f runtimes.txt
 touch runtimes.txt
-grep Elapsed runs.txt >> runtimes.txt
+grep time: runs.txt >> runtimes.txt
 
 ./analyse_runtimes.rb runtimes.txt 17

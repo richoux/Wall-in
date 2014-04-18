@@ -52,6 +52,53 @@ namespace wallin
     }
   }
   
+  pair<int, int> Grid::shift( Building& building )
+  {
+    int overlaps = 0;
+    int unbuildables = 0;
+    
+    if( building.isOnGrid() )
+    {
+      pair<int, int> pos = lin2mat( building.getPosition() );
+      int row = pos.first;
+      int col = pos.second;
+
+      int row_shift = row + building.getHeight();
+      int col_shift = col + building.getLength();
+
+      pair<int, int> key;
+
+      for( int x = row; x < row_shift; ++x )
+      {
+	add(x, col_shift, building.getShort(), building.getId() );	
+
+	key = make_pair( x, col_shift );
+	if( failures_.find( key ) != failures_.end() )
+	{
+	  if( failures_.at( key ).find( "###" ) == std::string::npos )
+	    ++overlaps;
+	  else
+	    ++unbuildables;
+	}
+
+	key = make_pair( x, col );
+	if( failures_.find( key ) != failures_.end() )
+	{
+	  if( failures_.at( key ).find( "###" ) == std::string::npos )
+	    --overlaps;
+	  else
+	    --unbuildables;
+	}
+
+	clear(x, col, building.getShort(), building.getId() );
+      }
+      
+      building.shiftPos();
+    }
+
+    return make_pair( overlaps, unbuildables );
+  }
+
   void Grid::clear( const Building& building )
   {
     if( building.isOnGrid() )

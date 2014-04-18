@@ -31,8 +31,9 @@ namespace wallin
     Grid& operator=(Grid&&) = default;
     ~Grid() = default;
 
-	   void		 add  ( const Building& );
-	   void		 clear( const Building& );
+	   void		  add  ( const Building& );
+	   pair<int, int> shift( Building& );
+	   void		  clear( const Building& );
 
     set< shared_ptr<Building> > getBuildingsAround ( const Building &, const vector< shared_ptr<Building> >& ) const;
 	   int	       	 countAround ( const Building &, const vector< shared_ptr<Building> >& ) const;  
@@ -47,6 +48,7 @@ namespace wallin
 
     inline set<int>	 buildingsAt( int row, int col ) const { return matrixId_[row][col]; }
     inline set<int>	 buildingsAt( pair<int, int> p ) const { return buildingsAt(p.first, p.second); }
+    inline set<int>	 buildingsAt( int p ) const { return buildingsAt( lin2mat( p ) ); }
 
     inline pair<int, int> getStartingTile()	const { return startingTile; }
     inline pair<int, int> getTargetTile()	const { return targetTile; }

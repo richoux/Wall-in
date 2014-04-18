@@ -30,6 +30,8 @@ namespace wallin
     friend std::ostream& operator<<( std::ostream&, const Constraint& );
     
   protected:
+    bool isWall() const;
+    
     std::vector< std::shared_ptr<Building> > variables;
     Grid grid;
   };  
@@ -40,6 +42,7 @@ namespace wallin
   public:
     Overlap( const std::vector< std::shared_ptr<Building> >&, const Grid& );
     double cost( std::vector<double>& ) const;
+    std::vector<double> simulateCost( Building&, const std::vector<int>&, int, std::vector< std::vector<double> >& );
   };
 
   //Buildable
@@ -48,6 +51,7 @@ namespace wallin
   public:
     Buildable( const std::vector< std::shared_ptr<Building> >&, const Grid& );
     double cost( std::vector<double>& ) const;
+    std::vector<double> simulateCost( Building&, const std::vector<int>&, int, std::vector< std::vector<double> >& );
   };
 
   //NoGaps

@@ -39,6 +39,7 @@ namespace wallin
   private:
     void reset();
     void move( shared_ptr<Building>&, int );
+    set< shared_ptr<Building> > getNecessaryBuildings() const;
 
     vector< shared_ptr<Constraint> > vecConstraints;
     vector<shared_ptr<Building> > vecBuildings;
