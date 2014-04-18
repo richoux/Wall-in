@@ -10,7 +10,7 @@
 #include <limits>
 #include <algorithm>
 #include <functional>
-#include <set>
+#include <cassert>
 
 #include "building.hpp"
 #include "constraint.hpp"

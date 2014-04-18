@@ -84,9 +84,6 @@ namespace wallin
     chrono::duration<double,milli> timeCleaning(0);
     chrono::time_point<chrono::system_clock> startSimCost, startCost, startCleaning; 
 
-    chrono::duration<double,milli> tfor(0), ttransform(0), treplace_if(0), tfor2(0), tfortotal(0);
-    chrono::time_point<chrono::system_clock> sfor, stransform, sreplace_if, sfor2; 
-
     chrono::duration<double,milli> toverlap(0), tbuildable(0), tnogaps(0), tstt(0);
     chrono::time_point<chrono::system_clock> soverlap, sbuildable, snogaps, sstt; 
  
@@ -192,8 +189,6 @@ namespace wallin
       // tfor = chrono::system_clock::now() - sfor;
       // tfortotal += chrono::system_clock::now() - sfor;
 
-      sfor = chrono::system_clock::now();
-
       soverlap = chrono::system_clock::now();
       vecConstraintsCosts[0] = vecConstraints[0]->simulateCost( *oldBuilding, possiblePositions, sizeGrid, vecVarSimCosts );
       toverlap += chrono::system_clock::now() - soverlap;
@@ -210,41 +205,40 @@ namespace wallin
       vecConstraintsCosts[3] = vecConstraints[3]->simulateCost( *oldBuilding, possiblePositions, sizeGrid, vecVarSimCosts );
       tstt += chrono::system_clock::now() - sstt;
 
-      tfor = chrono::system_clock::now() - sfor;
-      tfortotal += chrono::system_clock::now() - sfor;
-
       fill( vecGlobalCosts.begin(), vecGlobalCosts.end(), 0. );
       
       // sum all numbers in the vector vecConstraintsCosts[i] and put it into vecGlobalCosts[i] 
-      stransform = chrono::system_clock::now();
       for( auto v : vecConstraintsCosts )
       	transform( vecGlobalCosts.begin(), 
 		   vecGlobalCosts.end(), 
 		   v.begin(), 
 		   vecGlobalCosts.begin(), 
 		   plus<double>() );
-      ttransform = chrono::system_clock::now() - stransform;
+
+      // for( int i = 0; i < vecGlobalCosts.size(); ++i )
+      // 	assert( vecGlobalCosts[i] == vecConstraintsCosts[0][i] + vecConstraintsCosts[1][i] + vecConstraintsCosts[2][i] + vecConstraintsCosts[3][i] );
       
       // replace all negative numbers by the max value for double
-      sreplace_if = chrono::system_clock::now();
       replace_if( vecGlobalCosts.begin(), 
 		  vecGlobalCosts.end(), 
 		  bind( less<double>(), placeholders::_1, 0. ), 
 		  numeric_limits<double>::max() );
-      treplace_if = chrono::system_clock::now() - sreplace_if;
 
       // look for the first smallest cost
-      sfor2 = chrono::system_clock::now();
+
       for( int i = 0; i < vecGlobalCosts.size(); ++i )
+      {
+	std::cout << "vecGlobalCosts[" << i << "] = " << vecGlobalCosts[i] << std::endl;
       	if( vecGlobalCosts[i] < bestEstimatedCost
       	    || ( vecGlobalCosts[i] == bestEstimatedCost //heuristic: better to take i=-1 or the nearest position from the target tile. 
       		 && ( i == 0 || grid.distanceToTarget( i - 1 ) < grid.distanceToTarget( bestPosition ) ) ) )
       	{
       	  bestEstimatedCost = vecGlobalCosts[i];
+	  std::cout << "Best Estimated Cost = " << bestEstimatedCost << std::endl;
       	  bestPosition = i - 1;
       	  bestSimCost = vecVarSimCosts[i];
       	}
-      tfor2 = chrono::system_clock::now() - sfor2;
+      }
 
       timeSimCost += chrono::system_clock::now() - startSimCost;
 
@@ -275,6 +269,8 @@ namespace wallin
 
       if( bestEstimatedCost < bestGlobalCost )
       {
+	std::cout << "moved building: " << worstBuildingId << std::endl;
+	std::cout << "new position: " << bestPosition << std::endl;
 	bestGlobalCost = bestEstimatedCost;
 	variableCost = bestSimCost;
 	move( oldBuilding, bestPosition );
@@ -284,6 +280,8 @@ namespace wallin
 
       elapsedTime = chrono::system_clock::now() - start;
     } while( bestGlobalCost != 0. && elapsedTime.count() < timeout );
+
+    cout << "Grids before cleaning:" << grid << endl;
 
     // remove useless buildings
     if( bestGlobalCost == 0 )
@@ -336,11 +334,6 @@ namespace wallin
 	 << "Elapsed time to simulate cost: " << timeSimCost.count() << endl
       //<< "Elapsed time to cost: " << timeCost.count() << endl
 	 << "Elapsed time to clean: " << timeCleaning.count() << endl
-	 << "Last for 1: " << tfor.count() << endl
-	 << "Total for 1: " << tfortotal.count() << endl
-	 << "Transform: " << ttransform.count() << endl
-	 << "Replace_if: " << treplace_if.count() << endl
-	 << "For 2: " << tfor2.count() << endl
 	 << "Overlap: " << toverlap.count() << endl
 	 << "Buildable: " << tbuildable.count() << endl
 	 << "NoGaps: " << tnogaps.count() << endl
