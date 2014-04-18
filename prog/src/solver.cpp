@@ -213,6 +213,14 @@ namespace wallin
       double cost;
       NoGapsFinalize ngf( vecBuildings, grid );
 
+      // find all buildings accessible from the starting building and remove all others
+      auto current = *( grid.buildingsAt( grid.getStartingTile() ).begin() );
+      std::set<Building> toVisit;
+      std::set<Building> visited;
+      
+      // TODO
+
+      // clean wall from unnecessary buildings.
       do
       {
     	for( auto b : vecBuildings )
