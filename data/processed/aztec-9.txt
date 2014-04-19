@@ -1,10 +1,7 @@
 Chokepoint:
-Region 1: 4,13
-Region 2: -18,-28
-wall from 4,3 to 2,0
-wall from 2,4 to 0,3
+wall from 3,4 to 0,2
 21022
-11000
-11100
-00110
-00011
+21022
+21022
+21022
+21022
