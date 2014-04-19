@@ -39,8 +39,8 @@ int main(int argc, char **argv)
         std::vector<std::pair<int,int>> wall_end;
         printf("Processing chokepoint data...\n");
         // ignore the following two lines:
-        read = getline(&line, &len, fp);
-        read = getline(&line, &len, fp);
+//        read = getline(&line, &len, fp);
+//        read = getline(&line, &len, fp);
 
         // now read the start and end of a wall:
         do {
