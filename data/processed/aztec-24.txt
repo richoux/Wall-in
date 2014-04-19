@@ -1,0 +1,6 @@
+Chokepoint:
+Region 1: -1,-8
+Region 2: 4,17
+110
+110
+011

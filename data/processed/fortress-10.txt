@@ -1,0 +1,6 @@
+Chokepoint:
+Region 1: -12,11
+Region 2: 41,-38
+001
+001
+111
