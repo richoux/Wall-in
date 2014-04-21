@@ -7,11 +7,12 @@ using namespace std;
 
 namespace wallin
 {
-
+  enum Race{ Terran, Protoss, Zerg, Unknown };
+  
   class Building
   {
   public:
-    Building(int, int, int, int, int, int, string = "", int = 0);
+    Building(int, int, int, int, int, int, string = "", int = 0, Race = Unknown);
     Building(const Building&) = default;
     Building(Building&&) = default;
     Building& operator=(const Building&) = default;
@@ -26,6 +27,16 @@ namespace wallin
 
     inline int    getId()	const	{ return id; }
     inline string getShort()	const	{ return shortname; }
+    inline string getRace()	const	
+      { 
+	switch( race ) 
+	{
+	case Terran: return "Terran";
+	case Protoss: return "Protoss";
+	case Zerg: return "Zerg";
+	default: return "Unknown";
+	}
+      }
 
     inline int getLength()	const	{ return length; }
     inline int getHeight()	const	{ return height; }
@@ -53,6 +64,7 @@ namespace wallin
     int position;
     int id;
 
+    Race race;
   private:
     static int nberBuildings;
   };
@@ -60,50 +72,50 @@ namespace wallin
   class Academy : public Building
   {
   public:
-    Academy() : Building(3, 2, 0, 3, 7, 8, "A") { }
-    Academy(int pos) : Building(3, 2, 0, 3, 7, 8, "A", pos) { }
+    Academy() : Building(3, 2, 0, 3, 7, 8, "A", Terran) { }
+    Academy(int pos) : Building(3, 2, 0, 3, 7, 8, "A", pos, Terran) { }
   };
 
   class Barracks : public Building
   {
   public:
-    Barracks() : Building(4, 3, 8, 7, 15, 16, "B") { }
-    Barracks(int pos) : Building(4, 3, 8, 7, 15, 16, "B", pos) { }
+    Barracks() : Building(4, 3, 8, 7, 15, 16, "B", Terran) { }
+    Barracks(int pos) : Building(4, 3, 8, 7, 15, 16, "B", pos, Terran) { }
   };
 
   class Bunker : public Building
   {
   public:
-    Bunker() : Building(3, 2, 8, 15, 15, 16, "U") { }
-    Bunker(int pos) : Building(3, 2, 8, 15, 15, 16, "U", pos) { }
+    Bunker() : Building(3, 2, 8, 15, 15, 16, "U", Terran) { }
+    Bunker(int pos) : Building(3, 2, 8, 15, 15, 16, "U", pos, Terran) { }
   };
 
   class EngineeringBay : public Building
   {
   public:
-    EngineeringBay() : Building(4, 3, 16, 15, 19, 16, "E") { }
-    EngineeringBay(int pos) : Building(4, 3, 16, 15, 19, 16, "E", pos) { }
+    EngineeringBay() : Building(4, 3, 16, 15, 19, 16, "E", Terran) { }
+    EngineeringBay(int pos) : Building(4, 3, 16, 15, 19, 16, "E", pos, Terran) { }
   };
 
   class Factory : public Building
   {
   public:
-    Factory() : Building(4, 3, 8, 7, 7, 8, "F") { }
-    Factory(int pos) : Building(4, 3, 8, 7, 7, 8, "F", pos) { }
+    Factory() : Building(4, 3, 8, 7, 7, 8, "F", Terran) { }
+    Factory(int pos) : Building(4, 3, 8, 7, 7, 8, "F", pos, Terran) { }
   };
 
   class MissileTurret : public Building
   {
   public:
-    MissileTurret() : Building(2, 2, 0, 15, 15, 16, "T") { }
-    MissileTurret(int pos) : Building(2, 2, 0, 15, 15, 16, "T", pos) { }
+    MissileTurret() : Building(2, 2, 0, 15, 15, 16, "T", Terran) { }
+    MissileTurret(int pos) : Building(2, 2, 0, 15, 15, 16, "T", pos, Terran) { }
   };
 
   class SupplyDepot : public Building
   {
   public:
-    SupplyDepot() : Building(3, 2, 10, 9, 5, 10, "S") { }
-    SupplyDepot(int pos) : Building(3, 2, 10, 9, 5, 10, "S", pos) { }
+    SupplyDepot() : Building(3, 2, 10, 9, 5, 10, "S", Terran) { }
+    SupplyDepot(int pos) : Building(3, 2, 10, 9, 5, 10, "S", pos, Terran) { }
   };
 
 } // namespace wallin

@@ -11,7 +11,8 @@ namespace wallin
 		     int bottom, 
 		     int left, 
 		     std::string shortname, 
-		     int position)
+		     int position,
+		     Race race)
     : length(x),
       height(y),
       gapTop(top), 
@@ -20,7 +21,8 @@ namespace wallin
       gapLeft(left),
       shortname(shortname),
       position(position),
-      id(Building::nberBuildings++)
+      id(Building::nberBuildings++),
+      race(race)
   { }
 
   Building::~Building() {}
@@ -29,6 +31,7 @@ namespace wallin
   {
     return os
       << "Type: " <<  typeid(b).name() << std::endl
+      << "Race: " <<  b.getRace() << std::endl
       << "Short name: " << b.shortname << std::endl
       << "Id num: " << b.id << std::endl
       << "Position: " <<  b.position << std::endl
