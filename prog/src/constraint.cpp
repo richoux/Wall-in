@@ -258,7 +258,7 @@ namespace wallin
     // cost = |buildings with one neighbor| - 1 + |buildings with no neighbors|
     double conflicts = 0.;
 
-    if( !this->isWall() )
+    if( !isWall() )
     {
       int nberNeighbors;
       std::vector<int> oneNeighborBuildings;
