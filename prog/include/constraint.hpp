@@ -62,14 +62,6 @@ namespace wallin
     double cost( std::vector<double>& ) const;
   };
 
-  //NoGapsFinalize
-  class NoGapsFinalize : public Constraint
-  {
-  public:
-    NoGapsFinalize( const std::vector< std::shared_ptr<Building> >&, const Grid& );
-    double cost( std::vector<double>& ) const;
-  };
-
   //StartingTargetTiles
   class StartingTargetTiles : public Constraint
   {

@@ -282,7 +282,7 @@ namespace wallin
 	}
       }
 
-      if( oneNeighborBuildings.size() > 2 )
+      if( oneNeighborBuildings.size() > 2 ) // for latter: pylons can be alone, or have 1 neighbor only
       {
 	for( auto b : oneNeighborBuildings )
 	  if( ! grid.isStartingOrTargetTile( b ) )
@@ -293,56 +293,6 @@ namespace wallin
       }
     }
     
-    return conflicts;    
-  }
-
-  /******************/
-  /* NoGapsFinalize */
-  /******************/
-  NoGapsFinalize::NoGapsFinalize(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) 
-    : Constraint(variables, grid)
-  { }
-
-  double NoGapsFinalize::cost( std::vector<double>& varCost ) const
-  {
-    double conflicts = 0.;
-    if( !this->isWall() )
-    {
-
-      int nberNeighbors;
-      std::vector<int> oneNeighborBuildings;
-
-      for( auto building : variables )
-      {
-	if( building->isOnGrid() )
-	{
-	  nberNeighbors = grid.countAround( *building, variables );
-	  //std::cout << "NoGaps building " << building->getId() << ": " << nberNeighbors << " neighbors."<< std::endl; 
-
-	  if( nberNeighbors == 0 )
-	  {
-	    ++conflicts;
-	    ++varCost[ building->getId() ];
-	  }
-	  else
-	  {
-	    if( nberNeighbors == 1 )
-	      oneNeighborBuildings.push_back( building->getId() );
-	  }
-	}
-      }
-
-      if( oneNeighborBuildings.size() > 3 )
-      {
-	for( auto b : oneNeighborBuildings )
-	  if( ! grid.isStartingOrTargetTile( b ) )
-	  {
-	    ++conflicts;
-	    ++varCost[ b ];
-	  }
-      }
-    }
-
     return conflicts;    
   }
 

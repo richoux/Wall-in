@@ -220,13 +220,11 @@ namespace wallin
 
       for( int i = 0; i < vecGlobalCosts.size(); ++i )
       {
-	std::cout << "vecGlobalCosts[" << i << "] = " << vecGlobalCosts[i] << std::endl;
       	if( vecGlobalCosts[i] < bestEstimatedCost
       	    || ( vecGlobalCosts[i] == bestEstimatedCost //heuristic: better to take i=-1 or the nearest position from the target tile. 
       		 && ( i == 0 || grid.distanceToTarget( i - 1 ) < grid.distanceToTarget( bestPosition ) ) ) )
       	{
       	  bestEstimatedCost = vecGlobalCosts[i];
-	  std::cout << "Best Estimated Cost = " << bestEstimatedCost << std::endl;
       	  bestPosition = i - 1;
       	  bestSimCost = vecVarSimCosts[i];
       	}
@@ -261,8 +259,6 @@ namespace wallin
 
       if( bestEstimatedCost < bestGlobalCost )
       {
-	std::cout << "moved building: " << worstBuildingId << std::endl;
-	std::cout << "new position: " << bestPosition << std::endl;
 	bestGlobalCost = bestEstimatedCost;
 	variableCost = bestSimCost;
 	move( oldBuilding, bestPosition );
@@ -273,8 +269,6 @@ namespace wallin
       elapsedTime = chrono::system_clock::now() - start;
     } while( bestGlobalCost != 0. && elapsedTime.count() < timeout );
 
-    cout << "Grids before cleaning:" << grid << endl;
-
     // remove useless buildings
     if( bestGlobalCost == 0 )
     {
@@ -282,7 +276,7 @@ namespace wallin
 
       bool change;
       double cost;
-      NoGapsFinalize ngf( vecBuildings, grid );
+      NoGaps ng( vecBuildings, grid );
 
       // remove all unreachable buildings from the starting building out of the grid
       set< shared_ptr<Building> > visited = getNecessaryBuildings();
@@ -305,13 +299,13 @@ namespace wallin
 	      cost = 0.;
 	      fill( varSimCost.begin(), varSimCost.end(), 0. );
 	      
-	      cost = ngf.simulateCost( *b, -1, varSimCost );
+	      cost = ng.simulateCost( *b, -1, varSimCost );
 	      
 	      if( cost == 0. )
 	      {
 		grid.clear( *b );
 		b->setPos( -1 );
-		ngf.update( grid );
+		ng.update( grid );
 		change = true;
 	      }	  
 	    }
