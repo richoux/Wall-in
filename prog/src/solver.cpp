@@ -80,12 +80,13 @@ namespace wallin
 
     // to time simulateCost and cost functions
     chrono::duration<double,milli> timeSimCost(0);
-    chrono::duration<double,milli> timeCost(0);
     chrono::duration<double,milli> timeCleaning(0);
-    chrono::time_point<chrono::system_clock> startSimCost, startCost, startCleaning; 
+    chrono::time_point<chrono::system_clock> startSimCost, startCleaning; 
 
+#ifndef NDEBUG
     chrono::duration<double,milli> toverlap(0), tbuildable(0), tnogaps(0), tstt(0);
     chrono::time_point<chrono::system_clock> soverlap, sbuildable, snogaps, sstt; 
+#endif
  
     int sizeGrid = grid.getNberRows() * grid.getNberCols() + 1; // + 1 for the "position -1" outside the grid
     vector< vector< double > > vecConstraintsCosts( vecConstraints.size(), vector<double>( vecBuildings.size(), 0. ) );
@@ -116,14 +117,9 @@ namespace wallin
       {
 	currentCost = 0.;
 
-	// time costs
-	//startCost = chrono::system_clock::now();
-	
 	for( auto c : vecConstraints )
 	  currentCost += c->cost( variableCost );
 
-	//timeCost = chrono::system_clock::now() - startCost;
-	
 	if( currentCost < bestGlobalCost )
 	  bestGlobalCost = currentCost;
 	else
@@ -183,12 +179,7 @@ namespace wallin
       // variable simulated costs
       fill( bestSimCost.begin(), bestSimCost.end(), 0. );
 
-      // sfor = chrono::system_clock::now();
-      // for( int i = 0; i < vecConstraints.size(); ++i )
-      // 	vecConstraintsCosts[i] = vecConstraints[i]->simulateCost( *oldBuilding, possiblePositions, sizeGrid, vecVarSimCosts );
-      // tfor = chrono::system_clock::now() - sfor;
-      // tfortotal += chrono::system_clock::now() - sfor;
-
+#ifndef NDEBUG
       soverlap = chrono::system_clock::now();
       vecConstraintsCosts[0] = vecConstraints[0]->simulateCost( *oldBuilding, possiblePositions, sizeGrid, vecVarSimCosts );
       toverlap += chrono::system_clock::now() - soverlap;
@@ -204,6 +195,10 @@ namespace wallin
       sstt = chrono::system_clock::now();
       vecConstraintsCosts[3] = vecConstraints[3]->simulateCost( *oldBuilding, possiblePositions, sizeGrid, vecVarSimCosts );
       tstt += chrono::system_clock::now() - sstt;
+#else
+      for( int i = 0; i < vecConstraints.size(); ++i )
+      	vecConstraintsCosts[i] = vecConstraints[i]->simulateCost( *oldBuilding, possiblePositions, sizeGrid, vecVarSimCosts );
+#endif
 
       fill( vecGlobalCosts.begin(), vecGlobalCosts.end(), 0. );
       
@@ -215,9 +210,6 @@ namespace wallin
 		   vecGlobalCosts.begin(), 
 		   plus<double>() );
 
-      // for( int i = 0; i < vecGlobalCosts.size(); ++i )
-      // 	assert( vecGlobalCosts[i] == vecConstraintsCosts[0][i] + vecConstraintsCosts[1][i] + vecConstraintsCosts[2][i] + vecConstraintsCosts[3][i] );
-      
       // replace all negative numbers by the max value for double
       replace_if( vecGlobalCosts.begin(), 
 		  vecGlobalCosts.end(), 
@@ -331,14 +323,16 @@ namespace wallin
 
     cout << "Grids:" << grid << endl
 	 << "Elapsed time: " << elapsedTime.count() << endl
-	 << "Elapsed time to simulate cost: " << timeSimCost.count() << endl
-      //<< "Elapsed time to cost: " << timeCost.count() << endl
+	 << "Global cost: " << bestGlobalCost << endl;
+
+#ifndef NDEBUG
+    cout << endl << "Elapsed time to simulate cost: " << timeSimCost.count() << endl
 	 << "Elapsed time to clean: " << timeCleaning.count() << endl
 	 << "Overlap: " << toverlap.count() << endl
 	 << "Buildable: " << tbuildable.count() << endl
 	 << "NoGaps: " << tnogaps.count() << endl
-	 << "STT: " << tstt.count() << endl
-	 << "Global cost: " << bestGlobalCost << endl;
+	 << "STT: " << tstt.count() << endl;
+
 
     // print cost for each constraint
     for( auto c : vecConstraints )
@@ -353,7 +347,8 @@ namespace wallin
     }      
     
     cout << endl;
-    
+#endif
+
     return bestGlobalCost;
   }
 }
