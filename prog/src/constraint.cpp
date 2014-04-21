@@ -12,14 +12,23 @@ namespace wallin
   {
     std::vector<double> simCosts( sizeGrid, -1. );
     int backup = oldBuilding.getPosition();
+    int previousPos;
     
     for( auto pos : newPosition )
     {
-      grid.clear( oldBuilding );
-      oldBuilding.setPos( pos );
-      grid.add( oldBuilding );
-      
+      if( pos >= 1 && pos == previousPos + 1 )
+      {
+	grid.quickShift( oldBuilding );
+      }
+      else
+      { 
+	grid.clear( oldBuilding );
+	oldBuilding.setPos( pos );
+	grid.add( oldBuilding );
+      }
+
       simCosts[pos+1] = cost( vecVarSimCosts[pos+1] );
+      previousPos = pos;
     }
 
     grid.clear( oldBuilding );

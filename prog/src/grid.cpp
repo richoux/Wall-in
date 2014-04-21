@@ -99,6 +99,27 @@ namespace wallin
     return make_pair( overlaps, unbuildables );
   }
 
+  void Grid::quickShift( Building& building )
+  {
+    if( building.isOnGrid() )
+    {
+      pair<int, int> pos = lin2mat( building.getPosition() );
+      int row = pos.first;
+      int col = pos.second;
+
+      int row_shift = row + building.getHeight();
+      int col_shift = col + building.getLength();
+
+      for( int x = row; x < row_shift; ++x )
+      {
+	add(x, col_shift, building.getShort(), building.getId() );	
+	clear(x, col, building.getShort(), building.getId() );
+      }
+      
+      building.shiftPos();
+    }
+  }
+
   void Grid::clear( const Building& building )
   {
     if( building.isOnGrid() )

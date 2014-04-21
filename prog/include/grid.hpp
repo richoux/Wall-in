@@ -33,6 +33,7 @@ namespace wallin
 
 	   void		  add  ( const Building& );
 	   pair<int, int> shift( Building& );
+	   void		  quickShift( Building& );
 	   void		  clear( const Building& );
 
     set< shared_ptr<Building> > getBuildingsAround ( const Building &, const vector< shared_ptr<Building> >& ) const;
