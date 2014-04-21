@@ -18,21 +18,34 @@ namespace wallin
   {
     int xPos;
     int yPos;
+
+    string shortName;
+    bool supplyIncluded = false;
+
     for( auto b : vecBuildings )
     {
-      // 1 chance over 3 to be placed on the grid
-      int r = randomVar.getRandNum(3);
-      if( r == 0)
-      {
-	xPos = randomVar.getRandNum( grid.getNberRows() - b->getLength() );
-	yPos = randomVar.getRandNum( grid.getNberCols() - b->getHeight() );
-	b->setPos( grid.mat2lin( xPos, yPos ) );
+      // // 1 chance over 3 to be placed on the grid
+      // int r = randomVar.getRandNum(3);
+      // if( r == 0)
+      shortName = b->getShort();
 
-	grid.add( *b );
+      // Start with one Barracks and one supply
+      if( shortName.compare("B") == 0 || 
+	  ( shortName.compare("S") == 0 && !supplyIncluded ) )
+      {
+	if( shortName.compare("S") == 0 )
+	  supplyIncluded = true;
+
+    	xPos = randomVar.getRandNum( grid.getNberRows() - b->getLength() );
+    	yPos = randomVar.getRandNum( grid.getNberCols() - b->getHeight() );
+    	b->setPos( grid.mat2lin( xPos, yPos ) );
+
+    	grid.add( *b );
       }
       else
-	b->setPos( -1 );
+    	b->setPos( -1 );
     }
+
     updateConstraints( vecConstraints, grid );
   }
 
