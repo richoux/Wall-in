@@ -4,13 +4,17 @@ namespace wallin
 {
   Solver::Solver( const vector< shared_ptr<Constraint> >& vecConstraints, 
 		  const vector<shared_ptr<Building> >& vecBuildings, 
-		  const Grid& grid )
+		  const Grid& grid,
+		  const string &obj )
     : vecConstraints(vecConstraints), 
       vecBuildings(vecBuildings), 
       variableCost( vector<double>( vecBuildings.size(), 0. ) ),
       grid(grid),
-      tabooList( vector<int>( vecBuildings.size(), 0 ) )
+      tabooList( vector<int>( vecBuildings.size(), 0 ) ),
+      factory(FactoryObj()),
+      objective(factory.makeObjective( obj ))
   { 
+    // objective = factory.makeObjective( obj );
     reset();
   }
 
@@ -178,6 +182,7 @@ namespace wallin
       }
       
       // b is one of the most misplaced building.
+      // can apply some heuristics here, according to the objective function
       worstBuildingId = worstBuildings[ randomVar.getRandNum( worstBuildings.size() ) ];
 
       // Building oldBuilding = *(mapBuildings[ worstBuildingId ]);

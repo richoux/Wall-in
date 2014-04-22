@@ -16,6 +16,7 @@
 #include "grid.hpp"
 #include "tools.hpp"
 #include "random.hpp"
+#include "objective.hpp"
 
 using namespace std;
 
@@ -26,7 +27,8 @@ namespace wallin
   public:
     Solver( const vector< shared_ptr<Constraint> >&, 
 	    const vector<shared_ptr<Building> >&, 
-	    const Grid& );
+	    const Grid&,
+	    const string& = "" );
     Solver(const Solver&) = default;
     Solver(Solver&&) = default;
     Solver& operator=(const Solver&) = default;
@@ -46,5 +48,7 @@ namespace wallin
     Grid grid;
     vector<int> tabooList;
     Random randomVar;
+    FactoryObj factory;
+    shared_ptr<Objective> objective;
   };
 }
