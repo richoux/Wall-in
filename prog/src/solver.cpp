@@ -116,7 +116,7 @@ namespace wallin
     double bestEstimatedCost = numeric_limits<double>::max();
     int    bestPosition;
 
-    vector<double> worstBuildings;
+    vector<int> worstBuildings;
     double worstVariableCost;
     int worstBuildingId;
 
@@ -183,7 +183,8 @@ namespace wallin
       
       // b is one of the most misplaced building.
       // can apply some heuristics here, according to the objective function
-      worstBuildingId = worstBuildings[ randomVar.getRandNum( worstBuildings.size() ) ];
+      // worstBuildingId = worstBuildings[ randomVar.getRandNum( worstBuildings.size() ) ];
+      worstBuildingId = objective->heuristicVariable( worstBuildings );
 
       // Building oldBuilding = *(mapBuildings[ worstBuildingId ]);
       oldBuilding = vecBuildings[ worstBuildingId ];
@@ -236,17 +237,18 @@ namespace wallin
 
       // look for the first smallest cost
 
-      for( int i = 0; i < vecGlobalCosts.size(); ++i )
-      {
-      	if( vecGlobalCosts[i] < bestEstimatedCost
-      	    || ( vecGlobalCosts[i] == bestEstimatedCost //heuristic: better to take i=-1 or the nearest position from the target tile. 
-      		 && ( i == 0 || grid.distanceToTarget( i - 1 ) < grid.distanceToTarget( bestPosition ) ) ) )
-      	{
-      	  bestEstimatedCost = vecGlobalCosts[i];
-      	  bestPosition = i - 1;
-      	  bestSimCost = vecVarSimCosts[i];
-      	}
-      }
+      // for( int i = 0; i < vecGlobalCosts.size(); ++i )
+      // {
+      // 	if( vecGlobalCosts[i] < bestEstimatedCost
+      // 	    || ( vecGlobalCosts[i] == bestEstimatedCost //heuristic: better to take i=-1 or the nearest position from the target tile. 
+      // 		 && ( i == 0 || grid.distanceToTarget( i - 1 ) < grid.distanceToTarget( bestPosition ) ) ) )
+      // 	{
+      // 	  bestEstimatedCost = vecGlobalCosts[i];
+      // 	  bestPosition = i - 1;
+      // 	  bestSimCost = vecVarSimCosts[i];
+      // 	}
+      // }
+      bestSimCost = vecVarSimCosts[ objective->heuristicValue( vecGlobalCosts, bestEstimatedCost, bestPosition, grid) ];
 
       timeSimCost += chrono::system_clock::now() - startSimCost;
 

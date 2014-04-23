@@ -29,7 +29,7 @@ namespace wallin
 	  || ( vecPositions[i] == bestEstimatedCost
 	       && ( i == 0 || grid.distanceToTarget( i - 1 ) < grid.distanceToTarget( bestPosition ) ) ) )
       {
-	bestEstimatedCost = vecGlobalCosts[i];
+	bestEstimatedCost = vecPositions[i];
 	bestPosition = i - 1;
 	best = i;
       }
