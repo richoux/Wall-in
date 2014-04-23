@@ -58,7 +58,7 @@ int main(int argc, char **argv)
   std::vector<std::shared_ptr<Building> > vec			= makeTerranBuildings();
   std::vector< std::shared_ptr<Constraint> > vecConstraints	= makeTerranConstraints( vec, grid );
 
-  Solver solver( vecConstraints, vec, grid );
+  Solver solver( vecConstraints, vec, grid, "b" );
 #ifndef NDEBUG
   solver.solve( 200 );
 

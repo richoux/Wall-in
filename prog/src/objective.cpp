@@ -3,23 +3,13 @@
 namespace wallin
 {
 
-  /***********/
-  /* NoneObj */
-  /***********/
-  double NoneObj::cost( std::vector< std::shared_ptr<Building> > &vecBuildings )
-  {
-    return 0.;
-  }
-
-  int NoneObj::heuristicVariable( const std::vector< int > &vecVariables )
-  {
-    return vecVariables[ randomVar.getRandNum( vecVariables.size() ) ];
-  }
-
-  int NoneObj::heuristicValue( const std::vector< double > &vecPositions, 
-			       double &bestEstimatedCost,
-			       int &bestPosition,
-			       const Grid &grid )
+  /*************/
+  /* Objective */
+  /*************/
+  int Objective::heuristicValue( const std::vector< double > &vecPositions, 
+				 double &bestEstimatedCost,
+				 int &bestPosition,
+				 const Grid &grid ) const
   {
     int best = 0;
 
@@ -38,15 +28,28 @@ namespace wallin
     return best;
   }
 
+  /***********/
+  /* NoneObj */
+  /***********/
+  double NoneObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings ) const
+  {
+    return 0.;
+  }
+
+  int NoneObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings )
+  {
+    return vecVariables[ randomVar.getRandNum( vecVariables.size() ) ];
+  }
+
   /**********/
   /* GapObj */
   /**********/
-  double GapObj::cost( std::vector< std::shared_ptr<Building> > &vecBuildings )
+  double GapObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings ) const
   {
-
+    
   }
 
-  int GapObj::heuristicVariable( const std::vector< int > &vecVariables )
+  int GapObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings )
   {
 
   }
@@ -54,7 +57,7 @@ namespace wallin
   int GapObj::heuristicValue( const std::vector< double > &vecPositions,
 			      double &bestEstimatedCost,
 			      int &bestPosition,
-			      const Grid &grid )
+			      const Grid &grid ) const
   {
 
   }
@@ -62,49 +65,76 @@ namespace wallin
   /***************/
   /* BuildingObj */
   /***************/
-  double BuildingObj::cost( std::vector< std::shared_ptr<Building> > &vecBuildings )
+  double BuildingObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings ) const
   {
-
+    return std::count_if( vecBuildings.begin(), 
+			  vecBuildings.end(), 
+			  [](std::shared_ptr<Building> b){return b->isOnGrid();} );
   }
 
-  int BuildingObj::heuristicVariable( const std::vector< int > &vecVariables )
+  int BuildingObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings )
   {
+    std::vector< int > varOnGrid( vecVariables.size() );
+    
+    auto it = std::copy_if( vecVariables.begin(),
+    			    vecVariables.end(),
+    			    varOnGrid.begin(),
+    			    [&](int b){return vecBuildings[b]->isOnGrid();} );
 
-  }
+    int size = std::distance( varOnGrid.begin(), it );
 
-  int BuildingObj::heuristicValue( const std::vector< double > &vecPositions,
-				   double &bestEstimatedCost,
-				   int &bestPosition,
-				   const Grid &grid )
-  {
+    if( it == varOnGrid.begin() )
+    {
+      varOnGrid = vecVariables;
+      size = vecVariables.size();
+    }
 
+    return varOnGrid[ randomVar.getRandNum( size ) ];    
   }
 
   /***************/
   /* TechTreeObj */
   /***************/
-  double TechTreeObj::cost( std::vector< std::shared_ptr<Building> > &vecBuildings )
+  double TechTreeObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings ) const
   {
+    auto max =  std::max_element( vecBuildings.begin(), 
+				  vecBuildings.end(), 
+				  [](std::shared_ptr<Building> b1, std::shared_ptr<Building> b2)
+				  {return b1->getTreedepth() < b2->getTreedepth();} );
 
+    return (*max)->getTreedepth();
   }
 
-  int TechTreeObj::heuristicVariable( const std::vector< int > &vecVariables )
+  int TechTreeObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings )
   {
+    auto min =  std::min_element( vecBuildings.begin(), 
+				  vecBuildings.end(), 
+				  [](std::shared_ptr<Building> b1, std::shared_ptr<Building> b2)
+				  {return b1->getTreedepth() < b2->getTreedepth();} );
 
-  }
+    int minValue = (*min)->getTreedepth();
+    std::vector< int > varMinTech( vecVariables.size() );
+    
+    auto it = std::copy_if( vecVariables.begin(),
+			    vecVariables.end(),
+			    varMinTech.begin(),
+			    [&](int b){return vecBuildings[b]->getTreedepth() == minValue;} );
+    
+    int size = std::distance( varMinTech.begin(), it );
 
-  int TechTreeObj::heuristicValue( const std::vector< double > &vecPositions, 
-				   double &bestEstimatedCost,
-				   int &bestPosition,
-				   const Grid &grid )
-  {
+    if( it == varMinTech.begin() )
+    {
+      varMinTech = vecVariables;
+      size = vecVariables.size();
+    }
 
+    return varMinTech[ randomVar.getRandNum( size ) ];    
   }
 
   /**************/
   /* FactoryObj */
   /**************/
-  std::shared_ptr<Objective> FactoryObj::makeObjective( const std::string &obj )
+  std::shared_ptr<Objective> FactoryObj::makeObjective( const std::string &obj ) const
   {
     if( obj.compare("gap") == 0 || obj.compare("g") == 0 || obj.compare("G") == 0 )
       return std::make_shared<GapObj>();
