@@ -31,7 +31,7 @@ namespace wallin
   /***********/
   /* NoneObj */
   /***********/
-  double NoneObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings ) const
+  double NoneObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
     return 0.;
   }
@@ -44,9 +44,20 @@ namespace wallin
   /**********/
   /* GapObj */
   /**********/
-  double GapObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings ) const
+  double GapObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
+    int gaps = 0;
     
+    std::vector< std::shared_ptr<Building> > toVisit = vecBuildings;
+    std::set< std::shared_ptr<Building> > neighbors;
+
+    while( !toVisit.empty() )
+    {
+      auto b = *(toVisit.begin());
+      neighbors = grid.getBuildingsAround( *b, toVisit );
+      // for( auto n : neighbors )
+      // 	if( )
+    }
   }
 
   int GapObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings )
@@ -65,7 +76,7 @@ namespace wallin
   /***************/
   /* BuildingObj */
   /***************/
-  double BuildingObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings ) const
+  double BuildingObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
     return std::count_if( vecBuildings.begin(), 
 			  vecBuildings.end(), 
@@ -95,7 +106,7 @@ namespace wallin
   /***************/
   /* TechTreeObj */
   /***************/
-  double TechTreeObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings ) const
+  double TechTreeObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
     auto max =  std::max_element( vecBuildings.begin(), 
 				  vecBuildings.end(), 

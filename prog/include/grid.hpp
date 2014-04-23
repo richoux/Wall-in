@@ -37,6 +37,10 @@ namespace wallin
 	   void		  clear( const Building& );
 
     set< shared_ptr<Building> > getBuildingsAround ( const Building &, const vector< shared_ptr<Building> >& ) const;
+    set< shared_ptr<Building> > getBuildingsAbove ( const Building &, const vector< shared_ptr<Building> >& ) const;
+    set< shared_ptr<Building> > getBuildingsOnRight ( const Building &, const vector< shared_ptr<Building> >& ) const;
+    set< shared_ptr<Building> > getBuildingsBelow ( const Building &, const vector< shared_ptr<Building> >& ) const;
+    set< shared_ptr<Building> > getBuildingsOnLeft ( const Building &, const vector< shared_ptr<Building> >& ) const;
 	   int	       	 countAround ( const Building &, const vector< shared_ptr<Building> >& ) const;  
 
 	   int		 randomPos   ( const Building& );
