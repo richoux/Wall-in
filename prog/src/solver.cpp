@@ -184,7 +184,7 @@ namespace wallin
       // b is one of the most misplaced building.
       // can apply some heuristics here, according to the objective function
       // worstBuildingId = worstBuildings[ randomVar.getRandNum( worstBuildings.size() ) ];
-      worstBuildingId = objective->heuristicVariable( worstBuildings, vecBuildings );
+      worstBuildingId = objective->heuristicVariable( worstBuildings, vecBuildings, grid );
 
       // Building oldBuilding = *(mapBuildings[ worstBuildingId ]);
       oldBuilding = vecBuildings[ worstBuildingId ];

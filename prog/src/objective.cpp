@@ -36,7 +36,7 @@ namespace wallin
     return 0.;
   }
 
-  int NoneObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings )
+  int NoneObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid )
   {
     return vecVariables[ randomVar.getRandNum( vecVariables.size() ) ];
   }
@@ -49,28 +49,59 @@ namespace wallin
     int gaps = 0;
     
     std::vector< std::shared_ptr<Building> > toVisit = vecBuildings;
-    std::set< std::shared_ptr<Building> > neighbors;
 
     while( !toVisit.empty() )
     {
       auto b = *(toVisit.begin());
-      neighbors = grid.getBuildingsAround( *b, toVisit );
-      // for( auto n : neighbors )
-      // 	if( )
+      gaps += gapSize( b, toVisit, grid );
+      toVisit.erase( toVisit.begin() );
     }
+
+    return gaps;
   }
 
-  int GapObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings )
+  int GapObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid )
   {
+    auto worst =  std::max_element(vecVariables.begin(),
+				   vecVariables.end(),
+				   [&](int v1, int v2)
+				   {return gapSize( vecBuildings[v1], vecBuildings, grid ) < gapSize( vecBuildings[v2], vecBuildings, grid );} );
 
+    return *(worst);
   }
 
-  int GapObj::heuristicValue( const std::vector< double > &vecPositions,
-			      double &bestEstimatedCost,
-			      int &bestPosition,
-			      const Grid &grid ) const
-  {
+  // int GapObj::heuristicValue( const std::vector< double > &vecPositions,
+  // 			      double &bestEstimatedCost,
+  // 			      int &bestPosition,
+  // 			      const Grid &grid ) const
+  // {
+    
+  // }
 
+  int GapObj::gapSize( const std::shared_ptr<Building> b, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
+  {
+    int gaps = 0;
+    std::set< std::shared_ptr<Building> > neighbors = grid.getBuildingsAbove( *b, vecBuildings );
+    gaps += std::count_if( neighbors.begin(), 
+			   neighbors.end(), 
+			   [&](std::shared_ptr<Building> n){return b->getGapTop() + n->getGapBottom() >= 16;});
+    
+    neighbors = grid.getBuildingsOnRight( *b, vecBuildings );
+    gaps += std::count_if( neighbors.begin(), 
+			   neighbors.end(), 
+			   [&](std::shared_ptr<Building> n){return b->getGapRight() + n->getGapLeft() >= 16;});
+    
+    neighbors = grid.getBuildingsBelow( *b, vecBuildings );
+    gaps += std::count_if( neighbors.begin(), 
+			   neighbors.end(), 
+			   [&](std::shared_ptr<Building> n){return b->getGapBottom() + n->getGapTop() >= 16;});
+    
+    neighbors = grid.getBuildingsOnLeft( *b, vecBuildings );
+    gaps += std::count_if( neighbors.begin(), 
+			   neighbors.end(), 
+			   [&](std::shared_ptr<Building> n){return b->getGapLeft() + n->getGapRight() >= 16;});
+
+    return gaps;
   }
 
   /***************/
@@ -83,7 +114,7 @@ namespace wallin
 			  [](std::shared_ptr<Building> b){return b->isOnGrid();} );
   }
 
-  int BuildingObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings )
+  int BuildingObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid )
   {
     std::vector< int > varOnGrid( vecVariables.size() );
     
@@ -116,7 +147,7 @@ namespace wallin
     return (*max)->getTreedepth();
   }
 
-  int TechTreeObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings )
+  int TechTreeObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid )
   {
     auto min =  std::min_element( vecBuildings.begin(), 
 				  vecBuildings.end(), 
