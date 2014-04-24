@@ -16,7 +16,6 @@ namespace wallin
       factory(FactoryObj()),
       objective(factory.makeObjective( obj ))
   { 
-    // objective = factory.makeObjective( obj );
     reset();
   }
 
@@ -30,9 +29,6 @@ namespace wallin
 
     for( auto b : vecBuildings )
     {
-      // // 1 chance over 3 to be placed on the grid
-      // int r = randomVar.getRandNum(3);
-      // if( r == 0)
       shortName = b->getShort();
 
       // Start with one Barracks and one supply
@@ -183,12 +179,8 @@ namespace wallin
 	}
       }
       
-      // b is one of the most misplaced building.
       // can apply some heuristics here, according to the objective function
-      // worstBuildingId = worstBuildings[ randomVar.getRandNum( worstBuildings.size() ) ];
       worstBuildingId = objective->heuristicVariable( worstBuildings, vecBuildings, grid );
-
-      // Building oldBuilding = *(mapBuildings[ worstBuildingId ]);
       oldBuilding = vecBuildings[ worstBuildingId ];
       
       // get possible positions for oldBuilding.
@@ -237,45 +229,10 @@ namespace wallin
 		  bind( less<double>(), placeholders::_1, 0. ), 
 		  numeric_limits<double>::max() );
 
-      // look for the first smallest cost
-
-      // for( int i = 0; i < vecGlobalCosts.size(); ++i )
-      // {
-      // 	if( vecGlobalCosts[i] < bestEstimatedCost
-      // 	    || ( vecGlobalCosts[i] == bestEstimatedCost //heuristic: better to take i=-1 or the nearest position from the target tile. 
-      // 		 && ( i == 0 || grid.distanceToTarget( i - 1 ) < grid.distanceToTarget( bestPosition ) ) ) )
-      // 	{
-      // 	  bestEstimatedCost = vecGlobalCosts[i];
-      // 	  bestPosition = i - 1;
-      // 	  bestSimCost = vecVarSimCosts[i];
-      // 	}
-      // }
+      // look for the first smallest cost, according to objective heuristic
       bestSimCost = vecVarSimCosts[ objective->heuristicValue( vecGlobalCosts, bestEstimatedCost, bestPosition, grid) ];
 
       timeSimCost += chrono::system_clock::now() - startSimCost;
-
-      // for(auto pos : possiblePositions )
-      // {
-      // 	estimatedCost = 0.;
-      // 	fill( varSimCost.begin(), varSimCost.end(), 0. );
-      
-      // 	// time simulateCost
-      // 	startSimCost = chrono::system_clock::now();
-
-      // 	for( auto c : vecConstraints )
-      // 	  estimatedCost += c->simulateCost( *oldBuilding, pos, varSimCost );
-
-      // 	timeSimCost += chrono::system_clock::now() - startSimCost;
-
-      // 	if( estimatedCost < bestEstimatedCost 
-      // 	    || ( estimatedCost == bestEstimatedCost //heuristics: better to take pos=-1 or the nearest position from the target tile. 
-      // 		 && ( pos == -1 || grid.distanceToTarget( pos ) < grid.distanceToTarget( bestPosition ) ) ) )
-      // 	{
-      // 	  bestEstimatedCost = estimatedCost;
-      // 	  bestPosition = pos;
-      // 	  bestSimCost = varSimCost;
-      // 	}
-      // }
 
       currentCost = bestEstimatedCost;
 
