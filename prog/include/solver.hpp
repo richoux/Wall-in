@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <functional>
 #include <cassert>
+#include <typeinfo>
 
 #include "building.hpp"
 #include "constraint.hpp"
@@ -42,13 +43,15 @@ namespace wallin
     void move( shared_ptr<Building>&, int );
     set< shared_ptr<Building> > getNecessaryBuildings() const;
 
-    vector< shared_ptr<Constraint> > vecConstraints;
-    vector<shared_ptr<Building> > vecBuildings;
-    vector<double> variableCost;
-    Grid grid;
-    vector<int> tabooList;
-    Random randomVar;
-    FactoryObj factory;
-    shared_ptr<Objective> objective;
+    vector< shared_ptr<Constraint> >	vecConstraints;
+    vector< shared_ptr<Building> >	vecBuildings;
+    vector<double>			variableCost;
+    Grid				grid;
+    vector<int>				tabooList;
+    Random				randomVar;
+    FactoryObj				factory;
+    shared_ptr<Objective>		objective;
+    double				bestCost;
+    vector< int >			bestSolution;
   };
 }

@@ -2,10 +2,11 @@
 
 namespace wallin
 {
-
   /*************/
   /* Objective */
   /*************/
+  Objective::Objective( bool defaultObj ) : defaultObj(defaultObj) { }
+
   int Objective::heuristicValue( const std::vector< double > &vecPositions, 
 				 double &bestEstimatedCost,
 				 int &bestPosition,
@@ -31,6 +32,8 @@ namespace wallin
   /***********/
   /* NoneObj */
   /***********/
+  NoneObj::NoneObj() : Objective(true) { }
+
   double NoneObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
     return 0.;
@@ -44,6 +47,8 @@ namespace wallin
   /**********/
   /* GapObj */
   /**********/
+  GapObj::GapObj() : Objective(false) { }
+
   double GapObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
     int gaps = 0;
@@ -107,6 +112,8 @@ namespace wallin
   /***************/
   /* BuildingObj */
   /***************/
+  BuildingObj::BuildingObj() : Objective(false) { }
+
   double BuildingObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
     return std::count_if( vecBuildings.begin(), 
@@ -137,6 +144,8 @@ namespace wallin
   /***************/
   /* TechTreeObj */
   /***************/
+  TechTreeObj::TechTreeObj() : Objective(false) { }
+
   double TechTreeObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
     auto max =  std::max_element( vecBuildings.begin(), 

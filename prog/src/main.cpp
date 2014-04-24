@@ -69,6 +69,8 @@ int main(int argc, char **argv)
   std::cout << std::boolalpha << "Random movable: " << std::is_nothrow_move_constructible<Random>::value << std::endl;
   std::cout << std::boolalpha << "Constraint movable: " << std::is_nothrow_move_constructible<Constraint>::value << std::endl;
   std::cout << std::boolalpha << "Overlap movable: " << std::is_nothrow_move_constructible<Overlap>::value << std::endl;
+  std::cout << std::boolalpha << "Objective movable: " << std::is_nothrow_move_constructible<Objective>::value << std::endl;
+  std::cout << std::boolalpha << "GapObj movable: " << std::is_nothrow_move_constructible<GapObj>::value << std::endl;
 #else
   solver.solve( 20 );    
 #endif
