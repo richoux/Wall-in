@@ -1,7 +1,7 @@
 #include "../include/solver.hpp"
 
 #define TABU 8
-#define OPT_TIME 1000
+#define OPT_TIME 200
 
 namespace wallin
 {
@@ -11,12 +11,11 @@ namespace wallin
 		  const string &obj )
     : vecConstraints(vecConstraints), 
       vecBuildings(vecBuildings), 
-      variableCost( vector<double>( vecBuildings.size(), 0. ) ),
+      variableCost( vecBuildings.size() ),
       grid(grid),
-      tabooList( vector<int>( vecBuildings.size(), 0 ) ),
+      tabooList( vecBuildings.size() ),
       factory(FactoryObj()),
       objective(factory.makeObjective( obj )),
-      bestCost(numeric_limits<double>::max()),
       bestSolution(vecBuildings.size())
   { 
     reset();
@@ -28,29 +27,32 @@ namespace wallin
     int yPos;
 
     string shortName;
-    bool supplyIncluded = false;
+    //bool supplyIncluded = false;
 
     clearAllInGrid( vecBuildings, grid );
 
     for( auto b : vecBuildings )
     {
-      shortName = b->getShort();
-
-      // Start with one Barracks and one supply
-      if( shortName.compare("B") == 0 || 
-	  ( shortName.compare("S") == 0 && !supplyIncluded ) )
+      // 1 chance over 3 to be placed on the grid
+      if( randomVar.getRandNum(3) == 0)
       {
-	if( shortName.compare("S") == 0 )
-	  supplyIncluded = true;
-
-    	xPos = randomVar.getRandNum( grid.getNberRows() - b->getLength() );
-    	yPos = randomVar.getRandNum( grid.getNberCols() - b->getHeight() );
-    	b->setPos( grid.mat2lin( xPos, yPos ) );
-
-    	grid.add( *b );
+	shortName = b->getShort();
+	
+	// Start with one Barracks and one supply
+	// if( shortName.compare("B") == 0 || 
+	//     ( shortName.compare("S") == 0 && !supplyIncluded ) )
+	// {
+	//   if( shortName.compare("S") == 0 )
+	//     supplyIncluded = true;
+	  
+	xPos = randomVar.getRandNum( grid.getNberRows() - b->getLength() );
+	yPos = randomVar.getRandNum( grid.getNberCols() - b->getHeight() );
+	b->setPos( grid.mat2lin( xPos, yPos ) );
+	
+	grid.add( *b );
       }
       else
-    	b->setPos( -1 );
+	b->setPos( -1 );
     }
 
     updateConstraints( vecConstraints, grid );
@@ -95,7 +97,9 @@ namespace wallin
   double Solver::solve( double timeout )
   {
     chrono::duration<double,milli> elapsedTime;
+    chrono::duration<double,milli> elapsedTimeTour;
     chrono::time_point<chrono::system_clock> start;
+    chrono::time_point<chrono::system_clock> startTour;
     start = chrono::system_clock::now();
 
     // to time simulateCost and cost functions
@@ -106,16 +110,18 @@ namespace wallin
     chrono::duration<double,milli> toverlap(0), tbuildable(0), tnogaps(0), tstt(0);
     chrono::time_point<chrono::system_clock> soverlap, sbuildable, snogaps, sstt; 
 #endif
- 
-    int sizeGrid = grid.getNberRows() * grid.getNberCols() + 1; // + 1 for the "position -1" outside the grid
-    vector< vector< double > > vecConstraintsCosts( vecConstraints.size(), vector<double>( vecBuildings.size(), 0. ) );
-    vector< double >		 vecGlobalCosts( vector<double>( sizeGrid, -1 ) );
-    vector< vector< double > > vecVarSimCosts( vector< vector<double> >( sizeGrid, vector<double>( vecBuildings.size(), 0. ) ) );
 
+    int sizeGrid = grid.getNberRows() * grid.getNberCols() + 1; // + 1 for the "position -1" outside the grid
+    vector< vector< double > >  vecConstraintsCosts( vecConstraints.size() );
+    vector< double >		vecGlobalCosts( sizeGrid );
+    vector< vector< double > >  vecVarSimCosts( sizeGrid );
+
+    bestCost = numeric_limits<double>::max();
     double bestGlobalCost = numeric_limits<double>::max();
+    double globalCost;
     double currentCost;
     double estimatedCost;
-    double bestEstimatedCost = numeric_limits<double>::max();
+    double bestEstimatedCost;
     int    bestPosition;
 
     vector<int> worstBuildings;
@@ -124,25 +130,35 @@ namespace wallin
 
     shared_ptr<Building> oldBuilding;
     vector<int> possiblePositions;
-    vector<double> varSimCost( vector<double>( vecBuildings.size(), 0. ) );
-    vector<double> bestSimCost( vector<double>( vecBuildings.size(), 0. ) );
+    vector<double> varSimCost( vecBuildings.size() );
+    vector<double> bestSimCost( vecBuildings.size() );
 
     int tour = 0;
 
     do // optimization loop
     {
+      startTour = chrono::system_clock::now();
+      ++tour;
+      globalCost = numeric_limits<double>::max();
+      bestEstimatedCost = numeric_limits<double>::max();
+      std::fill( varSimCost.begin(), varSimCost.end(), 0. );
+      std::fill( bestSimCost.begin(), bestSimCost.end(), 0. );
+      std::fill( vecConstraintsCosts.begin(), vecConstraintsCosts.end(), vector<double>( vecBuildings.size(), 0. ) );
+      std::fill( vecVarSimCosts.begin(), vecVarSimCosts.end(), vector<double>( vecBuildings.size(), 0. ) );
+      std::fill( variableCost.begin(), variableCost.end(), 0. );
+      std::fill( tabooList.begin(), tabooList.end(), 0 );
+
       do // solving loop 
       {
-	++tour;
-	if( bestGlobalCost == numeric_limits<double>::max() )
+	if( globalCost == numeric_limits<double>::max() )
 	{
 	  currentCost = 0.;
 
 	  for( auto c : vecConstraints )
 	    currentCost += c->cost( variableCost );
 
-	  if( currentCost < bestGlobalCost )
-	    bestGlobalCost = currentCost;
+	  if( currentCost < globalCost )
+	    globalCost = currentCost;
 	  else
 	  {
 	    reset();
@@ -242,24 +258,33 @@ namespace wallin
 
 	currentCost = bestEstimatedCost;
 
-	if( bestEstimatedCost < bestGlobalCost )
+	if( bestEstimatedCost < globalCost )
 	{
-	  bestGlobalCost = bestEstimatedCost;
+	  globalCost = bestEstimatedCost;
+
+	  if( globalCost < bestGlobalCost )
+	    bestGlobalCost = globalCost;
+
 	  variableCost = bestSimCost;
 	  move( oldBuilding, bestPosition );
 	}
 	else // local minima
 	  tabooList[ worstBuildingId ] = TABU;
 
-	elapsedTime = chrono::system_clock::now() - start;
-      } while( bestGlobalCost != 0. && elapsedTime.count() < timeout );
+	elapsedTimeTour = chrono::system_clock::now() - startTour;
+      } while( globalCost != 0. && elapsedTimeTour.count() < timeout );
 
       // remove useless buildings
-      if( bestGlobalCost == 0 )
+      if( globalCost == 0 )
       {
-	bool change;
-	double cost;
-	NoGaps ng( vecBuildings, grid );
+	// bool change;
+	// double cost;
+	// NoGaps ng( vecBuildings, grid );
+
+
+	//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	// TODO: hunt (possible) bugs in getNecessaryBuildings 
+	//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 	// remove all unreachable buildings from the starting building out of the grid
 	set< shared_ptr<Building> > visited = getNecessaryBuildings();
@@ -270,30 +295,30 @@ namespace wallin
 	    b->setPos( -1 );
 	  }
 
-	// clean wall from unnecessary buildings.
-	do
-	{
-	  for( auto b : vecBuildings )
-	    if( ! grid.isStartingOrTargetTile( b->getId() ) )
-	    {
-	      change = false;
-	      if( b->isOnGrid() )
-	      {
-		cost = 0.;
-		fill( varSimCost.begin(), varSimCost.end(), 0. );
+	// // clean wall from unnecessary buildings.
+	// do
+	// {
+	//   for( auto b : vecBuildings )
+	//     if( ! grid.isStartingOrTargetTile( b->getId() ) )
+	//     {
+	//       change = false;
+	//       if( b->isOnGrid() )
+	//       {
+	// 	cost = 0.;
+	// 	fill( varSimCost.begin(), varSimCost.end(), 0. );
 	      
-		cost = ng.simulateCost( *b, -1, varSimCost );
+	// 	cost = ng.simulateCost( *b, -1, varSimCost );
 	      
-		if( cost == 0. )
-		{
-		  grid.clear( *b );
-		  b->setPos( -1 );
-		  ng.update( grid );
-		  change = true;
-		}	  
-	      }
-	    }
-	} while( change );
+	// 	if( cost == 0. )
+	// 	{
+	// 	  grid.clear( *b );
+	// 	  b->setPos( -1 );
+	// 	  ng.update( grid );
+	// 	  change = true;
+	// 	}	  
+	//       }
+	//     }
+	// } while( change );
 
 	double objectiveCost = objective->cost( vecBuildings, grid );
 	if( objectiveCost < bestCost )
@@ -306,20 +331,10 @@ namespace wallin
       reset();
       elapsedTime = chrono::system_clock::now() - start;
     }
-    while( !objective->isDefault() && elapsedTime.count() < 1000 );
+    while( !objective->isDefault() && elapsedTime.count() < OPT_TIME );
 
-    cout << "vecBuildings:" << endl;
-    for( auto v : vecBuildings )
-      cout << "(" << grid.lin2mat(v->getPosition()).first << "," << grid.lin2mat(v->getPosition()).second << ") ";
-    cout << endl;
+    clearAllInGrid( vecBuildings, grid );
 
-    cout << "bestSolution:" << endl;
-    for( auto v : bestSolution )
-      cout << "(" << grid.lin2mat(v).first << "," << grid.lin2mat(v).second << ") ";
-    cout << endl;
-
-    // clearAllInGrid( vecBuildings, grid );
-    
     for( int i = 0; i < vecBuildings.size(); ++i )
       vecBuildings[i]->setPos( bestSolution[i] );
     
@@ -338,6 +353,7 @@ namespace wallin
 	 << "NoGaps: " << tnogaps.count() << endl
 	 << "STT: " << tstt.count() << endl;
 
+    updateConstraints( vecConstraints, grid );
 
     // print cost for each constraint
     for( auto c : vecConstraints )

@@ -12,7 +12,7 @@ namespace wallin
   class Building
   {
   public:
-    Building(int, int, int, int, int, int, string, Race, int, int = 0);
+    Building(int, int, int, int, int, int, string, Race, int, int = -1);
     Building(const Building&) = default;
     Building(Building&&) = default;
     Building& operator=(const Building&) = default;

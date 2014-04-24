@@ -18,6 +18,7 @@ namespace wallin
     {
       if(      vecPositions[i] < bestEstimatedCost
 	  || ( vecPositions[i] == bestEstimatedCost
+	       && bestEstimatedCost != numeric_limits<double>::max()
 	       && ( i == 0 || grid.distanceToTarget( i - 1 ) < grid.distanceToTarget( bestPosition ) ) ) )
       {
 	bestEstimatedCost = vecPositions[i];

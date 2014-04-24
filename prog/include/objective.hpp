@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
+#include <limits>
 
 #include "building.hpp"
 #include "grid.hpp"
