@@ -1,5 +1,7 @@
 #include "../include/solver.hpp"
 
+#define TABU 8
+
 namespace wallin
 {
   Solver::Solver( const vector< shared_ptr<Constraint> >& vecConstraints, 
@@ -284,7 +286,7 @@ namespace wallin
 	move( oldBuilding, bestPosition );
       }
       else // local minima
-	tabooList[ worstBuildingId ] = 5;
+	tabooList[ worstBuildingId ] = TABU;
 
       elapsedTime = chrono::system_clock::now() - start;
     } while( bestGlobalCost != 0. && elapsedTime.count() < timeout );
