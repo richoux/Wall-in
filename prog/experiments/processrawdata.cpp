@@ -75,6 +75,8 @@ bool breakOutputFile(const char *fileName, const char *destinationFolder, const 
         int dy = strlen(buffer);
         char map[dx][dy];
         for(int i = 0;i<dy;i++) {
+          if (i!=0) getline(&line, &len, fp);
+          sscanf(line,"%s",buffer);
           for(int j = 0;j<dx;j++) {
             map[j][i] = buffer[j];
           }
