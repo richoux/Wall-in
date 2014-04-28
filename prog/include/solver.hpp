@@ -4,6 +4,7 @@
 #include <map>
 #include <set>
 #include <memory>
+#include <cmath>
 #include <chrono>
 #include <ctime>
 #include <limits>
@@ -47,11 +48,12 @@ namespace wallin
     vector< shared_ptr<Building> >	vecBuildings;
     vector<double>			variableCost;
     Grid				grid;
-    vector<int>				tabooList;
+    vector<int>				tabuList;
     Random				randomVar;
     FactoryObj				factory;
     shared_ptr<Objective>		objective;
     double				bestCost;
     vector< int >			bestSolution;
+    multimap<int, shared_ptr<Building>> buildingSameSize;
   };
 }

@@ -5,7 +5,7 @@ namespace wallin
   /*************/
   /* Objective */
   /*************/
-  Objective::Objective( bool defaultObj ) : defaultObj(defaultObj) { }
+  Objective::Objective( std::string name ) : name(name) { }
 
   int Objective::heuristicValue( const std::vector< double > &vecPositions, 
 				 double &bestEstimatedCost,
@@ -33,7 +33,7 @@ namespace wallin
   /***********/
   /* NoneObj */
   /***********/
-  NoneObj::NoneObj() : Objective(true) { }
+  NoneObj::NoneObj( std::string name ) : Objective( name ) { }
 
   double NoneObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
@@ -48,7 +48,7 @@ namespace wallin
   /**********/
   /* GapObj */
   /**********/
-  GapObj::GapObj() : Objective(false) { }
+  GapObj::GapObj( std::string name ) : Objective( name ) { }
 
   double GapObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
@@ -113,7 +113,7 @@ namespace wallin
   /***************/
   /* BuildingObj */
   /***************/
-  BuildingObj::BuildingObj() : Objective(false) { }
+  BuildingObj::BuildingObj( std::string name ) : Objective( name ) { }
 
   double BuildingObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
@@ -145,7 +145,7 @@ namespace wallin
   /***************/
   /* TechTreeObj */
   /***************/
-  TechTreeObj::TechTreeObj() : Objective(false) { }
+  TechTreeObj::TechTreeObj( std::string name ) : Objective( name ) { }
 
   double TechTreeObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
@@ -189,14 +189,14 @@ namespace wallin
   std::shared_ptr<Objective> FactoryObj::makeObjective( const std::string &obj ) const
   {
     if( obj.compare("gap") == 0 || obj.compare("g") == 0 || obj.compare("G") == 0 )
-      return std::make_shared<GapObj>();
+      return std::make_shared<BuildingObj>("gap");
     
     if( obj.compare("building") == 0 || obj.compare("b") == 0 || obj.compare("B") == 0 )
-      return std::make_shared<BuildingObj>();
+      return std::make_shared<BuildingObj>("building");
     
     if( obj.compare("techtree") == 0 || obj.compare("t") == 0 || obj.compare("T") == 0 )
-      return std::make_shared<TechTreeObj>();
+      return std::make_shared<TechTreeObj>("techtree");
     
-    return std::make_shared<NoneObj>();
+    return std::make_shared<NoneObj>("none");
   }
 }

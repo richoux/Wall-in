@@ -104,13 +104,14 @@ namespace wallin
   {
     os << "Constraint type: " <<  typeid(c).name() << std::endl;
 
-    for(auto v : c.variables)
-      os << (*v) << std::endl;
+    // for(auto v : c.variables)
+    //   os << (*v) << std::endl;
 
     std::vector<double> fake(c.variables.size(), 0.);
 
-    return os << c.grid << std::endl
-	      << "Cost: " << c.cost( fake ) << std::endl;
+    // return os << c.grid << std::endl
+    // 	      << "Cost: " << c.cost( fake ) << std::endl;
+    return os << "Cost: " << c.cost( fake ) << std::endl;
   }
 
   /***********/
@@ -276,9 +277,13 @@ namespace wallin
       {
 	if( building->isOnGrid() )
 	{
+	  // if we don't have a wall, penalise all buildings on the grid.
+	  ++conflicts;
+	  ++varCost[ building->getId() ];
+	  
 	  nberNeighbors = grid.countAround( *building, variables );
 
-	  if( nberNeighbors == 0 )
+	  if( nberNeighbors == 0 || nberNeighbors > 2 ) // to change with Protoss and pylons
 	  {
 	    ++conflicts;
 	    ++varCost[ building->getId() ];
@@ -330,16 +335,17 @@ namespace wallin
 
     if( startingBuildings.empty() )
     {
-      conflicts += 6;
-      
       // penalize buildings not placed on the grid
       for( auto v : variables )
 	if( !v->isOnGrid() )
+	{
 	  varCost[ v->getId() ] += 2;
+	  conflicts += 2;
+	}
     }
     else
     {
-      int penalty = 0;
+      //int penalty = 0;
       for( int bId : startingBuildings )
       {
 	b = mapBuildings.at(bId);
@@ -347,26 +353,27 @@ namespace wallin
 
 	if( neighbors != 1 )
 	{
-	  conflicts += 3;
+	  conflicts += 2;
 	  varCost[ bId ] += 2;
 	}
 
-	conflicts += penalty++;
+	//conflicts += penalty++;
       }
     }
 
     if( targetBuildings.empty() )
     {      
-      conflicts += 6;
-
       // penalize buildings not placed on the grid
       for( auto v : variables )
 	if( !v->isOnGrid() )
+	{
 	  varCost[ v->getId() ] += 2;
+	  conflicts += 2;
+	}
     }
     else
     {
-      int penalty = 0;
+      //int penalty = 0;
       for( int bId : targetBuildings )
       {
 	b = mapBuildings.at(bId);
@@ -374,11 +381,11 @@ namespace wallin
 
 	if( neighbors != 1 )
 	{
-	  conflicts += 3;
+	  conflicts += 2;
 	  varCost[ bId ] += 2;
 	}
 
-	conflicts += penalty++;	
+	//conflicts += penalty++;	
       }
       
     }

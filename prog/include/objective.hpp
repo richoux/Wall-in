@@ -15,20 +15,20 @@ namespace wallin
   class Objective
   {
   public:
-    Objective( bool );
+    Objective( std::string );
     virtual double cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& ) const = 0;
     virtual int heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& ) = 0;
     virtual int heuristicValue( const std::vector< double > &vecPositions, double&, int&, const Grid& ) const;
-    inline  bool isDefault() { return defaultObj; }
+    inline  std::string getName() { return name; }
   protected:
     Random randomVar;
-    bool defaultObj;
+    std::string name;
   };
 
   class NoneObj : public Objective
   {
   public:
-    NoneObj();
+    NoneObj( std::string );
     double cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& ) const;
     int heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& );
   };
@@ -36,7 +36,7 @@ namespace wallin
   class GapObj : public Objective
   {
   public:
-    GapObj();
+    GapObj( std::string );
     double cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& ) const;
     int heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& );
     //int heuristicValue( const std::vector< double > &vecPositions, double&, int&, const Grid& ) const;    
@@ -47,7 +47,7 @@ namespace wallin
   class BuildingObj : public Objective
   {
   public:
-    BuildingObj();
+    BuildingObj( std::string );
     double cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& ) const;
     int heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& );
   };
@@ -55,7 +55,7 @@ namespace wallin
   class TechTreeObj : public Objective
   {
   public:
-    TechTreeObj();
+    TechTreeObj( std::string );
     double cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& ) const;
     int heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& );
   };

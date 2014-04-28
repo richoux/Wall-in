@@ -1,7 +1,7 @@
 #include "../include/solver.hpp"
 
-#define TABU 8
-#define OPT_TIME 200
+constexpr int TABU	= 8;
+constexpr int OPT_TIME	= 200;
 
 namespace wallin
 {
@@ -13,7 +13,7 @@ namespace wallin
       vecBuildings(vecBuildings), 
       variableCost( vecBuildings.size() ),
       grid(grid),
-      tabooList( vecBuildings.size() ),
+      tabuList( vecBuildings.size() ),
       factory(FactoryObj()),
       objective(factory.makeObjective( obj )),
       bestSolution(vecBuildings.size())
@@ -83,12 +83,12 @@ namespace wallin
       current = first;
       toVisit.erase( first );
       neighbors = grid.getBuildingsAround( *current, vecBuildings );
+
+      visited.insert( current );
       
       for( auto n : neighbors )
 	if( visited.find( n ) == visited.end() )
 	  toVisit.insert( n );
-
-      visited.insert( current );
     }
 
     return visited;
@@ -98,6 +98,7 @@ namespace wallin
   {
     chrono::duration<double,milli> elapsedTime;
     chrono::duration<double,milli> elapsedTimeTour;
+    chrono::duration<double,milli> postprocessGap(0);
     chrono::time_point<chrono::system_clock> start;
     chrono::time_point<chrono::system_clock> startTour;
     start = chrono::system_clock::now();
@@ -146,7 +147,7 @@ namespace wallin
       std::fill( vecConstraintsCosts.begin(), vecConstraintsCosts.end(), vector<double>( vecBuildings.size(), 0. ) );
       std::fill( vecVarSimCosts.begin(), vecVarSimCosts.end(), vector<double>( vecBuildings.size(), 0. ) );
       std::fill( variableCost.begin(), variableCost.end(), 0. );
-      std::fill( tabooList.begin(), tabooList.end(), 0 );
+      std::fill( tabuList.begin(), tabuList.end(), 0 );
 
       do // solving loop 
       {
@@ -166,20 +167,20 @@ namespace wallin
 	  }
 	}
 
-	// make sure there is at least one untaboo variable
+	// make sure there is at least one untabu variable
 	bool freeVariables = false;
 
-	// Update taboo list
-	for( int i = 0; i < tabooList.size(); ++i )
+	// Update tabu list
+	for( int i = 0; i < tabuList.size(); ++i )
 	{
-	  if( tabooList[i] <= 1 )
+	  if( tabuList[i] <= 1 )
 	  {
-	    tabooList[i] = 0;
+	    tabuList[i] = 0;
 	    if( !freeVariables )
 	      freeVariables = true;      
 	  }
 	  else
-	    --tabooList[i];
+	    --tabuList[i];
 	}
 
 	// Here, we look at neighbor configurations with the lowest cost.
@@ -187,7 +188,7 @@ namespace wallin
 	worstVariableCost = 0;
 	for( int i = 0; i < variableCost.size(); ++i )
 	{
-	  if( !freeVariables || tabooList[i] == 0 )
+	  if( !freeVariables || tabuList[i] == 0 )
 	  {
 	    if( worstVariableCost < variableCost[i] )
 	    {
@@ -236,7 +237,7 @@ namespace wallin
 #endif
 
 	fill( vecGlobalCosts.begin(), vecGlobalCosts.end(), 0. );
-      
+
 	// sum all numbers in the vector vecConstraintsCosts[i] and put it into vecGlobalCosts[i] 
 	for( auto v : vecConstraintsCosts )
 	  transform( vecGlobalCosts.begin(), 
@@ -251,12 +252,35 @@ namespace wallin
 		    bind( less<double>(), placeholders::_1, 0. ), 
 		    numeric_limits<double>::max() );
 
+	// for( int i = 0; i < vecConstraints.size(); ++i )
+	// {
+	//   cout << "vecConstraintsCosts[" << i << "] = ";
+	//     for(auto d : vecConstraintsCosts[i])
+	//       cout << d << " ";
+	//   cout << endl;
+	// }
+
+	// cout << "vecGlobalCosts: ";
+	// for(auto d : vecGlobalCosts)
+	//   cout << d << " ";
+	// cout << endl;
+	
+
 	// look for the first smallest cost, according to objective heuristic
-	bestSimCost = vecVarSimCosts[ objective->heuristicValue( vecGlobalCosts, bestEstimatedCost, bestPosition, grid) ];
+	int b = objective->heuristicValue( vecGlobalCosts, bestEstimatedCost, bestPosition, grid);
+	// cout << "Best i = " << b << endl;
+	bestSimCost = vecVarSimCosts[ b ];
 
 	timeSimCost += chrono::system_clock::now() - startSimCost;
 
 	currentCost = bestEstimatedCost;
+
+	// cout << "Best Sim Cost:";
+	// for( auto i : bestSimCost )
+	//   cout << i << " ";
+	// cout << endl;
+
+	// cout << "Current cost: " << currentCost << endl;
 
 	if( bestEstimatedCost < globalCost )
 	{
@@ -269,7 +293,7 @@ namespace wallin
 	  move( oldBuilding, bestPosition );
 	}
 	else // local minima
-	  tabooList[ worstBuildingId ] = TABU;
+	  tabuList[ worstBuildingId ] = TABU;
 
 	elapsedTimeTour = chrono::system_clock::now() - startTour;
       } while( globalCost != 0. && elapsedTimeTour.count() < timeout );
@@ -277,14 +301,12 @@ namespace wallin
       // remove useless buildings
       if( globalCost == 0 )
       {
-	// bool change;
-	// double cost;
-	// NoGaps ng( vecBuildings, grid );
+	bool change;
+	double cost;
+	NoGaps ng( vecBuildings, grid );
 
-
-	//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-	// TODO: hunt (possible) bugs in getNecessaryBuildings 
-	//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	// cout << "BEFORE" << endl << grid;
+	// printConstraints( vecConstraints );
 
 	// remove all unreachable buildings from the starting building out of the grid
 	set< shared_ptr<Building> > visited = getNecessaryBuildings();
@@ -295,34 +317,37 @@ namespace wallin
 	    b->setPos( -1 );
 	  }
 
-	// // clean wall from unnecessary buildings.
-	// do
-	// {
-	//   for( auto b : vecBuildings )
-	//     if( ! grid.isStartingOrTargetTile( b->getId() ) )
-	//     {
-	//       change = false;
-	//       if( b->isOnGrid() )
-	//       {
-	// 	cost = 0.;
-	// 	fill( varSimCost.begin(), varSimCost.end(), 0. );
+	// clean wall from unnecessary buildings.
+	do
+	{
+	  for( auto b : vecBuildings )
+	    if( ! grid.isStartingOrTargetTile( b->getId() ) )
+	    {
+	      change = false;
+	      if( b->isOnGrid() )
+	      {
+		cost = 0.;
+		fill( varSimCost.begin(), varSimCost.end(), 0. );
 	      
-	// 	cost = ng.simulateCost( *b, -1, varSimCost );
+		cost = ng.simulateCost( *b, -1, varSimCost );
 	      
-	// 	if( cost == 0. )
-	// 	{
-	// 	  grid.clear( *b );
-	// 	  b->setPos( -1 );
-	// 	  ng.update( grid );
-	// 	  change = true;
-	// 	}	  
-	//       }
-	//     }
-	// } while( change );
+		if( cost == 0. )
+		{
+		  grid.clear( *b );
+		  b->setPos( -1 );
+		  ng.update( grid );
+		  change = true;
+		}	  
+	      }
+	    }
+	} while( change );
 
 	double objectiveCost = objective->cost( vecBuildings, grid );
 	if( objectiveCost < bestCost )
 	{
+	  // cout << "AFTER" << grid;
+	  // cout << "global cost: " << globalCost << endl << "obj cost: " << objectiveCost << endl << endl;
+	  // printConstraints( vecConstraints );
 	  bestCost = objectiveCost;
 	  for( int i = 0; i < vecBuildings.size(); ++i )
 	    bestSolution[i] = vecBuildings[i]->getPosition();
@@ -331,7 +356,8 @@ namespace wallin
       reset();
       elapsedTime = chrono::system_clock::now() - start;
     }
-    while( !objective->isDefault() && elapsedTime.count() < OPT_TIME );
+    while( objective->getName().compare("none") != 0  && 
+	   ( elapsedTime.count() < OPT_TIME || ( elapsedTime.count() >= OPT_TIME && bestGlobalCost != 0 ) ) );
 
     clearAllInGrid( vecBuildings, grid );
 
@@ -340,11 +366,84 @@ namespace wallin
     
     addAllInGrid( vecBuildings, grid );
 
+    // For gap objective, try now to decrease the number of gaps.
+    if( objective->getName().compare("gap") == 0 )
+    {
+      objective.reset( new GapObj("gap") );
+      std::fill( tabuList.begin(), tabuList.end(), 0 );
+        
+      for( auto v : vecBuildings )
+	buildingSameSize.insert( make_pair( v->getSurface(), v ) );
+
+      vector<int> goodVar;
+      shared_ptr<Building> toSwap;
+      bool mustSwap;
+
+      chrono::time_point<chrono::system_clock> startPostprocess = chrono::system_clock::now(); 
+    
+      bestCost = objective->cost( vecBuildings, grid );
+      double currentCost = bestCost;
+      cout << "bestCost: " << bestCost << endl;
+
+      while( (postprocessGap = chrono::system_clock::now() - startPostprocess).count() < 2*OPT_TIME && bestCost > 0 )
+      {
+	for( int i = 0; i < tabuList.size(); ++i )
+	{
+	  if( tabuList[i] <= 1 )
+	    tabuList[i] = 0;
+	  else
+	    --tabuList[i];
+	}
+
+	for( int i = 0; i < vecBuildings.size(); ++i )
+	{
+	  if( tabuList[i] > 0 )
+	    goodVar.push_back( i );
+	}
+
+	if( goodVar.empty() )
+	  for( int i = 0; i < vecBuildings.size(); ++i )
+	    goodVar.push_back( i );	
+
+	int index = objective->heuristicVariable( goodVar, vecBuildings, grid );
+	oldBuilding = vecBuildings[ index ];
+	auto surface = buildingSameSize.equal_range( oldBuilding->getSurface() );
+	
+	for( auto it = surface.first; it != surface.second; ++it )
+	{
+	  mustSwap = false;
+	  if( it->second->getId() != oldBuilding->getId() )
+	  {
+	    grid.swap( *it->second, *oldBuilding );
+	    
+	    currentCost = objective->cost( vecBuildings, grid );
+	    if( currentCost < bestCost )
+	    {
+	      bestCost = currentCost;
+	      toSwap = it->second;
+	      mustSwap = true;
+	      cout << "bestCost: " << bestCost << endl;
+	    }
+
+	    grid.swap( *it->second, *oldBuilding );
+	  }
+	  
+	  if( mustSwap )
+	    grid.swap( *toSwap, *oldBuilding );
+	}
+
+	tabuList[ index ] = std::max(2, static_cast<int>( ceil(TABU / 2) ) );
+      }
+    }
+ 
     cout << "Grids:" << grid << endl
 	 << "Elapsed time: " << elapsedTime.count() << endl
 	 << "Global cost: " << bestGlobalCost << endl
 	 << "Optimization cost: " << bestCost << endl
 	 << "Number of tours: " << tour << endl;
+
+    if( objective->getName().compare("gap") == 0 )
+      cout << "Post-processing time: " << postprocessGap.count() << endl; 
 
 #ifndef NDEBUG
     cout << endl << "Elapsed time to simulate cost: " << timeSimCost.count() << endl

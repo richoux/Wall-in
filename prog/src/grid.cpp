@@ -158,6 +158,15 @@ namespace wallin
     }
   }
 
+  void Grid::swap( Building &first, Building &second )
+  {
+    clear( first );
+    clear( second );
+    first.swapPosition( second );
+    add( first );
+    add( second );
+  }  
+
   set< shared_ptr<Building> > Grid::getBuildingsAround ( const Building& b, const vector< shared_ptr<Building> >& variables ) const
   {
     set< shared_ptr<Building> > myNeighbors;

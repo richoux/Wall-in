@@ -35,6 +35,7 @@ namespace wallin
 	   pair<int, int> shift( Building& );
 	   void		  quickShift( Building& );
 	   void		  clear( const Building& );
+	   void		  swap( Building&, Building& );	  
 
     set< shared_ptr<Building> > getBuildingsAround ( const Building &, const vector< shared_ptr<Building> >& ) const;
     set< shared_ptr<Building> > getBuildingsAbove ( const Building &, const vector< shared_ptr<Building> >& ) const;
@@ -65,7 +66,7 @@ namespace wallin
     inline bool		 hasFailure()	const { return !failures_.empty(); }
     inline mapFail	 failures()	const { return failures_; }
 
-    inline pair<int, int> lin2mat(int p)	    const {return make_pair<int, int>(p / mCol_, p % mCol_);}
+    inline pair<int, int> lin2mat(int p)	    const {return make_pair(p / mCol_, p % mCol_);}
     inline int		  mat2lin(int row, int col) const {return row * mCol_ + col;}
     inline int		  mat2lin(pair<int, int> p) const {return p.first * mCol_ + p.second;}
 
