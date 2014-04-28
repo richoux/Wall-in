@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <iostream>
 #include <typeinfo>
 
@@ -12,7 +13,7 @@ namespace wallin
   class Building
   {
   public:
-    Building(int, int, int, int, int, int, string, Race, int, int = 0);
+    Building(int, int, int, int, int, int, string, Race, int, int = -1);
     Building(const Building&) = default;
     Building(Building&&) = default;
     Building& operator=(const Building&) = default;
@@ -41,11 +42,14 @@ namespace wallin
 
     inline int getLength()	const	{ return length; }
     inline int getHeight()	const	{ return height; }
+    inline int getSurface()	const	{ return height * length; }
 
     inline int getGapTop()	const	{ return gapTop; }
     inline int getGapRight()	const	{ return gapRight; }
     inline int getGapBottom()	const	{ return gapBottom; }
     inline int getGapLeft()	const	{ return gapLeft; }
+
+    inline void swapPosition(Building &other)	{ std::swap(this->position, other.position); }
 
     inline bool operator<( const Building& other ) const { return id < other.id; }
 

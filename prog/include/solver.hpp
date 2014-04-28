@@ -4,18 +4,21 @@
 #include <map>
 #include <set>
 #include <memory>
+#include <cmath>
 #include <chrono>
 #include <ctime>
 #include <limits>
 #include <algorithm>
 #include <functional>
 #include <cassert>
+#include <typeinfo>
 
 #include "building.hpp"
 #include "constraint.hpp"
 #include "grid.hpp"
 #include "tools.hpp"
 #include "random.hpp"
+#include "objective.hpp"
 
 using namespace std;
 
@@ -26,7 +29,8 @@ namespace wallin
   public:
     Solver( const vector< shared_ptr<Constraint> >&, 
 	    const vector<shared_ptr<Building> >&, 
-	    const Grid& );
+	    const Grid&,
+	    const string& = "" );
     Solver(const Solver&) = default;
     Solver(Solver&&) = default;
     Solver& operator=(const Solver&) = default;
@@ -40,11 +44,16 @@ namespace wallin
     void move( shared_ptr<Building>&, int );
     set< shared_ptr<Building> > getNecessaryBuildings() const;
 
-    vector< shared_ptr<Constraint> > vecConstraints;
-    vector<shared_ptr<Building> > vecBuildings;
-    vector<double> variableCost;
-    Grid grid;
-    vector<int> tabooList;
-    Random randomVar;
+    vector< shared_ptr<Constraint> >	vecConstraints;
+    vector< shared_ptr<Building> >	vecBuildings;
+    vector<double>			variableCost;
+    Grid				grid;
+    vector<int>				tabuList;
+    Random				randomVar;
+    FactoryObj				factory;
+    shared_ptr<Objective>		objective;
+    double				bestCost;
+    vector< int >			bestSolution;
+    multimap<int, shared_ptr<Building>> buildingSameSize;
   };
 }

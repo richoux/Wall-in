@@ -2,8 +2,5 @@
 
 namespace wallin
 {
-  Random::Random()
-  {
-    rng.seed( time(NULL) + getpid() + getppid() );
-  }
+  Random::Random() : rng( rd() ) { }
 }
