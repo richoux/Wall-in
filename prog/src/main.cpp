@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 
   Solver solver( vecConstraints, vec, grid );
 #ifndef NDEBUG
-  solver.solve( 20 );
+  solver.solve( 200 );
 
   std::cout << std::boolalpha << "Building movable: " << std::is_nothrow_move_constructible<Building>::value << std::endl;
   std::cout << std::boolalpha << "Barracks movable: " << std::is_nothrow_move_constructible<Barracks>::value << std::endl;

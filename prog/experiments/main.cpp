@@ -83,7 +83,7 @@ int main(int argc, char **argv)
           std::vector< std::shared_ptr<Constraint> > vecConstraints = makeTerranConstraints( vec, grid );
 
           Solver solver( vecConstraints, vec, grid );
-          solver.solve( 200 );    
+          solver.solve( 20 );    
         }
 
         printf("\n\n");        
