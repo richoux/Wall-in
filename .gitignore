@@ -24,3 +24,4 @@ wall-in.synctex.gz
 prog/bin/wallin
 prog/bin/experiments
 prog/bin/processrawdata
+prog/bin/processresults
