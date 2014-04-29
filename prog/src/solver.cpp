@@ -1,7 +1,7 @@
 #include "../include/solver.hpp"
 
 constexpr int TABU	= 5;
-constexpr int OPT_TIME	= 100;
+constexpr int OPT_TIME	= 150;
 
 namespace wallin
 {
@@ -385,7 +385,7 @@ namespace wallin
       double currentCost = bestCost;
       cout << "bestCost: " << bestCost << endl;
 
-      while( (postprocessGap = chrono::system_clock::now() - startPostprocess).count() < 2*OPT_TIME && bestCost > 0 )
+      while( (postprocessGap = chrono::system_clock::now() - startPostprocess).count() < static_cast<int>( ceil(OPT_TIME / 100) ) && bestCost > 0 )
       {
 	for( int i = 0; i < tabuList.size(); ++i )
 	{
