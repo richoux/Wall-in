@@ -1,7 +1,7 @@
 #include "../include/solver.hpp"
 
-constexpr int TABU	= 8;
-constexpr int OPT_TIME	= 200;
+constexpr int TABU	= 5;
+constexpr int OPT_TIME	= 100;
 
 namespace wallin
 {
