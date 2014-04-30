@@ -11,8 +11,9 @@ namespace wallin
 		     int bottom, 
 		     int left, 
 		     std::string shortname, 
-		     int position,
-		     Race race)
+		     Race race,
+		     int treedepth,
+		     int position)
     : length(x),
       height(y),
       gapTop(top), 
@@ -20,9 +21,10 @@ namespace wallin
       gapBottom(bottom), 
       gapLeft(left),
       shortname(shortname),
-      position(position),
       id(Building::nberBuildings++),
-      race(race)
+      race(race),
+      treedepth(treedepth),
+      position(position)
   { }
 
   Building::~Building() {}
@@ -34,6 +36,7 @@ namespace wallin
       << "Race: " <<  b.getRace() << std::endl
       << "Short name: " << b.shortname << std::endl
       << "Id num: " << b.id << std::endl
+      << "Tree depth: " << b.treedepth << std::endl
       << "Position: " <<  b.position << std::endl
       << "Length: " <<  b.length << std::endl
       << "Height: " <<  b.height << std::endl

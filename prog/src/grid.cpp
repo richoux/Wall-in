@@ -158,6 +158,15 @@ namespace wallin
     }
   }
 
+  void Grid::swap( Building &first, Building &second )
+  {
+    clear( first );
+    clear( second );
+    first.swapPosition( second );
+    add( first );
+    add( second );
+  }  
+
   set< shared_ptr<Building> > Grid::getBuildingsAround ( const Building& b, const vector< shared_ptr<Building> >& variables ) const
   {
     set< shared_ptr<Building> > myNeighbors;
@@ -173,21 +182,170 @@ namespace wallin
 
       for(auto other : variables )
       {
+  	if( other->getId() != b.getId() && other->isOnGrid() )
+  	{
+  	  pair<int, int> xyOther = lin2mat( other->getPosition() );
+  	  int otherTop = xyOther.first;
+  	  int otherRight = xyOther.second + other->getLength() - 1;
+  	  int otherBottom = xyOther.first + other->getHeight() - 1;
+  	  int otherLeft = xyOther.second;
+
+  	  if(  ( top == otherBottom + 1 && ( otherRight >= left && otherLeft <= right ) )
+  	       || ( right == otherLeft - 1 && ( otherBottom >= top - 1 && otherTop <= bottom + 1 ) )
+  	       || ( bottom == otherTop - 1 && ( otherRight >= left && otherLeft <= right ) )
+  	       || ( left == otherRight + 1 && ( otherBottom >= top - 1 && otherTop <= bottom + 1 ) ) )
+  	  {
+  	    myNeighbors.insert( other );
+  	  }
+  	}
+      }
+    }
+    
+    return myNeighbors;
+  }
+
+  // slower than code above
+
+  // set< shared_ptr<Building> > Grid::getBuildingsAround ( const Building& b, const vector< shared_ptr<Building> >& variables ) const
+  // {
+  //   set< shared_ptr<Building> > myNeighbors;
+
+  //   if( b.isOnGrid() )
+  //   {
+  //     auto above = getBuildingsAbove( b, variables );
+  //     auto onRight = getBuildingsOnRight( b, variables );
+  //     auto below = getBuildingsBelow( b, variables );
+  //     auto onLeft = getBuildingsOnLeft( b, variables );
+    
+  //     for( auto b : above )
+  // 	myNeighbors.insert( b );
+
+  //     for( auto b : onRight )
+  // 	myNeighbors.insert( b );
+
+  //     for( auto b : below )
+  // 	myNeighbors.insert( b );
+
+  //     for( auto b : onLeft )
+  // 	myNeighbors.insert( b );
+  //   }
+
+  //   return myNeighbors;
+  // }
+
+  set< shared_ptr<Building> > Grid::getBuildingsAbove ( const Building& b, const vector< shared_ptr<Building> >& variables ) const
+  {
+    set< shared_ptr<Building> > myNeighbors;
+
+    if( b.isOnGrid() )
+    {
+      pair<int, int> coordinates = lin2mat( b.getPosition() );
+
+      int top = coordinates.first;
+      int right = coordinates.second + b.getLength() - 1;
+      int left = coordinates.second;
+
+      for(auto other : variables )
+      {
+	if( other->getId() != b.getId() && other->isOnGrid() )
+	{
+	  pair<int, int> xyOther = lin2mat( other->getPosition() );
+	  int otherRight = xyOther.second + other->getLength() - 1;
+	  int otherBottom = xyOther.first + other->getHeight() - 1;
+	  int otherLeft = xyOther.second;
+
+	  if( top == otherBottom + 1 && otherRight >= left && otherLeft <= right )
+	    myNeighbors.insert( other );
+	}
+      }
+    }
+    
+    return myNeighbors;
+  }
+
+  set< shared_ptr<Building> > Grid::getBuildingsOnRight ( const Building& b, const vector< shared_ptr<Building> >& variables ) const
+  {
+    set< shared_ptr<Building> > myNeighbors;
+
+    if( b.isOnGrid() )
+    {
+      pair<int, int> coordinates = lin2mat( b.getPosition() );
+
+      int top = coordinates.first;
+      int right = coordinates.second + b.getLength() - 1;
+      int bottom = coordinates.first + b.getHeight() - 1;
+
+      for(auto other : variables )
+      {
+	if( other->getId() != b.getId() && other->isOnGrid() )
+	{
+	  pair<int, int> xyOther = lin2mat( other->getPosition() );
+	  int otherTop = xyOther.first;
+	  int otherBottom = xyOther.first + other->getHeight() - 1;
+	  int otherLeft = xyOther.second;
+
+	  if( right == otherLeft - 1 && otherBottom >= top - 1 && otherTop <= bottom + 1 )
+	    myNeighbors.insert( other );
+	}
+      }
+    }
+    
+    return myNeighbors;
+  }
+
+  set< shared_ptr<Building> > Grid::getBuildingsBelow ( const Building& b, const vector< shared_ptr<Building> >& variables ) const
+  {
+    set< shared_ptr<Building> > myNeighbors;
+
+    if( b.isOnGrid() )
+    {
+      pair<int, int> coordinates = lin2mat( b.getPosition() );
+
+      int right = coordinates.second + b.getLength() - 1;
+      int bottom = coordinates.first + b.getHeight() - 1;
+      int left = coordinates.second;
+
+      for(auto other : variables )
+      {
+	if( other->getId() != b.getId() && other->isOnGrid() )
+	{
+	  pair<int, int> xyOther = lin2mat( other->getPosition() );
+	  int otherTop = xyOther.first;
+	  int otherRight = xyOther.second + other->getLength() - 1;
+	  int otherLeft = xyOther.second;
+
+	  if( bottom == otherTop - 1 && otherRight >= left && otherLeft <= right )
+	    myNeighbors.insert( other );
+	}
+      }
+    }
+    
+    return myNeighbors;
+  }
+
+  set< shared_ptr<Building> > Grid::getBuildingsOnLeft ( const Building& b, const vector< shared_ptr<Building> >& variables ) const
+  {
+    set< shared_ptr<Building> > myNeighbors;
+
+    if( b.isOnGrid() )
+    {
+      pair<int, int> coordinates = lin2mat( b.getPosition() );
+
+      int top = coordinates.first;
+      int bottom = coordinates.first + b.getHeight() - 1;
+      int left = coordinates.second;
+
+      for(auto other : variables )
+      {
 	if( other->getId() != b.getId() && other->isOnGrid() )
 	{
 	  pair<int, int> xyOther = lin2mat( other->getPosition() );
 	  int otherTop = xyOther.first;
 	  int otherRight = xyOther.second + other->getLength() - 1;
 	  int otherBottom = xyOther.first + other->getHeight() - 1;
-	  int otherLeft = xyOther.second;
 
-	  if(  ( top == otherBottom + 1 && ( otherRight >= left && otherLeft <= right ) )
-	       || ( right == otherLeft - 1 && ( otherBottom >= top - 1 && otherTop <= bottom + 1 ) )
-	       || ( bottom == otherTop - 1 && ( otherRight >= left && otherLeft <= right ) )
-	       || ( left == otherRight + 1 && ( otherBottom >= top - 1 && otherTop <= bottom + 1 ) ) )
-	  {
+	  if( left == otherRight + 1 && otherBottom >= top - 1 && otherTop <= bottom + 1 )
 	    myNeighbors.insert( other );
-	  }
 	}
       }
     }

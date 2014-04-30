@@ -1,8 +1,6 @@
 #pragma once
 
 #include <random>
-#include <ctime>
-#include <sys/types.h>
 #include <unistd.h>
 
 namespace wallin
@@ -12,15 +10,15 @@ namespace wallin
   public:
     Random();
     Random(const Random&) = default;
-    Random(Random&&) noexcept = default;
+    // Random(Random&&) noexcept = default;
     Random& operator=(const Random&) = default;
-    Random& operator=(Random&&) noexcept = default;
+    // Random& operator=(Random&&) noexcept = default;
     ~Random() = default;
 
     inline int getRandNum( int limit ) { return ( numbers(rng) % limit ); } 
   private:
+    std::random_device			rd;
     std::mt19937			rng;
-    unsigned int			seed;
     std::uniform_int_distribution<int>  numbers;
   };
 }
