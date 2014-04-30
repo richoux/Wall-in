@@ -69,7 +69,8 @@ int main(int argc, char **argv)
         for(int i = 0;i<dy;i++) {
           printf("%s\n",buffer);
           for(int j = 0;j<dx;j++) {
-            if (buffer[j]!='2') unbuildables.push_back(std::pair<int,int>(i,j));
+//            if (buffer[j]!='2') unbuildables.push_back(std::pair<int,int>(i,j));
+            if (buffer[j]!='2') unbuildables.push_back(std::pair<int,int>(j,i)); // since the solver has x/y inverted :)
           }
           if (i!=dy-1) {
             read = getline(&line, &len, fp);
