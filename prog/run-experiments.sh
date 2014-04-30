@@ -1,212 +1,171 @@
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 time_limit" >&2
+  exit 1
+fi
 # Processing '../data/raw/(2)Benzene-output.txt'...
-bin/experiments ../data/processed/benzene-1.txt
-bin/experiments ../data/processed/benzene-2.txt
-bin/experiments ../data/processed/benzene-3.txt
-bin/experiments ../data/processed/benzene-4.txt
-bin/experiments ../data/processed/benzene-5.txt
-bin/experiments ../data/processed/benzene-6.txt
-bin/experiments ../data/processed/benzene-7.txt
-bin/experiments ../data/processed/benzene-8.txt
-bin/experiments ../data/processed/benzene-9.txt
-bin/experiments ../data/processed/benzene-10.txt
-# Processing '../data/raw/(2)Breaking Point-output.txt'...
-bin/experiments ../data/processed/breakingpoint-1.txt
-bin/experiments ../data/processed/breakingpoint-2.txt
-bin/experiments ../data/processed/breakingpoint-3.txt
-bin/experiments ../data/processed/breakingpoint-4.txt
-bin/experiments ../data/processed/breakingpoint-5.txt
-bin/experiments ../data/processed/breakingpoint-6.txt
-bin/experiments ../data/processed/breakingpoint-7.txt
-bin/experiments ../data/processed/breakingpoint-8.txt
-bin/experiments ../data/processed/breakingpoint-9.txt
-bin/experiments ../data/processed/breakingpoint-10.txt
-bin/experiments ../data/processed/breakingpoint-11.txt
-bin/experiments ../data/processed/breakingpoint-12.txt
-bin/experiments ../data/processed/breakingpoint-13.txt
-bin/experiments ../data/processed/breakingpoint-14.txt
-bin/experiments ../data/processed/breakingpoint-15.txt
-bin/experiments ../data/processed/breakingpoint-16.txt
-bin/experiments ../data/processed/breakingpoint-17.txt
-bin/experiments ../data/processed/breakingpoint-18.txt
-bin/experiments ../data/processed/breakingpoint-19.txt
-bin/experiments ../data/processed/breakingpoint-20.txt
-bin/experiments ../data/processed/breakingpoint-21.txt
-bin/experiments ../data/processed/breakingpoint-22.txt
-bin/experiments ../data/processed/breakingpoint-23.txt
-bin/experiments ../data/processed/breakingpoint-24.txt
-bin/experiments ../data/processed/breakingpoint-25.txt
+bin/experiments ../data/processed/benzene-1.txt $1
+bin/experiments ../data/processed/benzene-2.txt $1
+bin/experiments ../data/processed/benzene-3.txt $1
+bin/experiments ../data/processed/benzene-4.txt $1
+bin/experiments ../data/processed/benzene-5.txt $1
+bin/experiments ../data/processed/benzene-6.txt $1
+bin/experiments ../data/processed/benzene-7.txt $1
+bin/experiments ../data/processed/benzene-8.txt $1
+bin/experiments ../data/processed/benzene-9.txt $1
+bin/experiments ../data/processed/benzene-10.txt $1
+bin/experiments ../data/processed/benzene-11.txt $1
+bin/experiments ../data/processed/benzene-12.txt $1
+bin/experiments ../data/processed/benzene-13.txt $1
+bin/experiments ../data/processed/benzene-14.txt $1
+bin/experiments ../data/processed/benzene-15.txt $1
+bin/experiments ../data/processed/benzene-16.txt $1
+bin/experiments ../data/processed/benzene-17.txt $1
+bin/experiments ../data/processed/benzene-18.txt $1
+bin/experiments ../data/processed/benzene-19.txt $1
+bin/experiments ../data/processed/benzene-20.txt $1
+bin/experiments ../data/processed/benzene-21.txt $1
+bin/experiments ../data/processed/benzene-22.txt $1
+bin/experiments ../data/processed/benzene-23.txt $1
+bin/experiments ../data/processed/benzene-24.txt $1
 # Processing '../data/raw/(2)Heartbreak Ridge-output.txt'...
-bin/experiments ../data/processed/heartbreakridge-1.txt
-bin/experiments ../data/processed/heartbreakridge-2.txt
-bin/experiments ../data/processed/heartbreakridge-3.txt
-bin/experiments ../data/processed/heartbreakridge-4.txt
-bin/experiments ../data/processed/heartbreakridge-5.txt
-bin/experiments ../data/processed/heartbreakridge-6.txt
-bin/experiments ../data/processed/heartbreakridge-7.txt
-bin/experiments ../data/processed/heartbreakridge-8.txt
-bin/experiments ../data/processed/heartbreakridge-9.txt
-bin/experiments ../data/processed/heartbreakridge-10.txt
-bin/experiments ../data/processed/heartbreakridge-11.txt
-bin/experiments ../data/processed/heartbreakridge-12.txt
-bin/experiments ../data/processed/heartbreakridge-13.txt
-bin/experiments ../data/processed/heartbreakridge-14.txt
-bin/experiments ../data/processed/heartbreakridge-15.txt
-bin/experiments ../data/processed/heartbreakridge-16.txt
-bin/experiments ../data/processed/heartbreakridge-17.txt
-bin/experiments ../data/processed/heartbreakridge-18.txt
-bin/experiments ../data/processed/heartbreakridge-19.txt
-bin/experiments ../data/processed/heartbreakridge-20.txt
-bin/experiments ../data/processed/heartbreakridge-21.txt
-bin/experiments ../data/processed/heartbreakridge-22.txt
-bin/experiments ../data/processed/heartbreakridge-23.txt
-bin/experiments ../data/processed/heartbreakridge-24.txt
-bin/experiments ../data/processed/heartbreakridge-25.txt
-bin/experiments ../data/processed/heartbreakridge-26.txt
-bin/experiments ../data/processed/heartbreakridge-27.txt
-bin/experiments ../data/processed/heartbreakridge-28.txt
+bin/experiments ../data/processed/heartbreakridge-1.txt $1
+bin/experiments ../data/processed/heartbreakridge-2.txt $1
+bin/experiments ../data/processed/heartbreakridge-3.txt $1
+bin/experiments ../data/processed/heartbreakridge-4.txt $1
+bin/experiments ../data/processed/heartbreakridge-5.txt $1
+bin/experiments ../data/processed/heartbreakridge-6.txt $1
+bin/experiments ../data/processed/heartbreakridge-7.txt $1
+bin/experiments ../data/processed/heartbreakridge-8.txt $1
+bin/experiments ../data/processed/heartbreakridge-9.txt $1
+bin/experiments ../data/processed/heartbreakridge-10.txt $1
+bin/experiments ../data/processed/heartbreakridge-11.txt $1
+bin/experiments ../data/processed/heartbreakridge-12.txt $1
+bin/experiments ../data/processed/heartbreakridge-13.txt $1
+bin/experiments ../data/processed/heartbreakridge-14.txt $1
+bin/experiments ../data/processed/heartbreakridge-15.txt $1
+bin/experiments ../data/processed/heartbreakridge-16.txt $1
+bin/experiments ../data/processed/heartbreakridge-17.txt $1
+bin/experiments ../data/processed/heartbreakridge-18.txt $1
+bin/experiments ../data/processed/heartbreakridge-19.txt $1
+bin/experiments ../data/processed/heartbreakridge-20.txt $1
+bin/experiments ../data/processed/heartbreakridge-21.txt $1
+bin/experiments ../data/processed/heartbreakridge-22.txt $1
+bin/experiments ../data/processed/heartbreakridge-23.txt $1
+bin/experiments ../data/processed/heartbreakridge-24.txt $1
+bin/experiments ../data/processed/heartbreakridge-25.txt $1
+bin/experiments ../data/processed/heartbreakridge-26.txt $1
+bin/experiments ../data/processed/heartbreakridge-27.txt $1
+bin/experiments ../data/processed/heartbreakridge-28.txt $1
+bin/experiments ../data/processed/heartbreakridge-29.txt $1
+bin/experiments ../data/processed/heartbreakridge-30.txt $1
+bin/experiments ../data/processed/heartbreakridge-31.txt $1
+bin/experiments ../data/processed/heartbreakridge-32.txt $1
 # Processing '../data/raw/(3)Aztec-output.txt'...
-bin/experiments ../data/processed/aztec-1.txt
-bin/experiments ../data/processed/aztec-2.txt
-bin/experiments ../data/processed/aztec-3.txt
-bin/experiments ../data/processed/aztec-4.txt
-bin/experiments ../data/processed/aztec-5.txt
-bin/experiments ../data/processed/aztec-6.txt
-bin/experiments ../data/processed/aztec-7.txt
-bin/experiments ../data/processed/aztec-8.txt
-bin/experiments ../data/processed/aztec-9.txt
-bin/experiments ../data/processed/aztec-10.txt
-bin/experiments ../data/processed/aztec-11.txt
-bin/experiments ../data/processed/aztec-12.txt
-bin/experiments ../data/processed/aztec-13.txt
-bin/experiments ../data/processed/aztec-14.txt
-bin/experiments ../data/processed/aztec-15.txt
-bin/experiments ../data/processed/aztec-16.txt
-bin/experiments ../data/processed/aztec-17.txt
-bin/experiments ../data/processed/aztec-18.txt
-bin/experiments ../data/processed/aztec-19.txt
-bin/experiments ../data/processed/aztec-20.txt
-bin/experiments ../data/processed/aztec-21.txt
-bin/experiments ../data/processed/aztec-22.txt
-bin/experiments ../data/processed/aztec-23.txt
-bin/experiments ../data/processed/aztec-24.txt
-bin/experiments ../data/processed/aztec-25.txt
+bin/experiments ../data/processed/aztec-1.txt $1
+bin/experiments ../data/processed/aztec-2.txt $1
+bin/experiments ../data/processed/aztec-3.txt $1
+bin/experiments ../data/processed/aztec-4.txt $1
+bin/experiments ../data/processed/aztec-5.txt $1
+bin/experiments ../data/processed/aztec-6.txt $1
+bin/experiments ../data/processed/aztec-7.txt $1
+bin/experiments ../data/processed/aztec-8.txt $1
+bin/experiments ../data/processed/aztec-9.txt $1
+bin/experiments ../data/processed/aztec-10.txt $1
+bin/experiments ../data/processed/aztec-11.txt $1
+bin/experiments ../data/processed/aztec-12.txt $1
+bin/experiments ../data/processed/aztec-13.txt $1
+bin/experiments ../data/processed/aztec-14.txt $1
+bin/experiments ../data/processed/aztec-15.txt $1
+bin/experiments ../data/processed/aztec-16.txt $1
+bin/experiments ../data/processed/aztec-17.txt $1
+bin/experiments ../data/processed/aztec-18.txt $1
+bin/experiments ../data/processed/aztec-19.txt $1
+bin/experiments ../data/processed/aztec-20.txt $1
+bin/experiments ../data/processed/aztec-21.txt $1
+bin/experiments ../data/processed/aztec-22.txt $1
+bin/experiments ../data/processed/aztec-23.txt $1
+bin/experiments ../data/processed/aztec-24.txt $1
+bin/experiments ../data/processed/aztec-25.txt $1
+bin/experiments ../data/processed/aztec-26.txt $1
+bin/experiments ../data/processed/aztec-27.txt $1
 # Processing '../data/raw/(4)Andromeda-output.txt'...
-bin/experiments ../data/processed/andromeda-1.txt
-bin/experiments ../data/processed/andromeda-2.txt
-bin/experiments ../data/processed/andromeda-3.txt
-bin/experiments ../data/processed/andromeda-4.txt
-bin/experiments ../data/processed/andromeda-5.txt
-bin/experiments ../data/processed/andromeda-6.txt
-bin/experiments ../data/processed/andromeda-7.txt
-bin/experiments ../data/processed/andromeda-8.txt
-bin/experiments ../data/processed/andromeda-9.txt
-bin/experiments ../data/processed/andromeda-10.txt
-bin/experiments ../data/processed/andromeda-11.txt
-bin/experiments ../data/processed/andromeda-12.txt
-bin/experiments ../data/processed/andromeda-13.txt
-bin/experiments ../data/processed/andromeda-14.txt
-bin/experiments ../data/processed/andromeda-15.txt
-bin/experiments ../data/processed/andromeda-16.txt
-bin/experiments ../data/processed/andromeda-17.txt
-bin/experiments ../data/processed/andromeda-18.txt
-bin/experiments ../data/processed/andromeda-19.txt
-bin/experiments ../data/processed/andromeda-20.txt
-bin/experiments ../data/processed/andromeda-21.txt
-bin/experiments ../data/processed/andromeda-22.txt
-bin/experiments ../data/processed/andromeda-23.txt
-bin/experiments ../data/processed/andromeda-24.txt
-bin/experiments ../data/processed/andromeda-25.txt
-bin/experiments ../data/processed/andromeda-26.txt
-bin/experiments ../data/processed/andromeda-27.txt
-bin/experiments ../data/processed/andromeda-28.txt
-bin/experiments ../data/processed/andromeda-29.txt
-bin/experiments ../data/processed/andromeda-30.txt
-bin/experiments ../data/processed/andromeda-31.txt
-bin/experiments ../data/processed/andromeda-32.txt
-bin/experiments ../data/processed/andromeda-33.txt
+bin/experiments ../data/processed/andromeda-1.txt $1
+bin/experiments ../data/processed/andromeda-2.txt $1
+bin/experiments ../data/processed/andromeda-3.txt $1
+bin/experiments ../data/processed/andromeda-4.txt $1
+bin/experiments ../data/processed/andromeda-5.txt $1
+bin/experiments ../data/processed/andromeda-6.txt $1
+bin/experiments ../data/processed/andromeda-7.txt $1
+bin/experiments ../data/processed/andromeda-8.txt $1
+bin/experiments ../data/processed/andromeda-9.txt $1
+bin/experiments ../data/processed/andromeda-10.txt $1
+bin/experiments ../data/processed/andromeda-11.txt $1
+bin/experiments ../data/processed/andromeda-12.txt $1
+bin/experiments ../data/processed/andromeda-13.txt $1
+bin/experiments ../data/processed/andromeda-14.txt $1
+bin/experiments ../data/processed/andromeda-15.txt $1
+bin/experiments ../data/processed/andromeda-16.txt $1
+bin/experiments ../data/processed/andromeda-17.txt $1
+bin/experiments ../data/processed/andromeda-18.txt $1
+bin/experiments ../data/processed/andromeda-19.txt $1
+bin/experiments ../data/processed/andromeda-20.txt $1
+bin/experiments ../data/processed/andromeda-21.txt $1
+bin/experiments ../data/processed/andromeda-22.txt $1
+bin/experiments ../data/processed/andromeda-23.txt $1
+bin/experiments ../data/processed/andromeda-24.txt $1
+bin/experiments ../data/processed/andromeda-25.txt $1
+bin/experiments ../data/processed/andromeda-26.txt $1
+bin/experiments ../data/processed/andromeda-27.txt $1
+bin/experiments ../data/processed/andromeda-28.txt $1
+bin/experiments ../data/processed/andromeda-29.txt $1
 # Processing '../data/raw/(4)Circuit_Breaker-output.txt'...
-bin/experiments ../data/processed/circuitbreaker-1.txt
-bin/experiments ../data/processed/circuitbreaker-2.txt
-bin/experiments ../data/processed/circuitbreaker-3.txt
-bin/experiments ../data/processed/circuitbreaker-4.txt
-bin/experiments ../data/processed/circuitbreaker-5.txt
-bin/experiments ../data/processed/circuitbreaker-6.txt
-bin/experiments ../data/processed/circuitbreaker-7.txt
-bin/experiments ../data/processed/circuitbreaker-8.txt
-bin/experiments ../data/processed/circuitbreaker-9.txt
-bin/experiments ../data/processed/circuitbreaker-10.txt
-bin/experiments ../data/processed/circuitbreaker-11.txt
-bin/experiments ../data/processed/circuitbreaker-12.txt
-bin/experiments ../data/processed/circuitbreaker-13.txt
-bin/experiments ../data/processed/circuitbreaker-14.txt
-bin/experiments ../data/processed/circuitbreaker-15.txt
-bin/experiments ../data/processed/circuitbreaker-16.txt
-bin/experiments ../data/processed/circuitbreaker-17.txt
-bin/experiments ../data/processed/circuitbreaker-18.txt
-bin/experiments ../data/processed/circuitbreaker-19.txt
-bin/experiments ../data/processed/circuitbreaker-20.txt
-bin/experiments ../data/processed/circuitbreaker-21.txt
-bin/experiments ../data/processed/circuitbreaker-22.txt
-bin/experiments ../data/processed/circuitbreaker-23.txt
-bin/experiments ../data/processed/circuitbreaker-24.txt
-bin/experiments ../data/processed/circuitbreaker-25.txt
-bin/experiments ../data/processed/circuitbreaker-26.txt
-bin/experiments ../data/processed/circuitbreaker-27.txt
-bin/experiments ../data/processed/circuitbreaker-28.txt
-bin/experiments ../data/processed/circuitbreaker-29.txt
-bin/experiments ../data/processed/circuitbreaker-30.txt
-bin/experiments ../data/processed/circuitbreaker-31.txt
-bin/experiments ../data/processed/circuitbreaker-32.txt
-bin/experiments ../data/processed/circuitbreaker-33.txt
-bin/experiments ../data/processed/circuitbreaker-34.txt
-bin/experiments ../data/processed/circuitbreaker-35.txt
-bin/experiments ../data/processed/circuitbreaker-36.txt
-bin/experiments ../data/processed/circuitbreaker-37.txt
-bin/experiments ../data/processed/circuitbreaker-38.txt
+bin/experiments ../data/processed/circuitbreaker-1.txt $1
+bin/experiments ../data/processed/circuitbreaker-2.txt $1
+bin/experiments ../data/processed/circuitbreaker-3.txt $1
+bin/experiments ../data/processed/circuitbreaker-4.txt $1
+bin/experiments ../data/processed/circuitbreaker-5.txt $1
+bin/experiments ../data/processed/circuitbreaker-6.txt $1
+bin/experiments ../data/processed/circuitbreaker-7.txt $1
+bin/experiments ../data/processed/circuitbreaker-8.txt $1
+bin/experiments ../data/processed/circuitbreaker-9.txt $1
+bin/experiments ../data/processed/circuitbreaker-10.txt $1
+bin/experiments ../data/processed/circuitbreaker-11.txt $1
+bin/experiments ../data/processed/circuitbreaker-12.txt $1
+bin/experiments ../data/processed/circuitbreaker-13.txt $1
+bin/experiments ../data/processed/circuitbreaker-14.txt $1
+bin/experiments ../data/processed/circuitbreaker-15.txt $1
+bin/experiments ../data/processed/circuitbreaker-16.txt $1
+bin/experiments ../data/processed/circuitbreaker-17.txt $1
+bin/experiments ../data/processed/circuitbreaker-18.txt $1
+bin/experiments ../data/processed/circuitbreaker-19.txt $1
+bin/experiments ../data/processed/circuitbreaker-20.txt $1
+bin/experiments ../data/processed/circuitbreaker-21.txt $1
+bin/experiments ../data/processed/circuitbreaker-22.txt $1
+bin/experiments ../data/processed/circuitbreaker-23.txt $1
+bin/experiments ../data/processed/circuitbreaker-24.txt $1
+bin/experiments ../data/processed/circuitbreaker-25.txt $1
+bin/experiments ../data/processed/circuitbreaker-26.txt $1
+bin/experiments ../data/processed/circuitbreaker-27.txt $1
+bin/experiments ../data/processed/circuitbreaker-28.txt $1
+bin/experiments ../data/processed/circuitbreaker-29.txt $1
+bin/experiments ../data/processed/circuitbreaker-30.txt $1
+bin/experiments ../data/processed/circuitbreaker-31.txt $1
+bin/experiments ../data/processed/circuitbreaker-32.txt $1
+bin/experiments ../data/processed/circuitbreaker-33.txt $1
+bin/experiments ../data/processed/circuitbreaker-34.txt $1
 # Processing '../data/raw/(4)Fortress-output.txt'...
-bin/experiments ../data/processed/fortress-1.txt
-bin/experiments ../data/processed/fortress-2.txt
-bin/experiments ../data/processed/fortress-3.txt
-bin/experiments ../data/processed/fortress-4.txt
-bin/experiments ../data/processed/fortress-5.txt
-bin/experiments ../data/processed/fortress-6.txt
-bin/experiments ../data/processed/fortress-7.txt
-bin/experiments ../data/processed/fortress-8.txt
-bin/experiments ../data/processed/fortress-9.txt
-bin/experiments ../data/processed/fortress-10.txt
+bin/experiments ../data/processed/fortress-1.txt $1
+bin/experiments ../data/processed/fortress-2.txt $1
+bin/experiments ../data/processed/fortress-3.txt $1
+bin/experiments ../data/processed/fortress-4.txt $1
+bin/experiments ../data/processed/fortress-5.txt $1
+bin/experiments ../data/processed/fortress-6.txt $1
+bin/experiments ../data/processed/fortress-7.txt $1
+bin/experiments ../data/processed/fortress-8.txt $1
 # Processing '../data/raw/(4)Python-output.txt'...
-bin/experiments ../data/processed/python-1.txt
-bin/experiments ../data/processed/python-2.txt
-bin/experiments ../data/processed/python-3.txt
-bin/experiments ../data/processed/python-4.txt
-bin/experiments ../data/processed/python-5.txt
-bin/experiments ../data/processed/python-6.txt
-# Processing '../data/raw/path01-output.txt'...
-bin/experiments ../data/processed/path01-1.txt
-bin/experiments ../data/processed/path01-2.txt
-bin/experiments ../data/processed/path01-3.txt
-bin/experiments ../data/processed/path01-4.txt
-bin/experiments ../data/processed/path01-5.txt
-bin/experiments ../data/processed/path01-6.txt
-bin/experiments ../data/processed/path01-7.txt
-bin/experiments ../data/processed/path01-8.txt
-bin/experiments ../data/processed/path01-9.txt
-bin/experiments ../data/processed/path01-10.txt
-bin/experiments ../data/processed/path01-11.txt
-bin/experiments ../data/processed/path01-12.txt
-bin/experiments ../data/processed/path01-13.txt
-bin/experiments ../data/processed/path01-14.txt
-bin/experiments ../data/processed/path01-15.txt
-bin/experiments ../data/processed/path01-16.txt
-bin/experiments ../data/processed/path01-17.txt
-bin/experiments ../data/processed/path01-18.txt
-bin/experiments ../data/processed/path01-19.txt
-bin/experiments ../data/processed/path01-20.txt
-bin/experiments ../data/processed/path01-21.txt
-bin/experiments ../data/processed/path01-22.txt
-bin/experiments ../data/processed/path01-23.txt
-bin/experiments ../data/processed/path01-24.txt
-bin/experiments ../data/processed/path01-25.txt
-bin/experiments ../data/processed/path01-26.txt
-bin/experiments ../data/processed/path01-27.txt
-bin/experiments ../data/processed/path01-28.txt
+bin/experiments ../data/processed/python-1.txt $1
+bin/experiments ../data/processed/python-2.txt $1
+bin/experiments ../data/processed/python-3.txt $1
+bin/experiments ../data/processed/python-4.txt $1
+bin/experiments ../data/processed/python-5.txt $1
+bin/experiments ../data/processed/python-6.txt $1

@@ -16,11 +16,14 @@ using namespace wallin;
 
 int main(int argc, char **argv)
 {
-  if (argc!=2) {
-    printf("Usage %s <datafile>\n", argv[0]);
+  if (argc!=3) {
+    printf("Usage %s <datafile> <time limit>\n", argv[0]);
     printf("The datafile is the result of analyzing a .scx map using Alberto's offline BWTA\n");
     return 1;
   }
+
+  int time_limit = 20;
+  sscanf(argv[2],"%i",&time_limit);
 
   // yes, yes, I know this is old school C, but I code in "old fashioned" C++ ;)
   FILE *fp = fopen(argv[1],"r+");
@@ -83,7 +86,7 @@ int main(int argc, char **argv)
           std::vector< std::shared_ptr<Constraint> > vecConstraints = makeTerranConstraints( vec, grid );
 
           Solver solver( vecConstraints, vec, grid );
-          solver.solve( 1000 );    
+          solver.solve( time_limit );    
         }
 
         printf("\n\n");        

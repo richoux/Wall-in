@@ -13,17 +13,18 @@ bool breakOutputFile(const char *fileName, const char *destinationFolder, const 
 
 int main(int argc, char **argv)
 {
-  int nInputFiles = 9;
-  const char *inputFiles[9] = {"../data/raw/(2)Benzene-output.txt",
-                         "../data/raw/(2)Breaking Point-output.txt",
+  int nInputFiles = 7;
+  const char *inputFiles[7] = {"../data/raw/(2)Benzene-output.txt",
+//                         "../data/raw/(2)Breaking Point-output.txt",
                          "../data/raw/(2)Heartbreak Ridge-output.txt",
                          "../data/raw/(3)Aztec-output.txt",
                          "../data/raw/(4)Andromeda-output.txt",
                          "../data/raw/(4)Circuit_Breaker-output.txt",
                          "../data/raw/(4)Fortress-output.txt",
                          "../data/raw/(4)Python-output.txt",
-                         "../data/raw/path01-output.txt"};
-  const char *codes[9]= {"benzene","breakingpoint","heartbreakridge","aztec","andromeda","circuitbreaker","fortress","python","path01"};
+//                         "../data/raw/path01-output.txt"
+                        };
+  const char *codes[9]= {"benzene",/*"breakingpoint",*/"heartbreakridge","aztec","andromeda","circuitbreaker","fortress","python"/*,"path01"*/};
 
   for(int i = 0;i<nInputFiles;i++) {
     printf("# Processing '%s'...\n",inputFiles[i]);
@@ -64,8 +65,11 @@ bool breakOutputFile(const char *fileName, const char *destinationFolder, const 
             // wall specification: wall from 6,12 to 9,6
             int x1,y1,x2,y2;
             sscanf(line,"wall from %i,%i to %i,%i",&x1,&y1,&x2,&y2);
-            wall_start.push_back(std::pair<int,int>(y1,x1));
-            wall_end.push_back(std::pair<int,int>(y2,x2));
+            if (x1!=-1 && y1!=-1 && x2!=-1 && y2!=-1 &&
+                std::abs(x1-x2)<20 && std::abs(y1-y2)<20) {
+              wall_start.push_back(std::pair<int,int>(x1,y1));
+              wall_end.push_back(std::pair<int,int>(x2,y2));
+            }
           }
         } while(line[0]=='w');
 
@@ -92,17 +96,33 @@ bool breakOutputFile(const char *fileName, const char *destinationFolder, const 
             outfp=NULL;
           }
           char buffer[512];
-          while(outfp==NULL) {
-            sprintf(buffer,"%s/%s-%i.txt",destinationFolder,code,idx++);
-            outfp = fopen(buffer,"w+");
-          }
+          sprintf(buffer,"%s/%s-%i.txt",destinationFolder,code,idx++);
+          outfp = fopen(buffer,"w+");
+          if (outfp==NULL) return false;
 
-          printf("bin/experiments %s\n",buffer);
+          printf("bin/experiments %s $1\n",buffer);
           fprintf(outfp,"Chokepoint:\n");
-          fprintf(outfp,"wall from %i,%i to %i,%i\n",start.first,start.second,end.first,end.second);
-          for(int i = 0;i<dy;i++) {
-            for(int j = 0;j<dx;j++) {
-              fprintf(outfp,"%c",map[j][i]);
+          int minx = std::min(start.first,end.first)-3;
+          int maxx = std::max(start.first,end.first)+3;
+          int miny = std::min(start.second,end.second)-3;
+          int maxy = std::max(start.second,end.second)+3;
+          if (minx<0) minx = 0;
+          if (miny<0) miny = 0;
+          if (maxx>=dx) maxx = dx-1;
+          if (maxy>=dy) maxy = dy-1;
+          fprintf(outfp,"wall from %i,%i to %i,%i\n",start.first-minx,start.second-miny,
+                                                     end.first-minx,end.second-miny);
+          for(int i = miny;i<maxy;i++) {
+            for(int j = minx;j<maxx;j++) {
+/*
+              if (i==start.second && j==start.first) {
+                fprintf(outfp,"s");              
+              } else if (i==end.second && j==end.first) {
+                fprintf(outfp,"t");              
+              } else {
+                */
+                fprintf(outfp,"%c",map[j][i]);              
+//              }
             }
             fprintf(outfp,"\n");
           }
