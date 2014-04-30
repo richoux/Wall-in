@@ -37,7 +37,10 @@ int main(int argc, char **argv)
       for(int i = 0;i<strlen(line);i++) 
         if (line[i]=='\n' || line[i]=='\r') line[i] = 0;
 
-      if (strcmp(line,"Chokepoint:")==0) {
+      if (strstr(line,"Chokepoint ")!=NULL) {
+        int dx = 0;
+        int dy = 0;
+        sscanf(line, "Chokepoint %i %i",&dx,&dy);
         std::vector<std::pair<int,int>> wall_start;
         std::vector<std::pair<int,int>> wall_end;
         printf("Processing chokepoint data...\n");
@@ -62,8 +65,6 @@ int main(int argc, char **argv)
         std::vector< std::pair<int, int> > unbuildables;
         char buffer[512];
         sscanf(line,"%s",buffer);
-        int dx = strlen(buffer);
-        int dy = strlen(buffer);
         printf("map size: %i,%i\n",dx,dy);
         for(int i = 0;i<dy;i++) {
           printf("%s\n",buffer);

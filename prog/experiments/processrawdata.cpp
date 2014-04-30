@@ -101,15 +101,16 @@ bool breakOutputFile(const char *fileName, const char *destinationFolder, const 
           if (outfp==NULL) return false;
 
           printf("bin/experiments %s $1\n",buffer);
-          fprintf(outfp,"Chokepoint:\n");
-          int minx = std::min(start.first,end.first)-3;
-          int maxx = std::max(start.first,end.first)+3;
-          int miny = std::min(start.second,end.second)-3;
-          int maxy = std::max(start.second,end.second)+3;
+          int padding = 4;
+          int minx = std::min(start.first,end.first)-padding;
+          int maxx = std::max(start.first,end.first)+padding;
+          int miny = std::min(start.second,end.second)-padding;
+          int maxy = std::max(start.second,end.second)+padding;
           if (minx<0) minx = 0;
           if (miny<0) miny = 0;
           if (maxx>=dx) maxx = dx-1;
           if (maxy>=dy) maxy = dy-1;
+          fprintf(outfp,"Chokepoint %i %i:\n",(maxx-minx),(maxy-miny));
           fprintf(outfp,"wall from %i,%i to %i,%i\n",start.first-minx,start.second-miny,
                                                      end.first-minx,end.second-miny);
           for(int i = miny;i<maxy;i++) {
