@@ -16,14 +16,16 @@ using namespace wallin;
 
 int main(int argc, char **argv)
 {
-  if (argc!=3) {
-    printf("Usage %s <datafile> <time limit>\n", argv[0]);
+  if (argc!=4) {
+    printf("Usage %s <datafile> <time limit> <attempts>\n", argv[0]);
     printf("The datafile is the result of analyzing a .scx map using Alberto's offline BWTA\n");
     return 1;
   }
 
   int time_limit = 20;
+  int attempts = 3;
   sscanf(argv[2],"%i",&time_limit);
+  sscanf(argv[3],"%i",&attempts);
 
   // yes, yes, I know this is old school C, but I code in "old fashioned" C++ ;)
   FILE *fp = fopen(argv[1],"r+");
@@ -65,7 +67,6 @@ int main(int argc, char **argv)
         std::vector< std::pair<int, int> > unbuildables;
         char buffer[512];
         sscanf(line,"%s",buffer);
-        printf("map size: %i,%i\n",dx,dy);
         for(int i = 0;i<dy;i++) {
           printf("%s\n",buffer);
           for(int j = 0;j<dx;j++) {
@@ -81,14 +82,22 @@ int main(int argc, char **argv)
         for(int i = 0;i<wall_start.size();i++) {
           std::pair<int,int> start = wall_start[i];
           std::pair<int,int> end = wall_end[i];
-          Grid grid( dx, dy, unbuildables, start.first, start.second, end.first, end.second );
-
-          printf("calling solver...\n");
+//          Grid grid( dx, dy, unbuildables, start.first, start.second, end.first, end.second );
+          Grid grid( dx, dy, unbuildables, start.second, start.first, end.second, end.first ); // since the solver has x/y inverted :)
           std::vector<std::shared_ptr<Building> > vec     = makeTerranBuildings();
           std::vector< std::shared_ptr<Constraint> > vecConstraints = makeTerranConstraints( vec, grid );
 
-          Solver solver( vecConstraints, vec, grid );
-          solver.solve( time_limit );    
+          for(int attempt = 0;attempt<attempts;attempt++) {
+            printf("attempt %i\n",attempt+1);
+            printf("map size: %i,%i\n",dx,dy);
+            printf("calling solver...\n");
+
+//            Solver solver( vecConstraints, vec, grid );
+//            Solver solver( vecConstraints, vec, grid, "building" );
+//            Solver solver( vecConstraints, vec, grid, "techtree" );
+            Solver solver( vecConstraints, vec, grid, "gap" );
+            solver.solve( time_limit );    
+          }
         }
 
         printf("\n\n");        

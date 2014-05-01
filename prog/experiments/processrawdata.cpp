@@ -66,7 +66,7 @@ bool breakOutputFile(const char *fileName, const char *destinationFolder, const 
             int x1,y1,x2,y2;
             sscanf(line,"wall from %i,%i to %i,%i",&x1,&y1,&x2,&y2);
             if (x1!=-1 && y1!=-1 && x2!=-1 && y2!=-1 &&
-                std::abs(x1-x2)<20 && std::abs(y1-y2)<20) {
+                std::abs(x1-x2)<=12 && std::abs(y1-y2)<=9) {
               wall_start.push_back(std::pair<int,int>(x1,y1));
               wall_end.push_back(std::pair<int,int>(x2,y2));
             }
