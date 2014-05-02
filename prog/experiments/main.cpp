@@ -82,7 +82,7 @@ int main(int argc, char **argv)
           std::vector<std::shared_ptr<Building> > vec     = makeTerranBuildings();
           std::vector< std::shared_ptr<Constraint> > vecConstraints = makeTerranConstraints( vec, grid );
 
-          Solver solver( vecConstraints, vec, grid, "g" );
+          Solver solver( vecConstraints, vec, grid );
           solver.solve( 20 );    
         }
 

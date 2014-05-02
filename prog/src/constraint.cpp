@@ -333,6 +333,10 @@ namespace wallin
     std::shared_ptr<Building> b;
     int neighbors;
 
+    // if same building on both the starting and target tile
+    if( startingBuildings.size() == 1 && targetBuildings.size() == 1 && *startingBuildings.begin() == *targetBuildings.begin() )
+      return 0.;
+
     if( startingBuildings.empty() )
     {
       // penalize buildings not placed on the grid

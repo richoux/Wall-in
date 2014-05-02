@@ -469,6 +469,9 @@ namespace wallin
     cout << endl;
 #endif
 
-    return bestCost;
+    if( objective->getName().compare("none") == 0 )
+      return bestGlobalCost;
+    else
+      return bestCost;
   }
 }
