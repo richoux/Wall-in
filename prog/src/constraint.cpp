@@ -66,6 +66,10 @@ namespace wallin
     if( targetBuildings.size() != 1)
       return false;
 
+    // if same building on both the starting and target tile
+    if( *startingBuildings.begin() == *targetBuildings.begin() )
+      return true;
+
     int nberTarget = *( targetBuildings.begin() );
 
     int nberCurrent = *( startingBuildings.begin() );

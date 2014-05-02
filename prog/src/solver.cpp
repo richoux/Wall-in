@@ -291,6 +291,7 @@ namespace wallin
 
 	  variableCost = bestSimCost;
 	  move( oldBuilding, bestPosition );
+	  //cout << "bestGlobalCost:" << bestGlobalCost << endl << grid << endl;
 	}
 	else // local minima
 	  tabuList[ worstBuildingId ] = TABU;
@@ -357,7 +358,7 @@ namespace wallin
       elapsedTime = chrono::system_clock::now() - start;
     }
     while( objective->getName().compare("none") != 0  && 
-	   ( elapsedTime.count() < OPT_TIME || ( elapsedTime.count() >= OPT_TIME && bestGlobalCost != 0 ) ) );
+	   ( elapsedTime.count() < OPT_TIME || ( elapsedTime.count() >= OPT_TIME && bestGlobalCost != 0 && elapsedTime.count() < 10 * OPT_TIME ) ) );
 
     clearAllInGrid( vecBuildings, grid );
 
@@ -367,7 +368,7 @@ namespace wallin
     addAllInGrid( vecBuildings, grid );
 
     // For gap objective, try now to decrease the number of gaps.
-    if( objective->getName().compare("gap") == 0 )
+    if( objective->getName().compare("gap") == 0 && bestGlobalCost == 0 )
     {
       objective.reset( new GapObj("gap") );
       std::fill( tabuList.begin(), tabuList.end(), 0 );

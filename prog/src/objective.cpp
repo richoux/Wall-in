@@ -88,6 +88,9 @@ namespace wallin
   {
     int gaps = 0;
     std::set< std::shared_ptr<Building> > neighbors = grid.getBuildingsAbove( *b, vecBuildings );
+    if( neighbors.empty() )
+      return 0;
+
     gaps += std::count_if( neighbors.begin(), 
 			   neighbors.end(), 
 			   [&](std::shared_ptr<Building> n){return b->getGapTop() + n->getGapBottom() >= 16;});

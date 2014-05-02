@@ -96,6 +96,7 @@ int main(int argc, char **argv)
 //            Solver solver( vecConstraints, vec, grid, "building" );
 //            Solver solver( vecConstraints, vec, grid, "techtree" );
             Solver solver( vecConstraints, vec, grid, "gap" );
+	    std::cout << "File name: " << argv[1] << std::endl; 
             solver.solve( time_limit );    
           }
         }

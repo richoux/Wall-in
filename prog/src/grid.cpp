@@ -150,7 +150,9 @@ namespace wallin
       
       if( it != failures_.end() )
       {
-	if( matrixType_[row][col].size() < 2 || matrixType_[row][col].compare("###") == 0 )
+	if( matrixType_[row][col].size() < 2 
+	    || matrixType_[row][col].compare("###") == 0 
+	    || ( matrixType_[row][col].size() == 2 && matrixType_[row][col].find("@") != string::npos ) )
 	  failures_.erase( it );
 	else
 	  failures_.at( key ) = matrixType_[row][col];
