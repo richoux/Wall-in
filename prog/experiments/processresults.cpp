@@ -29,8 +29,16 @@ int main(int argc, char **argv)
 
   double time_accum = 0;
   double cost_accum = 0;
+  double best_cost_so_far = -1;
+  double cost_accum_over_attempts = 0;
   double count = 0;
-  int n_solved = 0;
+  double count_over_attempts = 0;
+  int n_solved = 0; // global number of solved
+  bool solved_in_at_least_one_attempt = false;
+  int n_solved_in_at_least_one_attempt = 0; // solved it at least one of the attempts
+
+  int previous_attempt = 0;
+  int attempt = 0;
 
   while((read = getline(&line, &len, fp)) != -1) {
     for(int i = 0;i<strlen(line);i++) 
@@ -40,6 +48,18 @@ int main(int argc, char **argv)
       int dx,dy;
       sscanf(line,"map size: %i,%i",&dx,&dy);
       printf("%i\t%i\t",dx,dy);
+    }
+    if (strstr(line,"attempt")!=NULL) {
+      previous_attempt = attempt;
+      sscanf(line,"attempt %i",&attempt);
+      printf("%i\t",attempt);
+      if (attempt<=previous_attempt) {
+        if (solved_in_at_least_one_attempt) n_solved_in_at_least_one_attempt++;
+        solved_in_at_least_one_attempt = false;
+        cost_accum_over_attempts+=best_cost_so_far;
+        count_over_attempts++;
+        best_cost_so_far = -1;
+      }
     }
     if (strstr(line,"Elapsed time:")!=NULL) {
       float t;
@@ -52,18 +72,29 @@ int main(int argc, char **argv)
       sscanf(line,"Global cost: %i",&c);
       printf("%i\n",c);
       cost_accum+=c;
-      if (c==0) n_solved++;
+      if (best_cost_so_far<0 || c<best_cost_so_far) best_cost_so_far = c;
+      if (c==0) {
+        n_solved++;
+        solved_in_at_least_one_attempt = true;
+      }
       count++;
     }
   }
+  if (solved_in_at_least_one_attempt) n_solved_in_at_least_one_attempt++;
+  solved_in_at_least_one_attempt = false;
+  cost_accum_over_attempts+=best_cost_so_far;
+  count_over_attempts++;
   fclose(fp);
 
   time_accum/=count;
   cost_accum/=count;
+  cost_accum_over_attempts/=count_over_attempts;
 
   printf("Number of problems: %g\n", count);
   printf("Average time: %g, average cost: %g\n",time_accum, cost_accum);
   printf("Number of problems with cost = 0: %i\n",n_solved);
+  printf("Average cost of best solution across attempts: %g\n", cost_accum_over_attempts);
+  printf("Number of problems with cost = 0 (in at least one attempt): %i\n",n_solved_in_at_least_one_attempt);
 
   return 0;
 }
