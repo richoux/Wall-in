@@ -70,8 +70,8 @@ int main(int argc, char **argv)
         for(int i = 0;i<dy;i++) {
           printf("%s\n",buffer);
           for(int j = 0;j<dx;j++) {
-//            if (buffer[j]!='2') unbuildables.push_back(std::pair<int,int>(i,j));
-            if (buffer[j]!='2') unbuildables.push_back(std::pair<int,int>(j,i)); // since the solver has x/y inverted :)
+            if (buffer[j]!='2') unbuildables.push_back(std::pair<int,int>(i,j));
+//            if (buffer[j]!='2') unbuildables.push_back(std::pair<int,int>(j,i)); // since the solver has x/y inverted :)
           }
           if (i!=dy-1) {
             read = getline(&line, &len, fp);
@@ -82,8 +82,8 @@ int main(int argc, char **argv)
         for(int i = 0;i<wall_start.size();i++) {
           std::pair<int,int> start = wall_start[i];
           std::pair<int,int> end = wall_end[i];
-//          Grid grid( dx, dy, unbuildables, start.first, start.second, end.first, end.second );
-          Grid grid( dx, dy, unbuildables, start.second, start.first, end.second, end.first ); // since the solver has x/y inverted :)
+          Grid grid( dy, dx, unbuildables, start.first, start.second, end.first, end.second );
+//          Grid grid( dy, dx, unbuildables, start.second, start.first, end.second, end.first ); // since the solver has x/y inverted :)
           std::vector<std::shared_ptr<Building> > vec     = makeTerranBuildings();
           std::vector< std::shared_ptr<Constraint> > vecConstraints = makeTerranConstraints( vec, grid );
 
