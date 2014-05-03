@@ -21,8 +21,8 @@ namespace wallin
   //shared_ptr<Building> e;
   shared_ptr<Building> f1;
   shared_ptr<Building> f2;
-  shared_ptr<Building> t1;
-  shared_ptr<Building> t2;
+  //shared_ptr<Building> t1;
+  //shared_ptr<Building> t2;
   shared_ptr<Building> s1;
   shared_ptr<Building> s2;
 
@@ -42,13 +42,14 @@ namespace wallin
     //e = make_shared<EngineeringBay>( );
     f1 = make_shared<Factory>( );
     f2 = make_shared<Factory>( );
-    t1 = make_shared<MissileTurret>( );
-    t2 = make_shared<MissileTurret>( );
+    //t1 = make_shared<MissileTurret>( );
+    //t2 = make_shared<MissileTurret>( );
     s1 = make_shared<SupplyDepot>( );
     s2 = make_shared<SupplyDepot>( );
 
     //vector< shared_ptr<Building> > vec {a, b, u1, u2, e, f, t, s1, s2};
-    vector< shared_ptr<Building> > vec {a1, a2, b1, b2, u1, u2, f1, f2, t1, t2, s1, s2};
+    //vector< shared_ptr<Building> > vec {a1, a2, b1, b2, u1, u2, f1, f2, t1, t2, s1, s2};
+    vector< shared_ptr<Building> > vec {a1, a2, b1, b2, u1, u2, f1, f2, s1, s2};
     return vec;
   }
 

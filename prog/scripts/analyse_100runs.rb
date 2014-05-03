@@ -20,10 +20,12 @@ lines = 0
 # For each line in file
 file.each do |line|
   words = line.split(': ')
-  if words[1].to_i == 0
-    count += 1
+  if words[0] == "Global cost"
+    if words[1].to_i == 0
+      count += 1
+    end
+    lines += 1
   end
-  lines += 1
 end
 
 puts "Number of successes: #{count}"

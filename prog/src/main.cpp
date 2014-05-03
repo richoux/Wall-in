@@ -58,7 +58,7 @@ int main(int argc, char **argv)
   std::vector<std::shared_ptr<Building> > vec			= makeTerranBuildings();
   std::vector< std::shared_ptr<Constraint> > vecConstraints	= makeTerranConstraints( vec, grid );
 
-  Solver solver( vecConstraints, vec, grid );
+  Solver solver( vecConstraints, vec, grid, "gap" );
 #ifndef NDEBUG
   std::cout << std::boolalpha << "Building movable: " << std::is_nothrow_move_constructible<Building>::value << std::endl;
   std::cout << std::boolalpha << "Barracks movable: " << std::is_nothrow_move_constructible<Barracks>::value << std::endl;

@@ -86,26 +86,44 @@ namespace wallin
 
   int GapObj::gapSize( const std::shared_ptr<Building> b, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
+    if( !b->isOnGrid() )
+      return 0;
+
     int gaps = 0;
     std::set< std::shared_ptr<Building> > neighbors = grid.getBuildingsAbove( *b, vecBuildings );
-    if( neighbors.empty() )
-      return 0;
+
+    // std::cout << "ABOVE " << b->getId() << std::endl;
+    // for( auto n : neighbors )
+    //   std::cout << n->getId() << " ";
+    // std::cout << std::endl;
 
     gaps += std::count_if( neighbors.begin(), 
 			   neighbors.end(), 
 			   [&](std::shared_ptr<Building> n){return b->getGapTop() + n->getGapBottom() >= 16;});
     
     neighbors = grid.getBuildingsOnRight( *b, vecBuildings );
+    // std::cout << "RIGHT " << b->getId() << std::endl;
+    // for( auto n : neighbors )
+    //   std::cout << n->getId() << " ";
+    // std::cout << std::endl;
     gaps += std::count_if( neighbors.begin(), 
 			   neighbors.end(), 
 			   [&](std::shared_ptr<Building> n){return b->getGapRight() + n->getGapLeft() >= 16;});
     
     neighbors = grid.getBuildingsBelow( *b, vecBuildings );
+    // std::cout << "BELOW " << b->getId()  << std::endl;
+    // for( auto n : neighbors )
+    //   std::cout << n->getId() << " ";
+    // std::cout << std::endl;
     gaps += std::count_if( neighbors.begin(), 
 			   neighbors.end(), 
 			   [&](std::shared_ptr<Building> n){return b->getGapBottom() + n->getGapTop() >= 16;});
     
     neighbors = grid.getBuildingsOnLeft( *b, vecBuildings );
+    // std::cout << "LEFT " << b->getId()  << std::endl;
+    // for( auto n : neighbors )
+    //   std::cout << n->getId() << " ";
+    // std::cout << std::endl;
     gaps += std::count_if( neighbors.begin(), 
 			   neighbors.end(), 
 			   [&](std::shared_ptr<Building> n){return b->getGapLeft() + n->getGapRight() >= 16;});

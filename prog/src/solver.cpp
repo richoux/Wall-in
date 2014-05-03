@@ -118,6 +118,7 @@ namespace wallin
     vector< vector< double > >  vecVarSimCosts( sizeGrid );
 
     bestCost = numeric_limits<double>::max();
+    double beforePostProc = bestCost;
     double bestGlobalCost = numeric_limits<double>::max();
     double globalCost;
     double currentCost;
@@ -252,35 +253,13 @@ namespace wallin
 		    bind( less<double>(), placeholders::_1, 0. ), 
 		    numeric_limits<double>::max() );
 
-	// for( int i = 0; i < vecConstraints.size(); ++i )
-	// {
-	//   cout << "vecConstraintsCosts[" << i << "] = ";
-	//     for(auto d : vecConstraintsCosts[i])
-	//       cout << d << " ";
-	//   cout << endl;
-	// }
-
-	// cout << "vecGlobalCosts: ";
-	// for(auto d : vecGlobalCosts)
-	//   cout << d << " ";
-	// cout << endl;
-	
-
 	// look for the first smallest cost, according to objective heuristic
 	int b = objective->heuristicValue( vecGlobalCosts, bestEstimatedCost, bestPosition, grid);
-	// cout << "Best i = " << b << endl;
 	bestSimCost = vecVarSimCosts[ b ];
 
 	timeSimCost += chrono::system_clock::now() - startSimCost;
 
 	currentCost = bestEstimatedCost;
-
-	// cout << "Best Sim Cost:";
-	// for( auto i : bestSimCost )
-	//   cout << i << " ";
-	// cout << endl;
-
-	// cout << "Current cost: " << currentCost << endl;
 
 	if( bestEstimatedCost < globalCost )
 	{
@@ -291,7 +270,6 @@ namespace wallin
 
 	  variableCost = bestSimCost;
 	  move( oldBuilding, bestPosition );
-	  //cout << "bestGlobalCost:" << bestGlobalCost << endl << grid << endl;
 	}
 	else // local minima
 	  tabuList[ worstBuildingId ] = TABU;
@@ -305,9 +283,6 @@ namespace wallin
 	bool change;
 	double cost;
 	NoGaps ng( vecBuildings, grid );
-
-	// cout << "BEFORE" << endl << grid;
-	// printConstraints( vecConstraints );
 
 	// remove all unreachable buildings from the starting building out of the grid
 	set< shared_ptr<Building> > visited = getNecessaryBuildings();
@@ -346,9 +321,6 @@ namespace wallin
 	double objectiveCost = objective->cost( vecBuildings, grid );
 	if( objectiveCost < bestCost )
 	{
-	  // cout << "AFTER" << grid;
-	  // cout << "global cost: " << globalCost << endl << "obj cost: " << objectiveCost << endl << endl;
-	  // printConstraints( vecConstraints );
 	  bestCost = objectiveCost;
 	  for( int i = 0; i < vecBuildings.size(); ++i )
 	    bestSolution[i] = vecBuildings[i]->getPosition();
@@ -384,7 +356,7 @@ namespace wallin
     
       bestCost = objective->cost( vecBuildings, grid );
       double currentCost = bestCost;
-      cout << "bestCost: " << bestCost << endl;
+      beforePostProc = bestCost;
 
       while( (postprocessGap = chrono::system_clock::now() - startPostprocess).count() < static_cast<int>( ceil(OPT_TIME / 100) ) && bestCost > 0 )
       {
@@ -423,7 +395,6 @@ namespace wallin
 	      bestCost = currentCost;
 	      toSwap = it->second;
 	      mustSwap = true;
-	      cout << "bestCost: " << bestCost << endl;
 	    }
 
 	    grid.swap( *it->second, *oldBuilding );
@@ -441,6 +412,7 @@ namespace wallin
 	 << "Elapsed time: " << elapsedTime.count() << endl
 	 << "Global cost: " << bestGlobalCost << endl
 	 << "Optimization cost: " << bestCost << endl
+	 << "Opt Cost BEFORE post-processing: " << beforePostProc << endl
 	 << "Number of tours: " << tour << endl;
 
     if( objective->getName().compare("gap") == 0 )
