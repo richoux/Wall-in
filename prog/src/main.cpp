@@ -53,7 +53,7 @@ int main(int argc, char **argv)
     std::make_pair(11, 15) 
   };
   
-  Grid grid( 12, 16, unbuildables, 11, 7, 6, 15 );
+  Grid grid( 16, 12, unbuildables, 11, 7, 6, 15 );
 
   std::vector<std::shared_ptr<Building> > vec			= makeTerranBuildings();
   std::vector< std::shared_ptr<Constraint> > vecConstraints	= makeTerranConstraints( vec, grid );

@@ -82,7 +82,7 @@ int main(int argc, char **argv)
         for(int i = 0;i<wall_start.size();i++) {
           std::pair<int,int> start = wall_start[i];
           std::pair<int,int> end = wall_end[i];
-          Grid grid( dy, dx, unbuildables, start.first, start.second, end.first, end.second );
+          Grid grid( dx, dy, unbuildables, start.first, start.second, end.first, end.second );
 //          Grid grid( dy, dx, unbuildables, start.second, start.first, end.second, end.first ); // since the solver has x/y inverted :)
           std::vector<std::shared_ptr<Building> > vec     = makeTerranBuildings();
           std::vector< std::shared_ptr<Constraint> > vecConstraints = makeTerranConstraints( vec, grid );

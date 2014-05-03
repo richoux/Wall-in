@@ -76,8 +76,8 @@ namespace wallin
     void add(int, int, string, int);
     void clear(int, int, string, int);
     
-    int nRow_;
     int mCol_;
+    int nRow_;
     vector< vector<string> > matrixType_;
     vector< vector< set<int> > > matrixId_;
     pair<int, int> startingTile;

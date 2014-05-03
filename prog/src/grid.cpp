@@ -2,9 +2,9 @@
 
 namespace wallin
 {
-  Grid::Grid( int row, int col, int sRow, int sCol, int tRow, int tCol ) 
-    : nRow_(row),
-      mCol_(col),
+  Grid::Grid( int col, int row, int sRow, int sCol, int tRow, int tCol ) 
+    : mCol_(col),
+      nRow_(row),
       matrixType_(vector< vector<string> >(nRow_, vector<string>(mCol_, "") ) ),
       matrixId_(vector< vector< set<int> > >(nRow_, vector< set<int> >(mCol_, set<int>() ) ) ),
       startingTile( make_pair( sRow, sCol ) ),
@@ -14,8 +14,8 @@ namespace wallin
     matrixType_[tRow][tCol] += "@t";
   }
 
-  Grid::Grid( int row, int col, const vector< pair<int, int> >& unbuildables, int sRow, int sCol, int tRow, int tCol ) 
-    : Grid( row, col, sRow, sCol, tRow, tCol )
+  Grid::Grid( int col, int row, const vector< pair<int, int> >& unbuildables, int sRow, int sCol, int tRow, int tCol ) 
+    : Grid( col, row, sRow, sCol, tRow, tCol )
   {
     for( auto u : unbuildables )
       matrixType_[u.first][u.second].assign(3, '#');
