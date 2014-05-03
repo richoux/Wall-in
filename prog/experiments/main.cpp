@@ -92,10 +92,10 @@ int main(int argc, char **argv)
             printf("map size: %i,%i\n",dx,dy);
             printf("calling solver...\n");
 
-//            Solver solver( vecConstraints, vec, grid );
+            Solver solver( vecConstraints, vec, grid );
 //            Solver solver( vecConstraints, vec, grid, "building" );
 //            Solver solver( vecConstraints, vec, grid, "techtree" );
-            Solver solver( vecConstraints, vec, grid, "gap" );
+//            Solver solver( vecConstraints, vec, grid, "gap" );
 	    std::cout << "File name: " << argv[1] << std::endl; 
             solver.solve( time_limit );    
           }
