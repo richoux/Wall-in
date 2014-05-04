@@ -20,11 +20,11 @@ namespace wallin
       if(      vecPositions[i] < bestEstimatedCost
 	  || ( vecPositions[i] == bestEstimatedCost
 	       && bestEstimatedCost != numeric_limits<double>::max()
-	       && ( i == 0 || heuristicValueHelper[ i - 1 ] < bestHelp ) ) )
+	       && ( i == 0 || heuristicValueHelper.at( vecPositions[i] ) < bestHelp ) ) )
       {
 	bestEstimatedCost = vecPositions[i];
 	bestPosition = i - 1;
-	bestHelp = heuristicValueHelper[ i - 1 ];
+	bestHelp = heuristicValueHelper.at( vecPositions[i] );
 	best = i;
       }
     }
@@ -96,7 +96,8 @@ namespace wallin
 
   void GapObj::setHelper( const Building &b, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid )
   {
-    heuristicValueHelper.at( b.getPosition() ) = gapSize( b, vecBuildings, grid );
+    if( b.isOnGrid() )
+      heuristicValueHelper.at( b.getPosition() ) = gapSize( b, vecBuildings, grid );
   }
 
   int GapObj::gapSize( const Building &b, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
