@@ -8,6 +8,7 @@
 
 #include "building.hpp"
 #include "grid.hpp"
+#include "objective.hpp"
 
 namespace wallin
 {
@@ -22,6 +23,7 @@ namespace wallin
     // virtual ~Constraint() = default;
 
     virtual double cost( std::vector<double>& ) const = 0;
+    virtual std::vector<double> simulateCost( Building&, const std::vector<int>&, int, std::vector< std::vector<double> >&, std::shared_ptr<Objective>& );
     virtual std::vector<double> simulateCost( Building&, const std::vector<int>&, int, std::vector< std::vector<double> >& );
     virtual double simulateCost( Building&, const int, std::vector<double>& );
 

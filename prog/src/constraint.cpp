@@ -8,12 +8,15 @@ namespace wallin
     grid( grid )
   { }
   
-  std::vector<double> Constraint::simulateCost( Building& oldBuilding, const std::vector<int>& newPosition, int sizeGrid, std::vector< std::vector<double> >& vecVarSimCosts )
+  std::vector<double> Constraint::simulateCost( Building& oldBuilding, const std::vector<int>& newPosition, int sizeGrid, std::vector< std::vector<double> >& vecVarSimCosts, std::shared_ptr<Objective> &objective )
   {
     std::vector<double> simCosts( sizeGrid, -1. );
     int backup = oldBuilding.getPosition();
     int previousPos;
     
+    if( objective->getName().compare("fake") != 0 )
+      objective->resetHelper();
+
     for( auto pos : newPosition )
     {
       if( pos >= 1 && pos == previousPos + 1 )
@@ -28,6 +31,8 @@ namespace wallin
       }
 
       simCosts[pos+1] = cost( vecVarSimCosts[pos+1] );
+      if( objective->getName().compare("fake") != 0 )
+	objective->setHelper( oldBuilding, variables, grid );
       previousPos = pos;
     }
 
@@ -36,6 +41,12 @@ namespace wallin
     grid.add( oldBuilding );
     
     return simCosts;
+  }
+
+  std::vector<double> Constraint::simulateCost( Building& oldBuilding, const std::vector<int>& newPosition, int sizeGrid, std::vector< std::vector<double> >& vecVarSimCosts )
+  {
+    shared_ptr<Objective> fake = make_shared<NoneObj>("fake");
+    return simulateCost( oldBuilding, newPosition, sizeGrid, vecVarSimCosts, fake );
   }
 
   double Constraint::simulateCost( Building& oldBuilding, const int newPosition, std::vector<double>& varSimCost )

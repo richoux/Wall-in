@@ -18,11 +18,15 @@ namespace wallin
     Objective( std::string );
     virtual double cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& ) const = 0;
     virtual int heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& ) = 0;
-    virtual int heuristicValue( const std::vector< double > &vecPositions, double&, int&, const Grid& ) const;
+    virtual void setHelper( const Building&, const std::vector< std::shared_ptr<Building> >&, const Grid& );
+    void initHelper( int );
+    void resetHelper();
+    int heuristicValue( const std::vector< double > &vecPositions, double&, int&, const Grid& ) const;
     inline  std::string getName() { return name; }
   protected:
     Random randomVar;
     std::string name;
+    std::vector<int> heuristicValueHelper; 
   };
 
   class NoneObj : public Objective
@@ -39,9 +43,9 @@ namespace wallin
     GapObj( std::string );
     double cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& ) const;
     int heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& );
-    //int heuristicValue( const std::vector< double > &vecPositions, double&, int&, const Grid& ) const;    
+    void setHelper( const Building&, const std::vector< std::shared_ptr<Building> >&, const Grid& );
   private:
-    int gapSize( const std::shared_ptr<Building>, const std::vector< std::shared_ptr<Building> > &, const Grid& ) const;
+    int gapSize( const Building&, const std::vector< std::shared_ptr<Building> >&, const Grid& ) const;
   };
 
   class BuildingObj : public Objective

@@ -116,6 +116,7 @@ namespace wallin
     vector< vector< double > >  vecConstraintsCosts( vecConstraints.size() );
     vector< double >		vecGlobalCosts( sizeGrid );
     vector< vector< double > >  vecVarSimCosts( sizeGrid );
+    objective->initHelper( sizeGrid );
 
     bestCost = numeric_limits<double>::max();
     double beforePostProc = bestCost;
@@ -218,7 +219,7 @@ namespace wallin
 
 #ifndef NDEBUG
 	soverlap = chrono::system_clock::now();
-	vecConstraintsCosts[0] = vecConstraints[0]->simulateCost( *oldBuilding, possiblePositions, sizeGrid, vecVarSimCosts );
+	vecConstraintsCosts[0] = vecConstraints[0]->simulateCost( *oldBuilding, possiblePositions, sizeGrid, vecVarSimCosts, objective );
 	toverlap += chrono::system_clock::now() - soverlap;
 
 	sbuildable = chrono::system_clock::now();
@@ -233,7 +234,8 @@ namespace wallin
 	vecConstraintsCosts[3] = vecConstraints[3]->simulateCost( *oldBuilding, possiblePositions, sizeGrid, vecVarSimCosts );
 	tstt += chrono::system_clock::now() - sstt;
 #else
-	for( int i = 0; i < vecConstraints.size(); ++i )
+	vecConstraintsCosts[0] = vecConstraints[0]->simulateCost( *oldBuilding, possiblePositions, sizeGrid, vecVarSimCosts, objective );
+	for( int i = 1; i < vecConstraints.size(); ++i )
 	  vecConstraintsCosts[i] = vecConstraints[i]->simulateCost( *oldBuilding, possiblePositions, sizeGrid, vecVarSimCosts );
 #endif
 
@@ -342,7 +344,7 @@ namespace wallin
     // For gap objective, try now to decrease the number of gaps.
     if( objective->getName().compare("gap") == 0 && bestGlobalCost == 0 )
     {
-      objective.reset( new GapObj("gap") );
+      //objective.reset( new GapObj("gap") );
       std::fill( tabuList.begin(), tabuList.end(), 0 );
         
       for( auto v : vecBuildings )
