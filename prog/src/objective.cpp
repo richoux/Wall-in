@@ -44,8 +44,11 @@ namespace wallin
 
   void Objective::setHelper( const Building &b, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid )
   {
-    int pos = b.getPosition();
-    heuristicValueHelper.at( pos ) = grid.distanceToTarget( pos );
+    if( b.isOnGrid() )
+    {
+      int pos = b.getPosition();
+      heuristicValueHelper.at( pos ) = grid.distanceToTarget( pos );
+    }
   }
 
   /***********/
