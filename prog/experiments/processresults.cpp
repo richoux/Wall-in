@@ -27,12 +27,18 @@ int main(int argc, char **argv)
   size_t len = 0;
   ssize_t read;
 
+  int cost = 0;
   double time_accum = 0;
   double cost_accum = 0;
+  double best_opt_cost_so_far = -1;
+  double best_opt_init_cost_so_far = -1;
   double best_cost_so_far = -1;
+  double opt_init_cost_accum_over_attempts = 0;
+  double opt_cost_accum_over_attempts = 0;
   double cost_accum_over_attempts = 0;
   double count = 0;
   double count_over_attempts = 0;
+  double count_over_attempts_opt = 0;
   int n_solved = 0; // global number of solved
   bool solved_in_at_least_one_attempt = false;
   int n_solved_in_at_least_one_attempt = 0; // solved it at least one of the attempts
@@ -54,11 +60,17 @@ int main(int argc, char **argv)
       sscanf(line,"attempt %i",&attempt);
       printf("%i\t",attempt);
       if (attempt<=previous_attempt) {
-        if (solved_in_at_least_one_attempt) n_solved_in_at_least_one_attempt++;
+        if (solved_in_at_least_one_attempt) {
+          n_solved_in_at_least_one_attempt++;
+        }
         solved_in_at_least_one_attempt = false;
         cost_accum_over_attempts+=best_cost_so_far;
+        opt_cost_accum_over_attempts+=best_opt_cost_so_far;
+        opt_init_cost_accum_over_attempts+=best_opt_init_cost_so_far;
         count_over_attempts++;
         best_cost_so_far = -1;
+        best_opt_cost_so_far = -1;
+        best_opt_init_cost_so_far = -1;
       }
     }
     if (strstr(line,"Elapsed time:")!=NULL) {
@@ -68,16 +80,42 @@ int main(int argc, char **argv)
       time_accum+=t;
     }
     if (strstr(line,"Global cost:")!=NULL) {
-      int c;
-      sscanf(line,"Global cost: %i",&c);
-      printf("%i\n",c);
-      cost_accum+=c;
-      if (best_cost_so_far<0 || c<best_cost_so_far) best_cost_so_far = c;
-      if (c==0) {
+      sscanf(line,"Global cost: %i",&cost);
+      if (cost==0) {
+        printf("%i\n",cost);
+      } else {
+        printf("%i\n",cost);
+      }
+      cost_accum+=cost;
+      if (best_cost_so_far<0 || cost<best_cost_so_far) best_cost_so_far = cost;
+      if (cost==0) {
         n_solved++;
         solved_in_at_least_one_attempt = true;
       }
       count++;
+    }
+    if (cost==0) {
+      if (strstr(line,"Optimization cost:")!=NULL) {
+        int c;
+        sscanf(line,"Optimization cost: %i",&c);
+        if (c==0) {
+          printf("%i\n",c);
+        } else {
+          printf("%i\n",c);
+        }
+        if (best_opt_cost_so_far<0 || c<best_opt_cost_so_far) best_opt_cost_so_far = c;
+        count_over_attempts_opt++;
+      }
+      if (strstr(line,"Opt Cost BEFORE post-processing:")!=NULL) {
+        int c;
+        sscanf(line,"Opt Cost BEFORE post-processing: %i",&c);
+        if (c==0) {
+          printf("%i\n",c);
+        } else {
+          printf("%i\n",c);
+        }
+        if (best_opt_init_cost_so_far<0 || c<best_opt_init_cost_so_far) best_opt_init_cost_so_far = c;
+      }
     }
   }
   if (solved_in_at_least_one_attempt) n_solved_in_at_least_one_attempt++;
@@ -89,13 +127,18 @@ int main(int argc, char **argv)
   time_accum/=count;
   cost_accum/=count;
   cost_accum_over_attempts/=count_over_attempts;
+  opt_cost_accum_over_attempts/=count_over_attempts_opt;
+  opt_init_cost_accum_over_attempts/=count_over_attempts_opt;
 
+  printf("Problems\tbestCost\tnSolved\tOptCostBefore\tOptCostAfter\n");
+  printf("%g\t%g\t%d\t%g\t%g\n",count,cost_accum_over_attempts,n_solved_in_at_least_one_attempt,opt_init_cost_accum_over_attempts,opt_cost_accum_over_attempts);
+/*
   printf("Number of problems: %g\n", count);
   printf("Average time: %g, average cost: %g\n",time_accum, cost_accum);
   printf("Number of problems with cost = 0: %i\n",n_solved);
   printf("Average cost of best solution across attempts: %g\n", cost_accum_over_attempts);
   printf("Number of problems with cost = 0 (in at least one attempt): %i\n",n_solved_in_at_least_one_attempt);
-
+*/
   return 0;
 }
 
