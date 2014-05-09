@@ -58,7 +58,10 @@ namespace wallin
 
   double NoneObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
-    return 0.;
+    return std::count_if( vecBuildings.begin(), 
+			  vecBuildings.end(), 
+			  []( const std::shared_ptr<Building> &b ){ return b->isOnGrid(); });
+    //return 0.;
   }
 
   int NoneObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid )
@@ -159,7 +162,7 @@ namespace wallin
   {
     return std::count_if( vecBuildings.begin(), 
 			  vecBuildings.end(), 
-			  [](std::shared_ptr<Building> b){return b->isOnGrid();} );
+			  []( const std::shared_ptr<Building> &b ){ return b->isOnGrid(); });
   }
 
   int BuildingObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid )
@@ -189,9 +192,17 @@ namespace wallin
 
   double TechTreeObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
-    auto max =  std::max_element( vecBuildings.begin(), 
-				  vecBuildings.end(), 
-				  [](std::shared_ptr<Building> b1, std::shared_ptr<Building> b2)
+    std::vector< std::shared_ptr<Building> > onGrid( vecBuildings.size() );
+    
+    auto it = std::copy_if( vecBuildings.begin(),
+			    vecBuildings.end(), 
+			    onGrid.begin(),
+			    [](const std::shared_ptr<Building> &b){ return b->isOnGrid(); } );
+    onGrid.resize( std::distance( onGrid.begin(), it ) );
+
+    auto max =  std::max_element( onGrid.begin(), 
+				  onGrid.end(), 
+				  [](const std::shared_ptr<Building> &b1, const std::shared_ptr<Building> &b2)
 				  {return b1->getTreedepth() < b2->getTreedepth();} );
 
     return (*max)->getTreedepth();
@@ -199,18 +210,30 @@ namespace wallin
 
   int TechTreeObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid )
   {
-    auto min =  std::min_element( vecBuildings.begin(), 
-				  vecBuildings.end(), 
-				  [](std::shared_ptr<Building> b1, std::shared_ptr<Building> b2)
-				  {return b1->getTreedepth() < b2->getTreedepth();} );
+    // auto min =  std::min_element( vecBuildings.begin(), 
+    // 				  vecBuildings.end(), 
+    // 				  [](std::shared_ptr<Building> b1, std::shared_ptr<Building> b2)
+    // 				  {return b1->getTreedepth() < b2->getTreedepth();} );
 
-    int minValue = (*min)->getTreedepth();
+    // int minValue = (*min)->getTreedepth();
+    // std::vector< int > varMinTech( vecVariables.size() );
+
+    // auto it = std::copy_if( vecVariables.begin(),
+    // 			    vecVariables.end(),
+    // 			    varMinTech.begin(),
+    // 			    [&](int b){return vecBuildings[b]->getTreedepth() == minValue;} );
+
+    auto min =  std::min_element( vecVariables.begin(), 
+				  vecVariables.end(), 
+				  [&](int b1, int b2)
+				  { return vecBuildings[b1]->getTreedepth() < vecBuildings[b2]->getTreedepth(); } );
+
     std::vector< int > varMinTech( vecVariables.size() );
-    
+
     auto it = std::copy_if( vecVariables.begin(),
 			    vecVariables.end(),
 			    varMinTech.begin(),
-			    [&](int b){return vecBuildings[b]->getTreedepth() == minValue;} );
+			    [&](int b){return vecBuildings[b]->getTreedepth() == *min;} );
     
     int size = std::distance( varMinTech.begin(), it );
 

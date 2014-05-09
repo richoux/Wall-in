@@ -55,10 +55,15 @@ int main(int argc, char **argv)
   
   Grid grid( 16, 12, unbuildables, 11, 7, 6, 15 );
 
+  // Please write the name of the objective here!
+  std::string objective = "";
+
+  //std::vector<std::shared_ptr<Building> > vec			= makeTerranBuildings( objective );
   std::vector<std::shared_ptr<Building> > vec			= makeTerranBuildings();
   std::vector< std::shared_ptr<Constraint> > vecConstraints	= makeTerranConstraints( vec, grid );
 
-  Solver solver( vecConstraints, vec, grid );
+  Solver solver( vecConstraints, vec, grid, objective );
+
 #ifndef NDEBUG
   std::cout << std::boolalpha << "Building movable: " << std::is_nothrow_move_constructible<Building>::value << std::endl;
   std::cout << std::boolalpha << "Barracks movable: " << std::is_nothrow_move_constructible<Barracks>::value << std::endl;

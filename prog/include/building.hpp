@@ -81,6 +81,13 @@ namespace wallin
     Academy(int pos) : Building(3, 2, 0, 3, 7, 8, "A", Terran, 2, pos) { }
   };
 
+  class Armory : public Building
+  {
+  public:
+    Armory() : Building(3, 2, 0, 0, 9, 0, "R", Terran, 3) { }
+    Armory(int pos) : Building(3, 2, 0, 0, 9, 0, "R", Terran, 3, pos) { }
+  };
+
   class Barracks : public Building
   {
   public:
@@ -93,6 +100,13 @@ namespace wallin
   public:
     Bunker() : Building(3, 2, 8, 15, 15, 16, "U", Terran, 2) { }
     Bunker(int pos) : Building(3, 2, 8, 15, 15, 16, "U", Terran, 2, pos) { }
+  };
+
+  class CommandCenter : public Building
+  {
+  public:
+    CommandCenter() : Building(4, 3, 7, 5, 6, 6, "C", Terran, 0) { }
+    CommandCenter(int pos) : Building(4, 3, 7, 5, 6, 6, "C", Terran, 0, pos) { }
   };
 
   class EngineeringBay : public Building
@@ -114,6 +128,20 @@ namespace wallin
   public:
     MissileTurret() : Building(2, 2, 0, 15, 15, 16, "T", Terran, 2) { }
     MissileTurret(int pos) : Building(2, 2, 0, 15, 15, 16, "T", Terran, 2, pos) { }
+  };
+
+  class ScienceFacility : public Building
+  {
+  public:
+    ScienceFacility() : Building(4, 3, 10, 15, 9, 16, "I", Terran, 4) { }
+    ScienceFacility(int pos) : Building(4, 3, 10, 15, 9, 16, "I", Terran, 4, pos) { }
+  };
+
+  class Starport : public Building
+  {
+  public:
+    Starport() : Building(4, 3, 8, 15, 9, 16, "P", Terran, 3) { }
+    Starport(int pos) : Building(4, 3, 8, 15, 9, 16, "P", Terran, 3, pos) { }
   };
 
   class SupplyDepot : public Building

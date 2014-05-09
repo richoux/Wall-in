@@ -37,14 +37,7 @@ namespace wallin
       if( randomVar.getRandNum(3) == 0)
       {
 	shortName = b->getShort();
-	
-	// Start with one Barracks and one supply
-	// if( shortName.compare("B") == 0 || 
-	//     ( shortName.compare("S") == 0 && !supplyIncluded ) )
-	// {
-	//   if( shortName.compare("S") == 0 )
-	//     supplyIncluded = true;
-	  
+		  
 	xPos = randomVar.getRandNum( grid.getNberRows() - b->getLength() );
 	yPos = randomVar.getRandNum( grid.getNberCols() - b->getHeight() );
 	b->setPos( grid.mat2lin( xPos, yPos ) );
@@ -130,6 +123,7 @@ namespace wallin
     vector<int> worstBuildings;
     double worstVariableCost;
     int worstBuildingId;
+    int sizeWall;
 
     shared_ptr<Building> oldBuilding;
     vector<int> possiblePositions;
@@ -144,6 +138,7 @@ namespace wallin
       ++tour;
       globalCost = numeric_limits<double>::max();
       bestEstimatedCost = numeric_limits<double>::max();
+      sizeWall  = numeric_limits<int>::max();
       std::fill( varSimCost.begin(), varSimCost.end(), 0. );
       std::fill( bestSimCost.begin(), bestSimCost.end(), 0. );
       std::fill( vecConstraintsCosts.begin(), vecConstraintsCosts.end(), vector<double>( vecBuildings.size(), 0. ) );
@@ -321,12 +316,15 @@ namespace wallin
 	} while( change );
 
 	double objectiveCost = objective->cost( vecBuildings, grid );
-	if( objectiveCost < bestCost )
+	int currentSizeWall = countBuildings( vecBuildings );
+
+	if( objectiveCost < bestCost || ( objectiveCost == bestCost && currentSizeWall < sizeWall ) )
 	{
+	  sizeWall = currentSizeWall;
 	  bestCost = objectiveCost;
 	  for( int i = 0; i < vecBuildings.size(); ++i )
 	    bestSolution[i] = vecBuildings[i]->getPosition();
-	}      
+	}
       }
       reset();
       elapsedTime = chrono::system_clock::now() - start;
@@ -342,7 +340,7 @@ namespace wallin
     addAllInGrid( vecBuildings, grid );
 
     // For gap objective, try now to decrease the number of gaps.
-    if( objective->getName().compare("gap") == 0 && bestGlobalCost == 0 )
+    if( ( objective->getName().compare("gap") == 0 || objective->getName().compare("techtree") == 0 ) && bestGlobalCost == 0 )
     {
       //objective.reset( new GapObj("gap") );
       std::fill( tabuList.begin(), tabuList.end(), 0 );
@@ -362,6 +360,8 @@ namespace wallin
 
       while( (postprocessGap = chrono::system_clock::now() - startPostprocess).count() < static_cast<int>( ceil(OPT_TIME / 100) ) && bestCost > 0 )
       {
+	goodVar.clear();
+
 	for( int i = 0; i < tabuList.size(); ++i )
 	{
 	  if( tabuList[i] <= 1 )
@@ -372,7 +372,7 @@ namespace wallin
 
 	for( int i = 0; i < vecBuildings.size(); ++i )
 	{
-	  if( tabuList[i] > 0 )
+	  if( tabuList[i] == 0 )
 	    goodVar.push_back( i );
 	}
 
@@ -406,18 +406,41 @@ namespace wallin
 	    grid.swap( *toSwap, *oldBuilding );
 	}
 
-	tabuList[ index ] = std::max(2, static_cast<int>( ceil(TABU / 2) ) );
+	tabuList[ index ] = 2;//std::max(2, static_cast<int>( ceil(TABU / 2) ) );
       }
     }
  
-    cout << "Grids:" << grid << endl
-	 << "Elapsed time: " << elapsedTime.count() << endl
+    cout << "Grids:" << grid << endl;
+
+    if( objective->getName().compare("none") == 0 )
+      cout << "SATISFACTION run: try to find a sound wall only!" << endl;
+    else
+      cout << "OPTIMIZATION run with objective " << objective->getName() << endl;
+      
+    cout << "Elapsed time: " << elapsedTime.count() << endl
 	 << "Global cost: " << bestGlobalCost << endl
-	 << "Optimization cost: " << bestCost << endl
-	 << "Opt Cost BEFORE post-processing: " << beforePostProc << endl
 	 << "Number of tours: " << tour << endl;
 
-    if( objective->getName().compare("gap") == 0 )
+    if( objective->getName().compare("none") == 0 )
+    {
+      if( bestGlobalCost == 0 )
+      {
+	BuildingObj bObj("building");
+	GapObj gObj("gap");
+	TechTreeObj tObj("techtree");
+	
+	cout << "Opt Cost if the objective was building: " << bObj.cost( vecBuildings, grid ) << endl
+	     << "Opt Cost if the objective was gap: \t" << gObj.cost( vecBuildings, grid ) << endl
+	     << "Opt Cost if the objective was techtree: " << tObj.cost( vecBuildings, grid ) << endl;
+      }
+    }
+    else
+    {
+      cout << "Optimization cost: " << bestCost << endl
+	   << "Opt Cost BEFORE post-processing: " << beforePostProc << endl;
+    }
+
+    if( objective->getName().compare("gap") == 0 || objective->getName().compare("techtree") == 0 )
       cout << "Post-processing time: " << postprocessGap.count() << endl; 
 
 #ifndef NDEBUG
