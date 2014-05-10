@@ -56,7 +56,7 @@ int main(int argc, char **argv)
   Grid grid( 16, 12, unbuildables, 11, 7, 6, 15 );
 
   // Please write the name of the objective here!
-  std::string objective = "";
+  std::string objective = "g";
 
   //std::vector<std::shared_ptr<Building> > vec			= makeTerranBuildings( objective );
   std::vector<std::shared_ptr<Building> > vec			= makeTerranBuildings();

@@ -7,24 +7,25 @@ namespace wallin
   /*************/
   Objective::Objective( std::string name ) : name(name) { }
 
-  int Objective::heuristicValue( const std::vector< double > &vecPositions, 
+  int Objective::heuristicValue( const std::vector< double > &vecGlobalCosts, 
 				 double &bestEstimatedCost,
 				 int &bestPosition,
 				 const Grid &grid ) const
   {
     int best = 0;
-    int bestHelp = numeric_limits<int>::max();
+    double bestHelp = numeric_limits<int>::max();
 
-    for( int i = 0; i < vecPositions.size(); ++i )
+    for( int i = 0; i < vecGlobalCosts.size(); ++i )
     {
-      if(      vecPositions[i] < bestEstimatedCost
-	  || ( vecPositions[i] == bestEstimatedCost
-	       && bestEstimatedCost != numeric_limits<double>::max()
-	       && ( i == 0 || heuristicValueHelper.at( vecPositions[i] ) < bestHelp ) ) )
+      if(      vecGlobalCosts[i] < bestEstimatedCost
+	  || ( vecGlobalCosts[i] == bestEstimatedCost
+	       && vecGlobalCosts[i] < numeric_limits<int>::max()
+	       && ( i == 0 || heuristicValueHelper.at( i ) < bestHelp ) ) )
       {
-	bestEstimatedCost = vecPositions[i];
+	bestEstimatedCost = vecGlobalCosts[i];
 	bestPosition = i - 1;
-	bestHelp = heuristicValueHelper.at( vecPositions[i] );
+	if( heuristicValueHelper.at( i ) < bestHelp )
+	  bestHelp = heuristicValueHelper.at( i );
 	best = i;
       }
     }
@@ -34,7 +35,7 @@ namespace wallin
 
   void Objective::initHelper( int size )
   {
-    heuristicValueHelper = std::vector<int>( size, numeric_limits<int>::max() );
+    heuristicValueHelper = std::vector<double>( size, numeric_limits<int>::max() );
   }
 
   void Objective::resetHelper()
@@ -121,7 +122,7 @@ namespace wallin
 
     gaps += std::count_if( neighbors.begin(), 
 			   neighbors.end(), 
-			   [&](std::shared_ptr<Building> n){return b.getGapTop() + n->getGapBottom() >= 16;});
+			   [&](const std::shared_ptr<Building> &n){return b.getGapTop() + n->getGapBottom() >= 16;});
     
     neighbors = grid.getBuildingsOnRight( b, vecBuildings );
     // std::cout << "RIGHT " << b->getId() << std::endl;
@@ -130,7 +131,7 @@ namespace wallin
     // std::cout << std::endl;
     gaps += std::count_if( neighbors.begin(), 
 			   neighbors.end(), 
-			   [&](std::shared_ptr<Building> n){return b.getGapRight() + n->getGapLeft() >= 16;});
+			   [&](const std::shared_ptr<Building> &n){return b.getGapRight() + n->getGapLeft() >= 16;});
     
     neighbors = grid.getBuildingsBelow( b, vecBuildings );
     // std::cout << "BELOW " << b->getId()  << std::endl;
@@ -139,7 +140,7 @@ namespace wallin
     // std::cout << std::endl;
     gaps += std::count_if( neighbors.begin(), 
 			   neighbors.end(), 
-			   [&](std::shared_ptr<Building> n){return b.getGapBottom() + n->getGapTop() >= 16;});
+			   [&](const std::shared_ptr<Building> &n){return b.getGapBottom() + n->getGapTop() >= 16;});
     
     neighbors = grid.getBuildingsOnLeft( b, vecBuildings );
     // std::cout << "LEFT " << b->getId()  << std::endl;
@@ -148,7 +149,7 @@ namespace wallin
     // std::cout << std::endl;
     gaps += std::count_if( neighbors.begin(), 
 			   neighbors.end(), 
-			   [&](std::shared_ptr<Building> n){return b.getGapLeft() + n->getGapRight() >= 16;});
+			   [&](const std::shared_ptr<Building> &n){return b.getGapLeft() + n->getGapRight() >= 16;});
 
     return gaps;
   }
@@ -212,7 +213,7 @@ namespace wallin
   {
     // auto min =  std::min_element( vecBuildings.begin(), 
     // 				  vecBuildings.end(), 
-    // 				  [](std::shared_ptr<Building> b1, std::shared_ptr<Building> b2)
+    // 				  [](const std::shared_ptr<Building> &b1, const std::shared_ptr<Building> &b2)
     // 				  {return b1->getTreedepth() < b2->getTreedepth();} );
 
     // int minValue = (*min)->getTreedepth();

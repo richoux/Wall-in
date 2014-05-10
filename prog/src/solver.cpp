@@ -111,9 +111,9 @@ namespace wallin
     vector< vector< double > >  vecVarSimCosts( sizeGrid );
     objective->initHelper( sizeGrid );
 
-    bestCost = numeric_limits<double>::max();
+    bestCost = numeric_limits<int>::max();
     double beforePostProc = bestCost;
-    double bestGlobalCost = numeric_limits<double>::max();
+    double bestGlobalCost = numeric_limits<int>::max();
     double globalCost;
     double currentCost;
     double estimatedCost;
@@ -136,8 +136,8 @@ namespace wallin
     {
       startTour = chrono::system_clock::now();
       ++tour;
-      globalCost = numeric_limits<double>::max();
-      bestEstimatedCost = numeric_limits<double>::max();
+      globalCost = numeric_limits<int>::max();
+      bestEstimatedCost = numeric_limits<int>::max();
       sizeWall  = numeric_limits<int>::max();
       std::fill( varSimCost.begin(), varSimCost.end(), 0. );
       std::fill( bestSimCost.begin(), bestSimCost.end(), 0. );
@@ -148,7 +148,7 @@ namespace wallin
 
       do // solving loop 
       {
-	if( globalCost == numeric_limits<double>::max() )
+	if( globalCost == numeric_limits<int>::max() )
 	{
 	  currentCost = 0.;
 
@@ -248,7 +248,7 @@ namespace wallin
 	replace_if( vecGlobalCosts.begin(), 
 		    vecGlobalCosts.end(), 
 		    bind( less<double>(), placeholders::_1, 0. ), 
-		    numeric_limits<double>::max() );
+		    numeric_limits<int>::max() );
 
 	// look for the first smallest cost, according to objective heuristic
 	int b = objective->heuristicValue( vecGlobalCosts, bestEstimatedCost, bestPosition, grid);

@@ -26,7 +26,7 @@ namespace wallin
   protected:
     Random randomVar;
     std::string name;
-    std::vector<int> heuristicValueHelper; 
+    std::vector<double> heuristicValueHelper; 
   };
 
   class NoneObj : public Objective
