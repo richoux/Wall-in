@@ -21,6 +21,7 @@ cost = 0
 building = 0
 gap = 0
 techtree = 0
+perfect = 0
 
 # For each line in file
 file.each do |line|
@@ -35,6 +36,9 @@ file.each do |line|
     building += words[1].to_i
   elsif words[0] == "Opt Cost if the objective was gap"
     gap += words[1].to_i
+    if words[1].to_i == 0
+      perfect += 1
+    end
   elsif words[0] == "Opt Cost if the objective was techtree"
     techtree += words[1].to_i
   end
@@ -50,7 +54,9 @@ b = building / count.to_f
 puts "Average building cost (over successful runs): #{b}"
 g = gap / count.to_f
 puts "Average gap cost (over successful runs): #{g}"
+puts "Number of perfect walls (no gaps, over successful runs): #{perfect}"
 t = techtree / count.to_f
 puts "Average techtree cost (over successful runs): #{t}"
+
 
 exit

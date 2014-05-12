@@ -18,6 +18,7 @@ count = 0
 lines = 0
 cost = 0
 opt = 0
+perfect = 0
 
 # For each line in file
 file.each do |line|
@@ -31,6 +32,9 @@ file.each do |line|
   end
   if words[0] == "Optimization cost" and words[1] != "2.14748e+09"
     opt += words[1].to_i
+    if words[1].to_i == 0
+      perfect += 1
+    end
   end
 
 end
@@ -43,5 +47,6 @@ c = cost / lines.to_f
 puts "Average global cost: #{c}"
 o = opt / count.to_f
 puts "Average optimization cost (over successful runs): #{o}"
+puts "Number of perfect walls (no gaps, over successful runs): #{perfect}"
 
 exit
