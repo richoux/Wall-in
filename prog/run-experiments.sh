@@ -2,19 +2,22 @@ if [ "$#" -ne 2 ]; then
   echo "Usage: $0 time_limit attempts" >&2
   exit 1
 fi
+
+### means commented by Flo, ie benzene-5, benzene-8 and hearbreakridge-1
+
 # Processing '../data/raw/(2)Benzene-output.txt'...
 # bin/experiments ../data/processed/benzene-1.txt $1 $2
 # bin/experiments ../data/processed/benzene-2.txt $1 $2
 # bin/experiments ../data/processed/benzene-3.txt $1 $2
 # bin/experiments ../data/processed/benzene-4.txt $1 $2
-bin/experiments ../data/processed/benzene-5.txt $1 $2
+###bin/experiments ../data/processed/benzene-5.txt $1 $2
 bin/experiments ../data/processed/benzene-6.txt $1 $2
 # bin/experiments ../data/processed/benzene-7.txt $1 $2
-bin/experiments ../data/processed/benzene-8.txt $1 $2
+###bin/experiments ../data/processed/benzene-8.txt $1 $2
 bin/experiments ../data/processed/benzene-9.txt $1 $2
 bin/experiments ../data/processed/benzene-10.txt $1 $2
 # Processing '../data/raw/(2)Heartbreak Ridge-output.txt'...
-bin/experiments ../data/processed/heartbreakridge-1.txt $1 $2
+###bin/experiments ../data/processed/heartbreakridge-1.txt $1 $2
 # bin/experiments ../data/processed/heartbreakridge-2.txt $1 $2
 bin/experiments ../data/processed/heartbreakridge-3.txt $1 $2
 bin/experiments ../data/processed/heartbreakridge-4.txt $1 $2

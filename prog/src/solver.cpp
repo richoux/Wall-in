@@ -9,10 +9,18 @@ namespace wallin
 		  const vector<shared_ptr<Building> >& vecBuildings, 
 		  const Grid& grid,
 		  const string &obj )
+    : Solver(vecConstraints, vecBuildings, grid, 0, obj){  }
+
+  Solver::Solver( const vector< shared_ptr<Constraint> >& vecConstraints, 
+		  const vector<shared_ptr<Building> >& vecBuildings, 
+		  const Grid& grid,
+		  const int loops,
+		  const string &obj )
     : vecConstraints(vecConstraints), 
       vecBuildings(vecBuildings), 
       variableCost( vecBuildings.size() ),
       grid(grid),
+      loops(loops),
       tabuList( vecBuildings.size() ),
       factory(FactoryObj()),
       objective(factory.makeObjective( obj )),
@@ -329,8 +337,8 @@ namespace wallin
       reset();
       elapsedTime = chrono::system_clock::now() - start;
     }
-    while( objective->getName().compare("none") != 0  && 
-	   ( elapsedTime.count() < OPT_TIME || ( elapsedTime.count() >= OPT_TIME && bestGlobalCost != 0 && elapsedTime.count() < 10 * OPT_TIME ) ) );
+    while( ( objective->getName().compare("none") != 0 || loops == 0 )  && ( elapsedTime.count() < OPT_TIME || ( elapsedTime.count() >= OPT_TIME && bestGlobalCost != 0 && elapsedTime.count() < 10 * OPT_TIME ) ) 
+	   || ( objective->getName().compare("none") == 0 && elapsedTime.count() < timeout * loops ) );
 
     clearAllInGrid( vecBuildings, grid );
 

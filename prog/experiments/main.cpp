@@ -87,19 +87,18 @@ int main(int argc, char **argv)
           std::vector<std::shared_ptr<Building> > vec     = makeTerranBuildings();
           std::vector< std::shared_ptr<Constraint> > vecConstraints = makeTerranConstraints( vec, grid );
 
-          for(int attempt = 0;attempt<attempts;attempt++) {
-            printf("attempt %i\n",attempt+1);
-            printf("map size: %i,%i\n",dx,dy);
-            printf("calling solver...\n");
-
-//            Solver solver( vecConstraints, vec, grid );
+          // for(int attempt = 0;attempt<attempts;attempt++) {
+          //   printf("attempt %i\n",attempt+1);
+	  printf("map size: %i,%i\n",dx,dy);
+	  printf("calling solver...\n");
+	    
+	  Solver solver( vecConstraints, vec, grid, attempts );
 //            Solver solver( vecConstraints, vec, grid, "building" );
 //            Solver solver( vecConstraints, vec, grid, "techtree" );
-            Solver solver( vecConstraints, vec, grid, "gap" );
-	    std::cout << "File name: " << argv[1] << std::endl; 
-            solver.solve( time_limit );    
-          }
-        }
+//            Solver solver( vecConstraints, vec, grid, "gap" );
+	  std::cout << "File name: " << argv[1] << std::endl; 
+	  solver.solve( time_limit );    
+	}
 
         printf("\n\n");        
       }

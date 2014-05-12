@@ -17,6 +17,10 @@ file = File.open(ARGV[0])
 count = 0
 lines = 0
 
+building = 0
+gap = 0
+techtree = 0
+
 # For each line in file
 file.each do |line|
   words = line.split(': ')
@@ -25,6 +29,12 @@ file.each do |line|
       count += 1
     end
     lines += 1
+  elsif words[0] == "Opt Cost if the objective was building"
+    building += words[1].to_i
+  elsif words[0] == "Opt Cost if the objective was gap"
+    gap += words[1].to_i
+  elsif words[0] == "Opt Cost if the objective was techtree"
+    techtree += words[1].to_i
   end
 end
 
@@ -32,5 +42,11 @@ puts "Number of successes: #{count}"
 puts "Number of runs: #{lines}"
 rate = count.to_f * 100 / lines.to_f
 puts "Success rate: #{rate}"
+b = building / count.to_f
+puts "Average building cost (on successful runs): #{b}"
+g = gap / count.to_f
+puts "Average gap cost (on successful runs): #{g}"
+t = techtree / count.to_f
+puts "Average techtree cost (on successful runs): #{t}"
 
 exit

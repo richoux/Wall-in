@@ -28,9 +28,16 @@ namespace wallin
   {
   public:
     Solver( const vector< shared_ptr<Constraint> >&, 
+    	    const vector<shared_ptr<Building> >&, 
+    	    const Grid&,
+    	    const string& = "" );
+
+    Solver( const vector< shared_ptr<Constraint> >&, 
 	    const vector<shared_ptr<Building> >&, 
 	    const Grid&,
+	    const int loops,
 	    const string& = "" );
+
     Solver(const Solver&) = default;
     Solver(Solver&&) = default;
     Solver& operator=(const Solver&) = default;
@@ -48,6 +55,7 @@ namespace wallin
     vector< shared_ptr<Building> >	vecBuildings;
     vector<double>			variableCost;
     Grid				grid;
+    int					loops;
     vector<int>				tabuList;
     Random				randomVar;
     FactoryObj				factory;

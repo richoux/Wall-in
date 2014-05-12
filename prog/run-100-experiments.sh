@@ -6,8 +6,8 @@ if [ "$#" -ne 2 ]; then
 fi
 
 for i in `seq 1 100`; do
-    echo \*\*\*\*\*\*\*\*\*\*\*\* | cat >> scripts/100\ runs/100_runs_gap_$1_$2
-    echo \*\*\*\* $i \*\*\*\* | cat >> scripts/100\ runs/100_runs_gap_$1_$2
-    echo \*\*\*\*\*\*\*\*\*\*\*\* | cat >> scripts/100\ runs/100_runs_gap_$1_$2
-    ./run-experiments.sh $1 $2 >> scripts/100\ runs/100_runs_gap_$1_$2
+    echo \*\*\*\*\*\*\*\*\*\*\*\* | cat >> scripts/100\ runs/new_100_runs_$1_$2
+    echo \*\*\*\* $i \*\*\*\* | cat >> scripts/100\ runs/new_100_runs_$1_$2
+    echo \*\*\*\*\*\*\*\*\*\*\*\* | cat >> scripts/100\ runs/new_100_runs_$1_$2
+    ./run-experiments.sh $1 $2 >> scripts/100\ runs/new_100_runs_$1_$2
 done
