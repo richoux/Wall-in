@@ -59,15 +59,21 @@ namespace wallin
 
   double NoneObj::cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid ) const
   {
-    return std::count_if( vecBuildings.begin(), 
-			  vecBuildings.end(), 
-			  []( const std::shared_ptr<Building> &b ){ return b->isOnGrid(); });
-    //return 0.;
+    // return std::count_if( vecBuildings.begin(), 
+    // 			  vecBuildings.end(), 
+    // 			  []( const std::shared_ptr<Building> &b ){ return b->isOnGrid(); });
+    return 0.;
   }
 
   int NoneObj::heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid )
   {
     return vecVariables[ randomVar.getRandNum( vecVariables.size() ) ];
+  }
+
+  void NoneObj::setHelper( const Building &b, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid &grid )
+  {
+    if( b.isOnGrid() )
+      heuristicValueHelper.at( b.getPosition() ) = 0;
   }
 
   /**********/

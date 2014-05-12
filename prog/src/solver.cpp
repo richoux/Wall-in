@@ -337,7 +337,7 @@ namespace wallin
       reset();
       elapsedTime = chrono::system_clock::now() - start;
     }
-    while( ( objective->getName().compare("none") != 0 || loops == 0 )  && ( elapsedTime.count() < OPT_TIME || ( elapsedTime.count() >= OPT_TIME && bestGlobalCost != 0 && elapsedTime.count() < 10 * OPT_TIME ) ) 
+    while( ( objective->getName().compare("none") != 0 || loops == 0 )  && ( elapsedTime.count() < OPT_TIME )//|| ( elapsedTime.count() >= OPT_TIME && bestGlobalCost != 0 && elapsedTime.count() < 10 * OPT_TIME ) ) 
 	   || ( objective->getName().compare("none") == 0 && elapsedTime.count() < timeout * loops ) );
 
     clearAllInGrid( vecBuildings, grid );

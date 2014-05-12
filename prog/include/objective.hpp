@@ -35,6 +35,7 @@ namespace wallin
     NoneObj( std::string );
     double cost( const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& ) const;
     int heuristicVariable( const std::vector< int > &vecVariables, const std::vector< std::shared_ptr<Building> > &vecBuildings, const Grid& );
+    void setHelper( const Building&, const std::vector< std::shared_ptr<Building> >&, const Grid& );
   };
 
   class GapObj : public Objective
