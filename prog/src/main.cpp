@@ -1,5 +1,5 @@
 /*
- * Wall-in is a C++ library designed for StarCraft: Brood,
+ * Wall-in is a C++ library designed for StarCraft: Brood war,
  * making a wall optimizised for a given objective: minimize the
  * number of buildings, the technology needed, the number of gaps
  * between building big enough to let enter small units, etc.
