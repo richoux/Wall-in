@@ -23,5 +23,6 @@ wall-in.synctex.gz
 # ============#
 prog/bin/wallin
 prog/bin/experiments
+prog/bin/experiments_ghost
 prog/bin/processrawdata
 prog/bin/processresults
