@@ -167,6 +167,7 @@ namespace wallin
     vector<double> bestSimCost( vecBuildings.size() );
 
     int tour = 0;
+    int iterations = 0;
 
     do // optimization loop
     {
@@ -184,6 +185,8 @@ namespace wallin
 
       do // solving loop 
       {
+	++iterations;
+
 	if( globalCost == numeric_limits<int>::max() )
 	{
 	  currentCost = 0.;
@@ -455,7 +458,8 @@ namespace wallin
       
     cout << "Elapsed time: " << elapsedTime.count() << endl
 	 << "Global cost: " << bestGlobalCost << endl
-	 << "Number of tours: " << tour << endl;
+	 << "Number of tours: " << tour << endl
+	 << "Number of iterations: " << iterations << endl;
 
     if( objective->getName().compare("none") == 0 )
     {

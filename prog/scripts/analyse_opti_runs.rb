@@ -19,6 +19,7 @@ lines = 0
 cost = 0
 opt = 0
 perfect = 0
+iter = 0
 
 # For each line in file
 file.each do |line|
@@ -36,7 +37,9 @@ file.each do |line|
       perfect += 1
     end
   end
-
+  if words[0] == "Number of iterations"
+    iter += words[1].to_i
+  end
 end
 
 puts "Number of successes: #{count}"
@@ -45,6 +48,8 @@ rate = count.to_f * 100 / lines.to_f
 puts "Success rate: #{rate}"
 c = cost / lines.to_f
 puts "Average global cost: #{c}"
+avg_iter = iter / lines.to_f
+puts "Average number of iterations: #{avg_iter}"
 o = opt / count.to_f
 puts "Average optimization cost (over successful runs): #{o}"
 puts "Number of perfect walls (no gaps, over successful runs): #{perfect}"
