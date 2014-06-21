@@ -31,7 +31,7 @@ file.each do |line|
     lines += 1
     cost += words[1].to_i
   end
-  if words[0] == "Optimization cost" and words[1] != "2.14748e+09"
+  if words[0] == "Optimization cost" and not words[1].start_with?("2.14748e+09")
     opt += words[1].to_i
     if words[1].to_i == 0
       perfect += 1
