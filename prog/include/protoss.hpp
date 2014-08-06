@@ -54,7 +54,7 @@ namespace wallin
 
   shared_ptr<Constraint> overlap;
   shared_ptr<Constraint> buildable;
-  shared_ptr<Constraint> noGaps;
+  shared_ptr<Constraint> noHoles;
   shared_ptr<Constraint> specialTiles;
   shared_ptr<Constraint> pylons;
 
@@ -80,11 +80,11 @@ namespace wallin
   {
     overlap	 = make_shared<Overlap>( vec, grid );
     buildable	 = make_shared<Buildable>( vec, grid );
-    noGaps	 = make_shared<NoGaps>( vec, grid );
+    noHoles	 = make_shared<NoHoles>( vec, grid );
     specialTiles = make_shared<StartingTargetTiles>( vec, grid );
     pylons	 = make_shared<Pylons>( vec, grid );
     
-    vector< shared_ptr<Constraint> > vecConstraints {overlap, buildable, noGaps, specialTiles, pylons};
+    vector< shared_ptr<Constraint> > vecConstraints {overlap, buildable, noHoles, specialTiles, pylons};
     return vecConstraints;
   }
 }

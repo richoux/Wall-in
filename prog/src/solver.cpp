@@ -318,7 +318,7 @@ namespace wallin
       {
 	bool change;
 	double cost;
-	NoGaps ng( vecBuildings, grid );
+	NoHoles nh( vecBuildings, grid );
 
 	// remove all unreachable buildings from the starting building out of the grid
 	set< shared_ptr<Building> > visited = getNecessaryBuildings();
@@ -341,13 +341,13 @@ namespace wallin
 		cost = 0.;
 		fill( varSimCost.begin(), varSimCost.end(), 0. );
 	      
-		cost = ng.simulateCost( *b, -1, varSimCost );
+		cost = nh.simulateCost( *b, -1, varSimCost );
 	      
 		if( cost == 0. )
 		{
 		  grid.clear( *b );
 		  b->setPos( -1 );
-		  ng.update( grid );
+		  nh.update( grid );
 		  change = true;
 		}	  
 	      }
@@ -487,7 +487,7 @@ namespace wallin
     cout << endl << "Elapsed time to simulate cost: " << timeSimCost.count() << endl
 	 << "Overlap: " << toverlap.count() << endl
 	 << "Buildable: " << tbuildable.count() << endl
-	 << "NoGaps: " << tnogaps.count() << endl
+	 << "NoHoles: " << tnoholes.count() << endl
 	 << "STT: " << tstt.count() << endl;
 
     updateConstraints( vecConstraints, grid );

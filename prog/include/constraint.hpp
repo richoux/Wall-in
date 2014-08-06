@@ -84,11 +84,11 @@ namespace wallin
     std::vector<double> simulateCost( Building&, const std::vector<int>&, int, std::vector< std::vector<double> >& );
   };
 
-  //NoGaps
-  class NoGaps : public Constraint
+  //NoHoles
+  class NoHoles : public Constraint
   {
   public:
-    NoGaps( const std::vector< std::shared_ptr<Building> >&, const Grid& );
+    NoHoles( const std::vector< std::shared_ptr<Building> >&, const Grid& );
     double cost( std::vector<double>& ) const;
   };
 

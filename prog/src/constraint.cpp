@@ -300,13 +300,13 @@ namespace wallin
   }
 
   /**********/
-  /* NoGaps */
+  /* NoHoles */
   /**********/
-  NoGaps::NoGaps(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) 
+  NoHoles::NoHoles(const std::vector< std::shared_ptr<Building> >& variables, const Grid& grid) 
     : Constraint(variables, grid)
   { }
 
-  double NoGaps::cost( std::vector<double>& varCost ) const
+  double NoHoles::cost( std::vector<double>& varCost ) const
   {
     // cost = |buildings with one neighbor| - 1 + |buildings with no neighbors|
     double conflicts = 0.;
