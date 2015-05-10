@@ -137,8 +137,8 @@ namespace wallin
     chrono::time_point<chrono::system_clock> startSimCost; 
 
 #ifndef NDEBUG
-    chrono::duration<double,milli> toverlap(0), tbuildable(0), tnogaps(0), tstt(0);
-    chrono::time_point<chrono::system_clock> soverlap, sbuildable, snogaps, sstt; 
+    chrono::duration<double,milli> toverlap(0), tbuildable(0), tnoholes(0), tstt(0);
+    chrono::time_point<chrono::system_clock> soverlap, sbuildable, snoholes, sstt; 
 #endif
 
     int sizeGrid = grid.getNberRows() * grid.getNberCols() + 1; // + 1 for the "position -1" outside the grid
@@ -260,9 +260,9 @@ namespace wallin
 	vecConstraintsCosts[1] = vecConstraints[1]->simulateCost( *oldBuilding, possiblePositions, sizeGrid, vecVarSimCosts );
 	tbuildable += chrono::system_clock::now() - sbuildable;
 
-	snogaps = chrono::system_clock::now();
+	snoholes = chrono::system_clock::now();
 	vecConstraintsCosts[2] = vecConstraints[2]->simulateCost( *oldBuilding, possiblePositions, sizeGrid, vecVarSimCosts );
-	tnogaps += chrono::system_clock::now() - snogaps;
+	tnoholes += chrono::system_clock::now() - snoholes;
 
 	sstt = chrono::system_clock::now();
 	vecConstraintsCosts[3] = vecConstraints[3]->simulateCost( *oldBuilding, possiblePositions, sizeGrid, vecVarSimCosts );
