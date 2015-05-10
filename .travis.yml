@@ -5,7 +5,7 @@ compiler:
   - gcc
 
 before_install:
-  - sudo apt-get install valgrind
+#  - sudo apt-get install valgrind
 
   # g++4.8.1
   - if [ "$CXX" == "g++" ]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; fi
@@ -44,4 +44,4 @@ script:
   - cd ~/build/richoux/Wall-in/prog/src
   - $CXX -g $CXXFLAGS main.cpp building.cpp constraint.cpp grid.cpp tools.cpp solver.cpp random.cpp objective.cpp -o ../bin/wallin
   - cd ../bin ; ./wallin
-  - valgrind --leak-check=full --show-reachable=yes ../bin/wallin
+ # - valgrind --leak-check=full --show-reachable=yes ../bin/wallin
